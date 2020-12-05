@@ -1,31 +1,45 @@
 /* eslint no-undef: 0 */
 /* eslint arrow-parens: 0 */
-import React from 'react';
-import { enquireScreen } from 'enquire-js';
+import React from "react";
+import { enquireScreen } from "enquire-js";
 
-import Nav0 from './Nav0';
-import Banner0 from './Banner0';
-import Content0 from './Content0';
-import Content5 from './Content5';
-import Content3 from './Content3';
-import Footer1 from './Footer1';
+import Nav0 from "./Nav0";
+import Nav2 from "./Nav2";
+import Banner0 from "./Banner0";
+import Banner3 from "./Banner3";
+import Banner5 from "./Banner5";
+import Banner1 from "./Banner1";
+import Contact0 from "./Contact0";
+import Content4 from "./Content4";
+import Content0 from "./Content0";
+import Footer0 from "./Footer0";
+import Content5 from "./Content5";
+import Content3 from "./Content3";
+import Footer1 from "./Footer1";
 
 import {
   Nav00DataSource,
   Banner01DataSource,
+  Banner30DataSource,
+  Banner50DataSource,
+  Banner10DataSource,
+  Contact00DataSource,
+  Content40DataSource,
   Content00DataSource,
+  Footer00DataSource,
   Content50DataSource,
   Content30DataSource,
   Footer10DataSource,
-} from './data.source';
-import './less/antMotionStyle.less';
+  Nav20DataSource
+} from "./data.source";
+import "./less/antMotionStyle.less";
 
 let isMobile;
 enquireScreen((b) => {
   isMobile = b;
 });
 
-const { location = {} } = typeof window !== 'undefined' ? window : {};
+const { location = {} } = typeof window !== "undefined" ? window : {};
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -56,10 +70,16 @@ export default class Home extends React.Component {
 
   render() {
     const children = [
-      <Nav0
-        id="Nav0_0"
-        key="Nav0_0"
-        dataSource={Nav00DataSource}
+      // <Nav0
+      //   id="Nav0_0"
+      //   key="Nav0_0"
+      //   dataSource={Nav00DataSource}
+      //   isMobile={this.state.isMobile}
+      // />,
+      <Nav2
+        id="Nav2_0"
+        key="Nav2_0"
+        dataSource={Nav20DataSource}
         isMobile={this.state.isMobile}
       />,
       <Banner0
@@ -68,10 +88,46 @@ export default class Home extends React.Component {
         dataSource={Banner01DataSource}
         isMobile={this.state.isMobile}
       />,
+      <Banner3
+        id="Banner3_0"
+        key="Banner3_0"
+        dataSource={Banner30DataSource}
+        isMobile={this.state.isMobile}
+      />,
+      <Banner5
+        id="Banner5_0"
+        key="Banner5_0"
+        dataSource={Banner50DataSource}
+        isMobile={this.state.isMobile}
+      />,
+      <Banner1
+        id="Banner1_0"
+        key="Banner1_0"
+        dataSource={Banner10DataSource}
+        isMobile={this.state.isMobile}
+      />,
+      <Contact0
+        id="Contact0_0"
+        key="Contact0_0"
+        dataSource={Contact00DataSource}
+        isMobile={this.state.isMobile}
+      />,
+      <Content4
+        id="Content4_0"
+        key="Content4_0"
+        dataSource={Content40DataSource}
+        isMobile={this.state.isMobile}
+      />,
       <Content0
         id="Content0_0"
         key="Content0_0"
         dataSource={Content00DataSource}
+        isMobile={this.state.isMobile}
+      />,
+      <Footer0
+        id="Footer0_0"
+        key="Footer0_0"
+        dataSource={Footer00DataSource}
         isMobile={this.state.isMobile}
       />,
       <Content5

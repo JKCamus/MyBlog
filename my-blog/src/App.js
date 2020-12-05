@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import Home from 'pages/Home';
 // import { Provider } from "react-redux";
 // import { renderRoutes } from "react-router-config";
 
@@ -18,8 +19,6 @@ export default memo(function App() {
     //     <AppPlayerBar></AppPlayerBar>
     //   </HashRouter>
     // </Provider>
-    <div>
-      app
-    </div>
+   <Home></Home>
   );
 });

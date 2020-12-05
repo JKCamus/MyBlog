@@ -97,8 +97,29 @@ export const Nav00DataSource = {
   },
   mobileMenu: { className: 'header0-mobile-menu' },
 };
+export const Nav20DataSource = {
+  isScrollLink: true,
+  wrapper: { className: 'header2 home-page-wrapper' },
+  page: { className: 'home-page' },
+  logo: {
+    className: 'header2-logo',
+    children: 'https://os.alipayobjects.com/rmsportal/mlcYmsRilwraoAe.svg',
+  },
+  LinkMenu: {
+    className: 'header2-menu',
+    children: [
+      {
+        name: 'linkNav',
+        to: '当前页面 ID 地址，参考如上',
+        children: '导航名称',
+        className: 'menu-item',
+      },
+    ],
+  },
+  mobileMenu: { className: 'header2-mobile-menu' },
+};
 export const Banner01DataSource = {
-  wrapper: { className: 'banner0' },
+  wrapper: { className: 'banner0 kibhofepzkt-editor_css' },
   textWrapper: { className: 'banner0-text-wrapper' },
   title: {
     className: 'banner0-title',
@@ -109,6 +130,179 @@ export const Banner01DataSource = {
     children: '一个高效的页面动画解决方案',
   },
   button: { className: 'banner0-button', children: 'Learn More' },
+};
+export const Banner30DataSource = {
+  wrapper: { className: 'banner3' },
+  textWrapper: {
+    className: 'banner3-text-wrapper',
+    children: [
+      {
+        name: 'nameEn',
+        className: 'banner3-name-en',
+        children: 'Seeking Experience & Engineering Conference',
+      },
+      {
+        name: 'slogan',
+        className: 'banner3-slogan',
+        children: '首届蚂蚁金服体验科技大会',
+        texty: true,
+      },
+      {
+        name: 'name',
+        className: 'banner3-name',
+        children: '探索极致用户体验与最佳工程实践探索',
+      },
+      { name: 'button', className: 'banner3-button', children: '立即报名' },
+      {
+        name: 'time',
+        className: 'banner3-time',
+        children: '2018.01.06 / 中国·杭州',
+      },
+    ],
+  },
+};
+export const Banner50DataSource = {
+  wrapper: { className: 'home-page-wrapper banner5' },
+  page: { className: 'home-page banner5-page' },
+  childWrapper: {
+    className: 'banner5-title-wrapper',
+    children: [
+      { name: 'title', children: '产品名', className: 'banner5-title' },
+      {
+        name: 'explain',
+        className: 'banner5-explain',
+        children: '产品标语介绍',
+      },
+      {
+        name: 'content',
+        className: 'banner5-content',
+        children: '产品的详细说明，如是什么东西之类的文字',
+      },
+      {
+        name: 'button',
+        className: 'banner5-button-wrapper',
+        children: {
+          href: '#',
+          className: 'banner5-button',
+          type: 'primary',
+          children: '开始使用',
+        },
+      },
+    ],
+  },
+  image: {
+    className: 'banner5-image',
+    children:
+      'https://gw.alipayobjects.com/mdn/rms_ae7ad9/afts/img/A*-wAhRYnWQscAAAAAAAAAAABkARQnAQ',
+  },
+};
+export const Banner10DataSource = {
+  wrapper: { className: 'banner1' },
+  BannerAnim: {
+    children: [
+      {
+        name: 'elem0',
+        BannerElement: { className: 'banner-user-elem' },
+        textWrapper: { className: 'banner1-text-wrapper' },
+        bg: { className: 'bg bg0' },
+        title: {
+          className: 'banner1-title',
+          children:
+            'https://zos.alipayobjects.com/rmsportal/HqnZZjBjWRbjyMr.png',
+        },
+        content: {
+          className: 'banner1-content',
+          children: '一个高效的页面动画解决方案',
+        },
+        button: { className: 'banner1-button', children: 'Learn More' },
+      },
+      {
+        name: 'elem1',
+        BannerElement: { className: 'banner-user-elem' },
+        textWrapper: { className: 'banner1-text-wrapper' },
+        bg: { className: 'bg bg1' },
+        title: {
+          className: 'banner1-title',
+          children:
+            'https://zos.alipayobjects.com/rmsportal/HqnZZjBjWRbjyMr.png',
+        },
+        content: {
+          className: 'banner1-content',
+          children: '一个高效的页面动画解决方案',
+        },
+        button: { className: 'banner1-button', children: 'Learn More' },
+      },
+      {
+        name: 'elem2',
+        BannerElement: { className: 'banner-user-elem' },
+        textWrapper: { className: 'banner1-text-wrapper' },
+        bg: { className: 'bg bg1' },
+        title: {
+          className: 'banner1-title',
+          children:
+            'https://zos.alipayobjects.com/rmsportal/HqnZZjBjWRbjyMr.png',
+        },
+        content: {
+          className: 'banner1-content',
+          children: '一个高效的页面动画解决方案',
+        },
+        button: { className: 'banner1-button', children: 'Learn More' },
+      },
+    ],
+  },
+};
+export const Contact00DataSource = {
+  wrapper: { className: 'home-page-wrapper content10-wrapper' },
+  Content: {
+    className: 'icon-wrapper',
+    children: {
+      icon: {
+        className: 'icon',
+        children:
+          'https://gw.alipayobjects.com/zos/rmsportal/zIUVomgdcKEKcnnQdOzw.svg',
+        name: '主要图标',
+      },
+      iconShadow: {
+        className: 'icon-shadow',
+        children:
+          'https://gw.alipayobjects.com/zos/rmsportal/WIePwurYppfVvDNASZRN.svg',
+        name: '图标影阴',
+      },
+      url: { children: 'https://gaode.com/place/B0FFH3KPBX', name: '跳转地址' },
+      title: { children: '大会地址', name: '弹框标题' },
+      content: {
+        children: '蚂蚁 Z 空间  浙江省杭州市西湖区西溪路556号',
+        name: '弹框内容',
+      },
+    },
+  },
+};
+export const Content40DataSource = {
+  wrapper: { className: 'home-page-wrapper content4-wrapper' },
+  page: { className: 'home-page content4' },
+  OverPack: { playScale: 0.3, className: '' },
+  titleWrapper: {
+    className: 'title-wrapper',
+    children: [
+      {
+        name: 'title',
+        children: '蚂蚁金融云提供专业的服务',
+        className: 'title-h1',
+      },
+      {
+        name: 'content',
+        className: 'title-content content4-title-content',
+        children: '科技想象力，金融创造力',
+      },
+    ],
+  },
+  video: {
+    className: 'content4-video',
+    children: {
+      video: 'https://os.alipayobjects.com/rmsportal/EejaUGsyExkXyXr.mp4',
+      image: 'https://zos.alipayobjects.com/rmsportal/HZgzhugQZkqUwBVeNyfz.jpg',
+    },
+  },
 };
 export const Content00DataSource = {
   wrapper: { className: 'home-page-wrapper content0-wrapper' },
@@ -197,6 +391,19 @@ export const Content00DataSource = {
         },
       },
     ],
+  },
+};
+export const Footer00DataSource = {
+  wrapper: { className: 'home-page-wrapper footer0-wrapper' },
+  OverPack: { className: 'home-page footer0', playScale: 0.05 },
+  copyright: {
+    className: 'copyright',
+    children: (
+      <span>
+        ©2018 <a href="https://motion.ant.design">Ant Motion</a> All Rights
+        Reserved
+      </span>
+    ),
   },
 };
 export const Content50DataSource = {

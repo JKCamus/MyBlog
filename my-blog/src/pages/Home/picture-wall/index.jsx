@@ -2,8 +2,9 @@ import React from 'react';
 import QueueAnim from "rc-queue-anim";
 import PropTypes from "prop-types";
 import TweenOne, { TweenOneGroup } from "rc-tween-one";
-import Icon from "antd/lib/icon";
-// import "./index.less";
+import { CloseOutlined } from '@ant-design/icons'
+
+import "./index.less";
 const textData = {
   content:
     "Taiwan called motorcycle, motor bike [1] or a motorcycle," +
@@ -172,7 +173,8 @@ class PicDetailsDemo extends React.Component {
                 }}
               >
                 <h1>{title}</h1>
-                <Icon type="cross" onClick={(e) => this.onClose(e, i)} />
+                <CloseOutlined className={'closeStyle'} onClick={(e) => this.onClose(e, i)}/>
+                {/* <Icon type="home" onClick={(e) => this.onClose(e, i)} /> */}
                 <em />
                 <p>{content}</p>
               </div>

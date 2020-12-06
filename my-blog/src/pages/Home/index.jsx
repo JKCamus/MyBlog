@@ -122,25 +122,25 @@ export default class Home extends React.Component {
       //   isMobile={this.state.isMobile}
       // />,
       <PictureWall></PictureWall>,
-      <Content0
-        id="Content0_0"
-        key="Content0_0"
-        dataSource={Content00DataSource}
-        isMobile={this.state.isMobile}
-      />,
+      // <Content0
+      //   id="Content0_0"
+      //   key="Content0_0"
+      //   dataSource={Content00DataSource}
+      //   isMobile={this.state.isMobile}
+      // />,
 
-      <Content5
-        id="Content5_0"
-        key="Content5_0"
-        dataSource={Content50DataSource}
-        isMobile={this.state.isMobile}
-      />,
-      <Content3
-        id="Content3_0"
-        key="Content3_0"
-        dataSource={Content30DataSource}
-        isMobile={this.state.isMobile}
-      />,
+      // <Content5
+      //   id="Content5_0"
+      //   key="Content5_0"
+      //   dataSource={Content50DataSource}
+      //   isMobile={this.state.isMobile}
+      // />,
+      // <Content3
+      //   id="Content3_0"
+      //   key="Content3_0"
+      //   dataSource={Content30DataSource}
+      //   isMobile={this.state.isMobile}
+      // />,
       <Footer0
         id="Footer0_0"
         key="Footer0_0"

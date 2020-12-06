@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-05 16:05:06
  * @LastEditors: camus
- * @LastEditTime: 2020-12-05 16:07:52
+ * @LastEditTime: 2020-12-06 12:37:31
  */
 const {
   override,
@@ -12,10 +12,20 @@ const {
   addLessLoader,
   addWebpackAlias,
 } = require("customize-cra");
+const rewireLess = require("react-app-rewire-less-modules");
 const path = require("path");
 const resolve = (dir) => path.resolve(__dirname, dir); //dirname 目录路径
+// const customizeImageLoader  = () => config  => {
+//   console.log('config', config)
+//   config.module.rules[2].oneOf.push({
+//       test:  [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+//       loader: 'file-loader'
+//   });
+//   return config;
+// }
 
 module.exports = override(
+  // myOverrides(config,env),
   // 按需加载 antd
   fixBabelImports("import", {
     libraryName: "antd",
@@ -26,7 +36,8 @@ module.exports = override(
   addLessLoader({
     lessOptions: {
       javascriptEnabled: true,
-      modifyVars: { "@primary-color": "#1DA57A" },
+      // modifyVars: { "@primary-color": "#1DA57A" },
+      modifyVars: { "@primary-color": "#43a3ef" },
     },
   }),
   addWebpackAlias({
@@ -35,5 +46,24 @@ module.exports = override(
     pages: resolve("src/pages"),
     common: resolve("src/common"),
     services: resolve("src/services"),
-  })
+  }),
+  // (config, env) => {
+  //   // config = rewireLess(config, env);
+  //   // // with loaderOptions
+  //   // config = rewireLess.withLoaderOptions({
+  //   //   modifyVars: {
+  //   //     "@primary-color": "#1890ff",
+  //   //   },
+  //   // })(config, env);
+  //   // config.module.rules[1].oneOf.push({
+  //   //   test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+  //   //   loader: "file-loader",
+  //   // });
+  //   config.module.rules.push({
+  //     test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+  //     use: ["file-loader"],
+  //     // loader: "file-loader",
+  //   });
+  //   return config;
+  // }
 );

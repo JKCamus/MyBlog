@@ -19,7 +19,21 @@ class Banner extends React.PureComponent {
           delay={200}
           {...dataSource.textWrapper}
         >
-          <div key="title" {...dataSource.title}>
+           <section class="mockup-section paint-area">
+              <div class="mockup-content">
+                <blockquote class="mockup-blockquote">
+                  <p class="paint-area paint-area--text">
+                    There are two types of people who will tell you that you
+                    cannot make a difference in this world: those who are afraid
+                    to try and those who are afraid you will succeed.
+                  </p>
+                  <footer class="paint-area paint-area--text">
+                    Ray Goforth
+                  </footer>
+                </blockquote>
+              </div>
+            </section>
+          {/* <div key="title" {...dataSource.title}>
             {typeof dataSource.title.children === 'string' &&
             dataSource.title.children.match(isImg) ? (
               <img src={dataSource.title.children} width="100%" alt="img" />
@@ -32,7 +46,7 @@ class Banner extends React.PureComponent {
           </div>
           <Button ghost key="button" {...dataSource.button}>
             {dataSource.button.children}
-          </Button>
+          </Button> */}
         </QueueAnim>
         <TweenOne
           animation={{

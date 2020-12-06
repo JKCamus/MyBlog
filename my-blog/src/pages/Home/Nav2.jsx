@@ -1,6 +1,7 @@
 import React from 'react';
 import TweenOne from 'rc-tween-one';
 import { Link } from 'rc-scroll-anim';
+import miao from '../../assets/img/miao.png';
 
 class Header extends React.Component {
   constructor(props) {
@@ -54,7 +55,9 @@ class Header extends React.Component {
             animation={{ x: -30, type: 'from', ease: 'easeOutQuad' }}
             {...dataSource.logo}
           >
-            <img width="100%" src={dataSource.logo.children} alt="img" />
+            <div style={{color:'white',fontWeight:'bold',fontSize:'20px'}}>CamusBlog</div>
+            {/* <img width="100%" src={dataSource.logo.children} alt="img" /> */}
+            {/* <img width="50%" src={require('@/assets/img/miao.png').default} alt="img" /> */}
           </TweenOne>
           {isMobile && (
             <div

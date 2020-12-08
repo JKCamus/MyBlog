@@ -1459,6 +1459,13 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@node-rs/helper@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.npm.taobao.org/@node-rs/helper/download/@node-rs/helper-0.4.0.tgz#deec7d95aafa90535980a51cbd5336b8bbefe93a"
+  integrity sha1-3ux9lar6kFNZgKUcvVM2uLvv6To=
+  dependencies:
+    tslib "^2.0.1"
+
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
   resolved "https://registry.npm.taobao.org/@nodelib/fs.scandir/download/@nodelib/fs.scandir-2.1.3.tgz#3a582bdb53804c6ba6d146579c46e52130cf4a3b"
@@ -1651,6 +1658,39 @@
     "@svgr/plugin-jsx" "^5.4.0"
     "@svgr/plugin-svgo" "^5.4.0"
     loader-utils "^2.0.0"
+
+"@swc/core-darwin@^1.2.40":
+  version "1.2.40"
+  resolved "https://registry.npm.taobao.org/@swc/core-darwin/download/@swc/core-darwin-1.2.40.tgz#4acb1379f3df626e5550fb12b0795682a25aa177"
+  integrity sha1-SssTefPfYm5VUPsSsHlWgqJaoXc=
+
+"@swc/core-linux@^1.2.40":
+  version "1.2.40"
+  resolved "https://registry.npm.taobao.org/@swc/core-linux/download/@swc/core-linux-1.2.40.tgz#57f0d21fce82b0bf6379c1b57a71d0df36ba80e4"
+  integrity sha1-V/DSH86CsL9jecG1enHQ3za6gOQ=
+
+"@swc/core-win32@^1.2.40":
+  version "1.2.40"
+  resolved "https://registry.npm.taobao.org/@swc/core-win32/download/@swc/core-win32-1.2.40.tgz#bea0f9b883d6ccc84504426f21a3aa6eb9608941"
+  integrity sha1-vqD5uIPWzMhFBEJvIaOqbrlgiUE=
+
+"@swc/core@^1.1.48", "@swc/core@^1.2.30", "@swc/core@^1.2.36":
+  version "1.2.40"
+  resolved "https://registry.npm.taobao.org/@swc/core/download/@swc/core-1.2.40.tgz#b9362e7c882a14f3c83b5535b11381abfa0cae4e"
+  integrity sha1-uTYufIgqFPPIO1U1sROBq/oMrk4=
+  dependencies:
+    "@node-rs/helper" "^0.4.0"
+  optionalDependencies:
+    "@swc/core-darwin" "^1.2.40"
+    "@swc/core-linux" "^1.2.40"
+    "@swc/core-win32" "^1.2.40"
+
+"@swc/jest@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.npm.taobao.org/@swc/jest/download/@swc/jest-0.1.2.tgz#5195f2439c60430dff661b4a7b5c904483791eb7"
+  integrity sha1-UZXyQ5xgQw3/ZhtKe1yQRIN5Hrc=
+  dependencies:
+    "@swc/core" "^1.2.30"
 
 "@testing-library/dom@^7.28.1":
   version "7.28.1"
@@ -3403,7 +3443,7 @@ clone-deep@^4.0.1:
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
 
-clone@^2.1.1:
+clone@^2.1.1, clone@^2.1.2:
   version "2.1.2"
   resolved "https://registry.npm.taobao.org/clone/download/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
   integrity sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
@@ -3701,6 +3741,23 @@ cosmiconfig@^7.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
     yaml "^1.10.0"
+
+craco-less@^1.17.1:
+  version "1.17.1"
+  resolved "https://registry.npm.taobao.org/craco-less/download/craco-less-1.17.1.tgz#aa23cf10d09f0f99657bed977788cc9b501add70"
+  integrity sha1-qiPPENCfD5lle+2Xd4jMm1Aa3XA=
+  dependencies:
+    less "^3.11.1"
+    less-loader "^6.1.0"
+
+craco-swc@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npm.taobao.org/craco-swc/download/craco-swc-0.1.0.tgz#b10c6fc2ab976c37799dbac6109e29cd200762db"
+  integrity sha1-sQxvwquXbDd5nbrGEJ4pzSAHYts=
+  dependencies:
+    "@swc/core" "^1.2.36"
+    "@swc/jest" "^0.1.2"
+    swc-loader "^0.1.12"
 
 create-ecdh@^4.0.0:
   version "4.0.4"
@@ -7103,6 +7160,16 @@ less-loader@^4.1.0:
     loader-utils "^1.1.0"
     pify "^3.0.0"
 
+less-loader@^6.1.0:
+  version "6.2.0"
+  resolved "https://registry.npm.taobao.org/less-loader/download/less-loader-6.2.0.tgz?cache=0&sync_timestamp=1605095927771&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fless-loader%2Fdownload%2Fless-loader-6.2.0.tgz#8b26f621c155b342eefc24f5bd6e9dc40c42a719"
+  integrity sha1-iyb2IcFVs0Lu/CT1vW6dxAxCpxk=
+  dependencies:
+    clone "^2.1.2"
+    less "^3.11.3"
+    loader-utils "^2.0.0"
+    schema-utils "^2.7.0"
+
 less-loader@^7.1.0:
   version "7.1.0"
   resolved "https://registry.npm.taobao.org/less-loader/download/less-loader-7.1.0.tgz?cache=0&sync_timestamp=1605095927771&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fless-loader%2Fdownload%2Fless-loader-7.1.0.tgz#958d41e86d7de0bcb490711ee0f235aa9dc596aa"
@@ -7112,7 +7179,7 @@ less-loader@^7.1.0:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
 
-less@^3.0.1, less@^3.12.2:
+less@^3.0.1, less@^3.11.1, less@^3.11.3, less@^3.12.2:
   version "3.12.2"
   resolved "https://registry.npm.taobao.org/less/download/less-3.12.2.tgz#157e6dd32a68869df8859314ad38e70211af3ab4"
   integrity sha1-FX5t0ypohp34hZMUrTjnAhGvOrQ=
@@ -11229,6 +11296,14 @@ svgo@^1.0.0, svgo@^1.2.2:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
+swc-loader@^0.1.12:
+  version "0.1.12"
+  resolved "https://registry.npm.taobao.org/swc-loader/download/swc-loader-0.1.12.tgz#f3c336df30a3633cfd3fc7ce29aff178c72fe62a"
+  integrity sha1-88M23zCjYzz9P8fOKa/xeMcv5io=
+  dependencies:
+    "@swc/core" "^1.1.48"
+    loader-utils "^2.0.0"
+
 symbol-tree@^3.2.4:
   version "3.2.4"
   resolved "https://registry.npm.taobao.org/symbol-tree/download/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
@@ -11491,7 +11566,7 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.npm.taobao.org/tslib/download/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha1-zy04vcNKE0vK8QkcQfZhni9nLQA=
 
-tslib@^2.0.3:
+tslib@^2.0.1, tslib@^2.0.3:
   version "2.0.3"
   resolved "https://registry.npm.taobao.org/tslib/download/tslib-2.0.3.tgz#8e0741ac45fc0c226e58a17bfc3e64b9bc6ca61c"
   integrity sha1-jgdBrEX8DCJuWKF7/D5kubxsphw=

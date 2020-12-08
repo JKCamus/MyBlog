@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-05 16:05:06
  * @LastEditors: camus
- * @LastEditTime: 2020-12-06 12:37:31
+ * @LastEditTime: 2020-12-06 16:29:29
  */
 const {
   override,
@@ -12,7 +12,6 @@ const {
   addLessLoader,
   addWebpackAlias,
 } = require("customize-cra");
-const rewireLess = require("react-app-rewire-less-modules");
 const path = require("path");
 const resolve = (dir) => path.resolve(__dirname, dir); //dirname 目录路径
 // const customizeImageLoader  = () => config  => {
@@ -23,6 +22,7 @@ const resolve = (dir) => path.resolve(__dirname, dir); //dirname 目录路径
 //   });
 //   return config;
 // }
+// "start": "react-app-rewired start",
 
 module.exports = override(
   // myOverrides(config,env),

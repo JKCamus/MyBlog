@@ -82,11 +82,14 @@ class PicDetailsDemo extends React.Component {
     const imgHeight = 76;
     const imgBoxWidth = 130;
     const imgBoxHeight = 96;
+    // const imgWidth = 200;
+    // const imgHeight = 76;
+    // const imgBoxWidth = 130;
+    // const imgBoxHeight = 96;
     return dataArray.map((item, i) => {
       const { image, title, content } = item;
       const isEnter = typeof this.state.picOpen[i] === "boolean";
       const isOpen = this.state.picOpen[i];
-
       const left = isEnter ? 0 : imgBoxWidth * (i % 4);
       const imgLeft = isEnter ? imgBoxWidth * (i % 4) : 0;
       const isRight = Math.floor((i % 4) / 2);
@@ -97,7 +100,7 @@ class PicDetailsDemo extends React.Component {
       imgTop = isEnter ? imgTop : 0;
 
       const liStyle = isEnter
-        ? { width: "100%", height: 175, zIndex: 1 }
+        ? { width: "100%", height: 300, zIndex: 1 }
         : null;
       const liAnimation = isOpen
         ? { boxShadow: "0 2px 8px rgba(140, 140, 140, .35)" }
@@ -117,6 +120,8 @@ class PicDetailsDemo extends React.Component {
         ? {
             ease: "easeInOutCubic",
             left: isRight ? imgBoxWidth * 2 - 10 : 0,
+            // left: isRight ? 600: 0,
+            // left: 600,
             width: "50%",
             height: 175,
             top: 0,
@@ -174,7 +179,6 @@ class PicDetailsDemo extends React.Component {
               >
                 <h1>{title}</h1>
                 <CloseOutlined className={'closeStyle'} onClick={(e) => this.onClose(e, i)}/>
-                {/* <Icon type="home" onClick={(e) => this.onClose(e, i)} /> */}
                 <em />
                 <p>{content}</p>
               </div>
@@ -204,8 +208,8 @@ class PicDetailsDemo extends React.Component {
               type="bottom"
               className={`${this.props.className}-title`}
             >
-              <h1 key="h1">Motion Design</h1>
-              <p key="p">The react animation solution</p>
+              <h1 key="h1">Travel Around</h1>
+              <p key="p">I love you not for who you are, but for who I am with you.</p>
             </QueueAnim>
             <QueueAnim
               delay={this.getDelay}

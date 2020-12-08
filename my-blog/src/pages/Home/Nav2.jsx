@@ -1,7 +1,7 @@
-import React from 'react';
-import TweenOne from 'rc-tween-one';
-import { Link } from 'rc-scroll-anim';
-import miao from '../../assets/img/miao.png';
+import React from "react";
+import TweenOne from "rc-tween-one";
+import { Link } from "rc-scroll-anim";
+import miao from "../../assets/img/miao.png";
 
 class Header extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class Header extends React.Component {
       const tagProps = {};
       if (item.to && item.to.match(/\//g)) {
         tagProps.href = item.to;
-        tag = 'a';
+        tag = "a";
         delete item.to;
       }
       return React.createElement(
@@ -43,19 +43,23 @@ class Header extends React.Component {
     return (
       <TweenOne
         component="header"
-        animation={{ opacity: 0, type: 'from' }}
+        animation={{ opacity: 0, type: "from" }}
         {...dataSource.wrapper}
         {...props}
       >
         <div
           {...dataSource.page}
-          className={`${dataSource.page.className}${phoneOpen ? ' open' : ''}`}
+          className={`${dataSource.page.className}${phoneOpen ? " open" : ""}`}
         >
           <TweenOne
-            animation={{ x: -30, type: 'from', ease: 'easeOutQuad' }}
+            animation={{ x: -30, type: "from", ease: "easeOutQuad" }}
             {...dataSource.logo}
           >
-            <div style={{color:'white',fontWeight:'bold',fontSize:'20px'}}>CamusBlog</div>
+            <div
+              style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}
+            >
+              CamusBlog
+            </div>
             {/* <img width="100%" src={dataSource.logo.children} alt="img" /> */}
             {/* <img width="50%" src={require('@/assets/img/miao.png').default} alt="img" /> */}
           </TweenOne>
@@ -80,10 +84,10 @@ class Header extends React.Component {
                     duration: 300,
                     onComplete: (e) => {
                       if (this.state.phoneOpen) {
-                        e.target.style.height = 'auto';
+                        e.target.style.height = "auto";
                       }
                     },
-                    ease: 'easeInOutQuad',
+                    ease: "easeInOutQuad",
                   }
                 : null
             }
@@ -91,6 +95,9 @@ class Header extends React.Component {
             reverse={!!phoneOpen}
           >
             {navChildren}
+              {/* <a href="#" className={"menu-item"} >点击</a> */}
+            {/* <div className={"header2-menu"}>
+            </div> */}
           </TweenOne>
         </div>
       </TweenOne>

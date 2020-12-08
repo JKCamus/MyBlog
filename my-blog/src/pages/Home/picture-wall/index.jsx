@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import TweenOne, { TweenOneGroup } from "rc-tween-one";
 import { CloseOutlined } from "@ant-design/icons";
 import { getPhotoList } from "services/home";
+import { Skeleton, message } from "antd";
 
 import "./index.less";
 const textData = {
@@ -14,18 +15,18 @@ const textData = {
   title: "Motorcycle",
 };
 let dataArray = [
-  { image: "https://zos.alipayobjects.com/rmsportal/DGOtoWASeguMJgV.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/BXJNKCeUSkhQoSS.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/TDIbcrKdLWVeWJM.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/SDLiKqyfBvnKMrA.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/UcVbOrSDHCLPqLG.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/QJmGZYJBRLkxFSy.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/PDiTkHViQNVHddN.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/beHtidyjUMOXbkI.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/vJcpMCTaSKSVWyH.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/dvQuFtUoRmvWLsZ.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/QqWQKvgLSJaYbpr.png" },
-  { image: "https://zos.alipayobjects.com/rmsportal/pTfNdthdsUpLPLJ.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/DGOtoWASeguMJgV.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/BXJNKCeUSkhQoSS.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/TDIbcrKdLWVeWJM.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/SDLiKqyfBvnKMrA.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/UcVbOrSDHCLPqLG.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/QJmGZYJBRLkxFSy.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/PDiTkHViQNVHddN.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/beHtidyjUMOXbkI.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/vJcpMCTaSKSVWyH.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/dvQuFtUoRmvWLsZ.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/QqWQKvgLSJaYbpr.png" },
+  { url: "https://zos.alipayobjects.com/rmsportal/pTfNdthdsUpLPLJ.png" },
 ];
 dataArray = dataArray.map((item) => ({ ...item, ...textData }));
 class PhotoView extends React.Component {
@@ -41,16 +42,23 @@ class PhotoView extends React.Component {
     super(props);
     this.state = {
       picOpen: {},
-      imgArray:[]
+      imgArray: [],
+      loadImgWall: false,
     };
   }
   componentDidMount() {
     this._getPhotoList();
   }
   async _getPhotoList() {
-    await getPhotoList(1, 12).then((res) => {
-      this.setState({ imgArray: res });
-    });
+    try {
+      this.setState({ loadImgWall: true });
+      await getPhotoList(1, 12).then((res) => {
+        Array.isArray(res) && this.setState({ imgArray: res });
+      });
+      this.setState({ loadImgWall: false });
+    } catch (error) {
+      message.error("图片请求失败！");
+    }
   }
   onImgClick = (e, i) => {
     const { picOpen } = this.state;
@@ -82,7 +90,7 @@ class PhotoView extends React.Component {
   };
 
   getDelay = (e) => {
-    const i = e.index + (dataArray.length % 4);
+    const i = e.index + (this.state.imgArray.length % 4);
     return (i % 4) * 100 + Math.floor(i / 4) * 100 + 200;
   };
 
@@ -91,12 +99,14 @@ class PhotoView extends React.Component {
     const imgHeight = 76;
     const imgBoxWidth = 130;
     const imgBoxHeight = 96;
+    const { imgArray } = this.state;
     // const imgWidth = 200;
     // const imgHeight = 76;
     // const imgBoxWidth = 130;
     // const imgBoxHeight = 96;
-    return dataArray.map((item, i) => {
-      const { image, title, content } = item;
+    const toShowArray = imgArray.length === 0 ? dataArray : imgArray;
+    return imgArray.map((item, i) => {
+      const { url, title, content } = item;
       const isEnter = typeof this.state.picOpen[i] === "boolean";
       const isOpen = this.state.picOpen[i];
       const left = isEnter ? 0 : imgBoxWidth * (i % 4);
@@ -136,7 +146,6 @@ class PhotoView extends React.Component {
             top: 0,
           }
         : aAnimation;
-
       // 位置 js 控制；
       return (
         <TweenOne
@@ -150,17 +159,19 @@ class PhotoView extends React.Component {
           className={isOpen ? "open" : ""}
           animation={liAnimation}
         >
-          <TweenOne
-            component="a"
-            onClick={(e) => this.onImgClick(e, i)}
-            style={{
-              left: imgLeft,
-              top: imgTop,
-            }}
-            animation={aAnimation}
-          >
-            <img src={image} width="100%" height="100%" />
-          </TweenOne>
+          <Skeleton loading={this.state.loadImgWall}>
+            <TweenOne
+              component="a"
+              onClick={(e) => this.onImgClick(e, i)}
+              style={{
+                left: imgLeft,
+                top: imgTop,
+              }}
+              animation={aAnimation}
+            >
+              <img src={url} width="100%" height="100%" />
+            </TweenOne>
+          </Skeleton>
           <TweenOneGroup
             enter={[
               {
@@ -202,7 +213,6 @@ class PhotoView extends React.Component {
   };
 
   render() {
-    console.log("this.props", this.props);
     return (
       <div>
         <div className={`${this.props.className}-wrapper`}>
@@ -225,15 +235,19 @@ class PhotoView extends React.Component {
                 I love you not for who you are, but for who I am with you.
               </p>
             </QueueAnim>
-            <QueueAnim
-              delay={this.getDelay}
-              component="ul"
-              className={`${this.props.className}-image-wrapper`}
-              interval={0}
-              type="bottom"
-            >
-              {this.getLiChildren()}
-            </QueueAnim>
+            <Skeleton loading={this.state.loadImgWall}>
+              <QueueAnim
+                delay={this.getDelay}
+                component="ul"
+                className={`${this.props.className}-image-wrapper`}
+                interval={0}
+                type="bottom"
+              >
+                {this.getLiChildren()}
+              </QueueAnim>
+            </Skeleton>
+            <Skeleton loading={this.state.loadImgWall}></Skeleton>
+            <Skeleton loading={this.state.loadImgWall}></Skeleton>
           </div>
         </div>
       </div>

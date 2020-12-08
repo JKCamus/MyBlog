@@ -1,8 +1,9 @@
-import React from 'react';
+import React from "react";
 import QueueAnim from "rc-queue-anim";
 import PropTypes from "prop-types";
 import TweenOne, { TweenOneGroup } from "rc-tween-one";
-import { CloseOutlined } from '@ant-design/icons'
+import { CloseOutlined } from "@ant-design/icons";
+import { getPhotoList } from "services/home";
 
 import "./index.less";
 const textData = {
@@ -27,7 +28,7 @@ let dataArray = [
   { image: "https://zos.alipayobjects.com/rmsportal/pTfNdthdsUpLPLJ.png" },
 ];
 dataArray = dataArray.map((item) => ({ ...item, ...textData }));
-class PicDetailsDemo extends React.Component {
+class PhotoView extends React.Component {
   static propTypes = {
     className: PropTypes.string,
   };
@@ -40,9 +41,17 @@ class PicDetailsDemo extends React.Component {
     super(props);
     this.state = {
       picOpen: {},
+      imgArray:[]
     };
   }
-
+  componentDidMount() {
+    this._getPhotoList();
+  }
+  async _getPhotoList() {
+    await getPhotoList(1, 12).then((res) => {
+      this.setState({ imgArray: res });
+    });
+  }
   onImgClick = (e, i) => {
     const { picOpen } = this.state;
     Object.keys(picOpen).forEach((key) => {
@@ -178,7 +187,10 @@ class PicDetailsDemo extends React.Component {
                 }}
               >
                 <h1>{title}</h1>
-                <CloseOutlined className={'closeStyle'} onClick={(e) => this.onClose(e, i)}/>
+                <CloseOutlined
+                  className={"closeStyle"}
+                  onClick={(e) => this.onClose(e, i)}
+                />
                 <em />
                 <p>{content}</p>
               </div>
@@ -190,7 +202,7 @@ class PicDetailsDemo extends React.Component {
   };
 
   render() {
-    console.log('this.props', this.props)
+    console.log("this.props", this.props);
     return (
       <div>
         <div className={`${this.props.className}-wrapper`}>
@@ -209,7 +221,9 @@ class PicDetailsDemo extends React.Component {
               className={`${this.props.className}-title`}
             >
               <h1 key="h1">Travel Around</h1>
-              <p key="p">I love you not for who you are, but for who I am with you.</p>
+              <p key="p">
+                I love you not for who you are, but for who I am with you.
+              </p>
             </QueueAnim>
             <QueueAnim
               delay={this.getDelay}
@@ -226,4 +240,4 @@ class PicDetailsDemo extends React.Component {
     );
   }
 }
-export default PicDetailsDemo
+export default PhotoView;

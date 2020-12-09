@@ -1,24 +1,20 @@
 import React, { memo } from "react";
-import Home from 'pages/Home';
+import Home from "pages/Home";
+import { HashRouter } from "react-router-dom";
 // import { Provider } from "react-redux";
-// import { renderRoutes } from "react-router-config";
-
-// import routes from "./router";
+import routes from "./router";
+import { renderRoutes } from "react-router-config";
+import Footer0 from "components/app-footer/Footer0";
 // import store from "./store";
-
-
-// import { HashRouter } from "react-router-dom";
-
 export default memo(function App() {
   return (
     // <Provider store={store}>
-    //   <HashRouter>
-    //     <HYAppHeader />
-    //     {renderRoutes(routes)}
-    //     <HYAppFooter />
-    //     <AppPlayerBar></AppPlayerBar>
-    //   </HashRouter>
+    <HashRouter>
+      {/* // <HYAppHeader /> */}
+      {renderRoutes(routes)}
+      <Footer0></Footer0>
+      {/* <Home></Home> */}
+    </HashRouter>
     // </Provider>
-   <Home></Home>
   );
 });

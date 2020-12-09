@@ -230,7 +230,7 @@ class PhotoView extends React.Component {
               type="bottom"
               className={`${this.props.className}-title`}
             >
-              <h1 key="h1">Travel Around</h1>
+              <h1 key="h1">Travel Around </h1>
               <p key="p">
                 I love you not for who you are, but for who I am with you.
               </p>

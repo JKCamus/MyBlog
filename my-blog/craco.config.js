@@ -1,7 +1,7 @@
 const path = require("path");
 const CracoLessPlugin = require("craco-less");
-const CracoSwcPlugin = require('craco-swc');
-
+const CracoSwcPlugin = require("craco-swc");
+const cracoPluginStyleResourcesLoader = require("craco-plugin-style-resources-loader");
 const resolve = (dir) => path.resolve(__dirname, dir); //dirname 目录路径
 module.exports = {
   webpack: {
@@ -13,6 +13,7 @@ module.exports = {
       services: resolve("src/services"),
     },
   },
+
   plugins: [
     {
       plugin: CracoLessPlugin,
@@ -30,7 +31,7 @@ module.exports = {
       plugin: {
         ...CracoSwcPlugin,
         overrideCracoConfig: ({ cracoConfig }) => {
-          if (typeof cracoConfig.eslint.enable !== 'undefined') {
+          if (typeof cracoConfig.eslint.enable !== "undefined") {
             cracoConfig.disableEslint = !cracoConfig.eslint.enable;
           }
           delete cracoConfig.eslint;
@@ -38,11 +39,11 @@ module.exports = {
         },
         overrideWebpackConfig: ({ webpackConfig, cracoConfig }) => {
           if (
-            typeof cracoConfig.disableEslint !== 'undefined' &&
+            typeof cracoConfig.disableEslint !== "undefined" &&
             cracoConfig.disableEslint === true
           ) {
             webpackConfig.plugins = webpackConfig.plugins.filter(
-              (instance) => instance.constructor.name !== 'ESLintWebpackPlugin',
+              (instance) => instance.constructor.name !== "ESLintWebpackPlugin"
             );
           }
           return webpackConfig;
@@ -52,9 +53,9 @@ module.exports = {
         swcLoaderOptions: {
           jsc: {
             externalHelpers: true,
-            target: 'es5',
+            target: "es5",
             parser: {
-              syntax: 'typescript',
+              syntax: "typescript",
               tsx: true,
               dynamicImport: true,
               exportDefaultFrom: true,
@@ -63,7 +64,19 @@ module.exports = {
         },
       },
     },
-
+    {
+      plugin: cracoPluginStyleResourcesLoader,
+      options: {
+        patterns: path.join(__dirname, "src/assets/css/reset.less"),
+        /*
+          Please enter supported CSS processor type
+          1. if u use css processor，please type css string
+          2. if u use less processor，please type less string
+          3. if u use sass or scss processor，please type sass or scss string，Choose one of the two
+          4. if u use stylus processor，please type stylus string
+      */
+        styleType: "less",
+      },
+    },
   ],
-
 };

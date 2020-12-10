@@ -6,12 +6,15 @@ class Footer extends React.PureComponent {
   render() {
     return (
       <div className={"home-page-wrapper footer0-wrapper"}>
-        <OverPack className={"home-page footer0"} playScale={0.01}>
+
+        <OverPack className={"home-page footer0"} playScale={0.5}>
           <TweenOne
             animation={{ y: "+=30", opacity: 0, type: "from" }}
             key="footer"
             className={"copyright"}
           >
+        <TweenOne key='tweenOne' vars={{ x:100 }} >单元素动画</TweenOne>
+
             <span>
               ©2020{"  "}
               <a href="#" style={{ color: "rgb(50, 166, 194)" }}>

@@ -117,7 +117,7 @@ export const Nav20DataSource = {
       },
       {
         name: "linkNav",
-        to: "当前页面 ID 地址，参考如上",
+        to: "/demo",
         children: "Demo",
         className: "menu-item",
       },
@@ -406,21 +406,7 @@ export const Content00DataSource = {
     ],
   },
 };
-export const Footer00DataSource = {
-  wrapper: { className: "home-page-wrapper footer0-wrapper" },
-  OverPack: { className: "home-page footer0", playScale: 0.05 },
-  copyright: {
-    className: "copyright",
-    children: (
-      <span>
-        {/* ©2018 <a href="https://motion.ant.design">Ant Motion</a> All Rights
-        Reserved */}
-             ©2020 <a href="#" style={{color:'rgb(50, 166, 194)'}}>Camus</a> All Rights
-        Reserved
-      </span>
-    ),
-  },
-};
+
 export const Content50DataSource = {
   wrapper: { className: "home-page-wrapper content5-wrapper" },
   page: { className: "home-page content5" },

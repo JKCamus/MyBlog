@@ -77,12 +77,12 @@ export default class Home extends React.Component {
       //   dataSource={Nav00DataSource}
       //   isMobile={this.state.isMobile}
       // />,
-      <Nav2
-        id="Nav2_0"
-        key="Nav2_0"
-        dataSource={Nav20DataSource}
-        isMobile={this.state.isMobile}
-      />,
+      // <Nav2
+      //   id="Nav2_0"
+      //   key="Nav2_0"
+      //   dataSource={Nav20DataSource}
+      //   isMobile={this.state.isMobile}
+      // />,
       // <Banner1
       //   id="Banner1_0"
       //   key="Banner1_0"

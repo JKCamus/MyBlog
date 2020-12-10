@@ -64,6 +64,7 @@ module.exports = {
         },
       },
     },
+    // 配置全局less变量使用，用的是一个少有人知的loader
     {
       plugin: cracoPluginStyleResourcesLoader,
       options: {

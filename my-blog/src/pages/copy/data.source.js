@@ -103,7 +103,7 @@ export const Nav20DataSource = {
   page: { className: "home-page" },
   logo: {
     className: "header2-logo",
-    children: `${require("../../assets/img/miao.png")}`,
+    // children: `${require("../../assets/img/miao.png")}`,
     // children: 'https://os.alipayobjects.com/rmsportal/mlcYmsRilwraoAe.svg',
   },
   LinkMenu: {

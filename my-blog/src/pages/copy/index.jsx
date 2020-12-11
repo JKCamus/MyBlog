@@ -157,12 +157,13 @@ export default class Home extends React.Component {
     return (
       <div
         className="templates-wrapper"
-        ref={(d) => {
-          this.dom = d;
-        }}
+        // ref={(d) => {
+        //   console.log('sss', this.dom)
+        //   this.dom = d;
+        // }}
       >
         {/* 如果不是 dva 2.0 替换成 {children} start */}
-        {this.state.show && children}
+        { children}
         {/* 如果不是 dva 2.0 替换成 {children} end */}
       </div>
     );

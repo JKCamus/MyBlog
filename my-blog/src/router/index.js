@@ -1,7 +1,8 @@
 import React from "react";
 
 import { Redirect } from "react-router-dom";
-import Home from 'pages/Home';
+// import Home from 'pages/Home';
+import CLayout from 'pages/Layout';
 import Demo from 'pages/Demo';
 
 const routes = [
@@ -15,7 +16,7 @@ const routes = [
   },
   {
     path:"/home",
-    component: Home,
+    component: CLayout,
     exact: true,
     // routes:[
     //   {

@@ -50,8 +50,35 @@ export default memo(function CamusDemo() {
     setArticlesData(testArticle);
   }, []);
 
-  const scrollToArticle = () => {
-    console.log("scrollToArticle");
+  const scrollToArticle = (element, selected) => {
+    if (view.type === 'grid') {
+      const selectedChildren = login === true ? 1 : 0
+      if (element) {
+        const articles = document.querySelectorAll('.article')
+        articles.forEach((currentElement, index) => {
+          console.log('currentElement',currentElement.children[selectedChildren].textContent )
+          if (currentElement.children[selectedChildren].textContent === element) {
+            window.scroll({
+              top: currentElement.offsetTop - 100,
+              left: 0,
+              behavior: 'smooth'
+            })
+          }
+        })
+      }
+    } else if (view.type === 'article') {
+      const articles = articles
+      Object.keys(articles).forEach(key => {
+        if (articles[key].article === element) {
+          this.setState({
+            view: {
+              type: 'article',
+              selected: selected
+            }
+          })
+        }
+      })
+    }
   };
   const changeView = (index) => {
     if (view.type === "grid") {
@@ -104,7 +131,7 @@ export default memo(function CamusDemo() {
               index={key}
               login={login}
               details={articlesData[key]}
-              scrollToArticle={() => scrollToArticle}
+              scrollToArticle={(element,selected) => scrollToArticle(element,selected)}
             />
           );
         } else {

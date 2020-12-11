@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-11 14:15:50
  * @LastEditors: camus
- * @LastEditTime: 2020-12-11 15:01:02
+ * @LastEditTime: 2020-12-11 22:15:08
  */
 // React
 import React, { Component } from "react";
@@ -37,12 +37,13 @@ class ExplorerElement extends Component {
       return (
         <Element
           className="explorerElement"
-          // onClick={() =>
-          //   this.props.scrollToArticle(
-          //     this.props.details.article,
-          //     this.props.index
-          //   )
-          // }
+          onClick={() =>
+           {
+             this.props.scrollToArticle(
+              this.props.details.article,
+              this.props.index
+            )}
+          }
         >
           {indicator} {this.props.details.article}
         </Element>

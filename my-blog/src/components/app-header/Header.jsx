@@ -26,14 +26,13 @@ const Header = (props) => {
         >
           <NavLink
             to={"/"}
-            style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}
+            style={{ color: "white", fontWeight: "bold", fontSize: "20px",textDecoration:'none' }}
           >
             CamusBlog
           </NavLink>
         </TweenOne>
         {isMobile && (
           <div
-            // {...dataSource.mobileMenu}
             className={"header2-mobile-menu"}
             onClick={() => {
               setPhoneOpen(!phoneOpen);

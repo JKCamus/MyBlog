@@ -2,6 +2,7 @@ const path = require("path");
 const CracoLessPlugin = require("craco-less");
 const CracoSwcPlugin = require("craco-swc");
 const cracoPluginStyleResourcesLoader = require("craco-plugin-style-resources-loader");
+const babelPluginStyledComponents = require("babel-plugin-styled-components");
 const resolve = (dir) => path.resolve(__dirname, dir); //dirname 目录路径
 module.exports = {
   webpack: {
@@ -77,6 +78,12 @@ module.exports = {
           4. if u use stylus processor，please type stylus string
       */
         styleType: "less",
+      },
+    },
+    {
+      plugin: babelPluginStyledComponents,
+      options: {
+        fileName: false,
       },
     },
   ],

@@ -29,7 +29,7 @@ export default memo(function App() {
         <Skeleton loading={false} active paragraph={{ rows: 5 }}>
           <Header></Header>
           {renderRoutes(routes)}
-          <Footer></Footer>
+          {/* <Footer></Footer> */}
         </Skeleton>
       </HashRouter>
     </Provider>

@@ -1,3 +1,11 @@
+/*
+ * @Description:
+ * @version:
+ * @Author: camus
+ * @Date: 2020-12-13 12:23:45
+ * @LastEditors: camus
+ * @LastEditTime: 2020-12-14 13:27:04
+ */
 import React, { useState, useEffect, useRef } from "react";
 import { Layout, Button } from "antd";
 import { WidthProvider, Responsive } from "react-grid-layout";
@@ -14,20 +22,10 @@ const { Header, Content } = Layout;
 const DragLayout = (props) => {
   const cols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
   const rowHeight = 180;
-
   const [widgets, setWidgets] = useState([]);
   const [layouts, setLayouts] = useState({});
   const [renderType, setRenderType] = useState("");
-
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     layouts: this.getFromLS("layouts") || {},
-  //     widgets: [],
-  //     renderType: "",
-  //   };
-  //   this.renderChart = React.createRef();
-  // }
+  const [chartInstance, setChartInstance] = useState(undefined);
 
   useEffect(() => {
     setLayouts(getFromLS() || {});
@@ -55,7 +53,7 @@ const DragLayout = (props) => {
       );
     }
   };
-  const generateDOM = (props, ref) => {
+  const generateDOM = (props) => {
     return _.map(widgets, (l, i) => {
       let option;
       if (l.type === "bar") {
@@ -70,12 +68,13 @@ const DragLayout = (props) => {
           <span className="remove" onClick={onRemoveItem(i)}>
             x
           </span>
-          <Charts handleResizeWidget={handleResizeWidget} renderType={renderType}></Charts>
+          <Charts setChartInstance={setChartInstance} renderType={renderType}
+          chartOptions={option}
+          ></Charts>
         </div>
       );
     });
   };
-  // console.log("widgets", widgets);
   const addChart = (type) => {
     const addItem = {
       x: (widgets.length * 3) % 12,
@@ -88,33 +87,22 @@ const DragLayout = (props) => {
 
     const oldWidget = [...widgets];
     setWidgets([...oldWidget, addItem]);
-    // console.log("widgets", [...oldWidget, addItem]);
-    // this.setState({
-    //   widgets: this.state.widgets.concat({
-    //     ...addItem,
-    //     type,
-    //   }),
-    // });
   };
 
   const onRemoveItem = (i) => {
+    console.log('i', i)
     // setWidgets(widgets.filter((item, index) => index != i));
     // // this.setState({
     // //   widgets: widgets.filter((item, index) => index != i),
     // // });
   };
-  const handleResizeWidget = (params) => {
-    setRenderType("resize");
+  const handleResizeStop = () => {
+    chartInstance.resize()
   };
-  // const handleResizeStop = () => {
-  //   setRenderType("");
-  // };
   const onLayoutChange = (layout, layouts) => {
     setRenderType("resize");
-    // this.setState({ renderType: "resize" });
     saveToLS("layouts", layouts);
     setLayouts(layouts);
-    // setState({ layouts });
   };
   return (
     <Layout>
@@ -136,19 +124,18 @@ const DragLayout = (props) => {
         <Button
           type="primary"
           style={{ marginRight: "7px" }}
-          // onClick={addChart( "line")}
+          onClick={()=>addChart( "line")}
         >
           添加折线图
         </Button>
         <Button
           type="primary"
           style={{ marginRight: "7px" }}
-          // onClick={addChart.bind("pie")}
+          onClick={()=>addChart("pie")}
         >
           添加饼图
         </Button>
       </Header>
-      <Test></Test>
       <Content style={{ marginTop: 44 }}>
         <div style={{ background: "#fff", padding: 20, minHeight: 800 }}>
           <ResponsiveReactGridLayout
@@ -159,7 +146,7 @@ const DragLayout = (props) => {
             onLayoutChange={(layout, layouts) => {
               onLayoutChange(layout, layouts);
             }}
-            onResize={() => handleResizeWidget()}
+            // onResize={() => handleResizeWidget()}
             onResizeStop={() => handleResizeStop()}
             // isResizable={true}
           >

@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 // import Home from 'pages/Home';
 import CLayout from 'pages/Layout';
 import Demo from 'pages/Demo';
+import DragChart from 'pages/Demo/drag-charts';
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
     path: "/demo",
     exact: true,
     component: Demo,
+  },
+  {
+    path: "/charts",
+    exact: true,
+    component: DragChart,
   },
 
 

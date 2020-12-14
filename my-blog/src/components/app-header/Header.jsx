@@ -68,9 +68,9 @@ const Header = (props) => {
           <NavLink to={"/demo"} className={"menu-item"}>
             Demo
           </NavLink>
-          <a to={"#"} className={"menu-item"}>
-            About
-          </a>
+          <NavLink to={"/charts"} className={"menu-item"}>
+            Charts
+          </NavLink>
         </TweenOne>
       </div>
     </TweenOne>

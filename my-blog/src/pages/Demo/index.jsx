@@ -1,3 +1,11 @@
+/*
+ * @Description:
+ * @version:
+ * @Author: camus
+ * @Date: 2020-12-09 12:13:18
+ * @LastEditors: camus
+ * @LastEditTime: 2020-12-13 10:11:33
+ */
 import React, { memo, useState, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
@@ -8,6 +16,9 @@ import { fadeIn, fadeInLeft } from "react-animations";
 import DemoLayer from "./DemoLayer";
 import ExplorerElement from "./ExplorerElement";
 import Article from "./Article";
+import Charts from './Charts'
+import {RenderType} from './constants';
+
 
 export default memo(function CamusDemo() {
   const { isMobile } = useSelector((state) => ({
@@ -20,8 +31,11 @@ export default memo(function CamusDemo() {
     type: "grid",
     selected: undefined,
   });
+  // const [renderType, setRenderType] = useState('')
   const [isSearch, setIsSearch] = useState(false);
   // const [changeView, setChangeView] = useState(false)
+
+  // article数据
   useEffect(() => {
     const testArticle = [
       {
@@ -49,37 +63,39 @@ export default memo(function CamusDemo() {
     ];
     setArticlesData(testArticle);
   }, []);
-
+  // 滚动到对应的card
   const scrollToArticle = (element, selected) => {
-    if (view.type === 'grid') {
-      const selectedChildren = login === true ? 1 : 0
+    if (view.type === "grid") {
+      const selectedChildren = login === true ? 1 : 0;
       if (element) {
-        const articles = document.querySelectorAll('.article')
+        const articles = document.querySelectorAll(".article");
         articles.forEach((currentElement, index) => {
-          console.log('currentElement',currentElement.children[selectedChildren].textContent )
-          if (currentElement.children[selectedChildren].textContent === element) {
+          if (
+            currentElement.children[selectedChildren].textContent === element
+          ) {
             window.scroll({
               top: currentElement.offsetTop - 100,
               left: 0,
-              behavior: 'smooth'
-            })
+              behavior: "smooth",
+            });
           }
-        })
+        });
       }
-    } else if (view.type === 'article') {
-      const articles = articles
-      Object.keys(articles).forEach(key => {
+    } else if (view.type === "article") {
+      const articles = articles;
+      Object.keys(articles).forEach((key) => {
         if (articles[key].article === element) {
           this.setState({
             view: {
-              type: 'article',
-              selected: selected
-            }
-          })
+              type: "article",
+              selected: selected,
+            },
+          });
         }
-      })
+      });
     }
   };
+
   const changeView = (index) => {
     if (view.type === "grid") {
       setView({
@@ -131,7 +147,9 @@ export default memo(function CamusDemo() {
               index={key}
               login={login}
               details={articlesData[key]}
-              scrollToArticle={(element,selected) => scrollToArticle(element,selected)}
+              scrollToArticle={(element, selected) =>
+                scrollToArticle(element, selected)
+              }
             />
           );
         } else {
@@ -151,6 +169,7 @@ export default memo(function CamusDemo() {
   return (
     <ContainerApp>
       <DemoLayer></DemoLayer>
+      <Charts RenderType={RenderType}/>
       {/* <SearchResult></SearchResult> */}
       {isMobile ? null : (
         <ExplorerPanel>

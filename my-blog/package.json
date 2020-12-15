@@ -44,6 +44,7 @@
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-sticky": "^6.0.3",
     "react-sublime-video": "^0.2.5",
     "redux": "^4.0.5",
     "redux-immutable": "^4.0.0",

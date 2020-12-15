@@ -6,12 +6,15 @@ import * as actionTypes from './constants';
 
 const defaultState = Map({
   isMobile: false,
+  routerPath:'/home'
 });
 
 function reducer(state = defaultState, action) {
   switch (action.type) {
     case actionTypes.CHANGE_IS_MOBILE:
       return state.set("isMobile",action.isMobile)
+      case actionTypes.CHANGE_PAGE_STYLE:
+        return state.set("routerPath",action.routerPath)
     default:
       return state;
   }

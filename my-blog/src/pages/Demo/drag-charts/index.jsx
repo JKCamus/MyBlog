@@ -1,20 +1,28 @@
 /*
- * @Description:
+ * @Description:组件包括点击生成可拖拽，并且可resize的echarts表格，吸顶效果的控制条
+  引用组件：
+  react-grid-layout 可以拖拽的库
+  react-sticky：吸顶效果库
  * @version:
  * @Author: camus
  * @Date: 2020-12-13 12:23:45
  * @LastEditors: camus
- * @LastEditTime: 2020-12-14 13:27:04
+ * @LastEditTime: 2020-12-15 14:09:20
  */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Button } from "antd";
 import { WidthProvider, Responsive } from "react-grid-layout";
+import { StickyContainer, Sticky } from "react-sticky";
 import _ from "lodash";
-import ReactEcharts from "echarts-for-react";
-import { getBarChart, getLineChart, getPieChart } from "./chart";
-import Charts from "../Charts";
+import {
+  getBarChart,
+  getLineChart,
+  getPieChart,
+  pieHalfRoseOption,
+} from "./chart";
+import Charts from "./Charts";
 import "./index.less";
-import Test from "./Test";
+import { CloseOutlined } from "@ant-design/icons";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
@@ -25,34 +33,7 @@ const DragLayout = (props) => {
   const [widgets, setWidgets] = useState([]);
   const [layouts, setLayouts] = useState({});
   const [renderType, setRenderType] = useState("");
-  const [chartInstance, setChartInstance] = useState(undefined);
-
-  useEffect(() => {
-    setLayouts(getFromLS() || {});
-  }, []);
-
-  const getFromLS = (key) => {
-    let ls = {};
-    if (global.localStorage) {
-      try {
-        ls = JSON.parse(global.localStorage.getItem("rgl-8")) || {};
-      } catch (e) {
-        /*Ignore*/
-      }
-    }
-    return ls[key];
-  };
-
-  const saveToLS = (key, value) => {
-    if (global.localStorage) {
-      global.localStorage.setItem(
-        "rgl-8",
-        JSON.stringify({
-          [key]: value,
-        })
-      );
-    }
-  };
+  const [chartInstance, setChartInstance] = useState({});
   const generateDOM = (props) => {
     return _.map(widgets, (l, i) => {
       let option;
@@ -62,14 +43,21 @@ const DragLayout = (props) => {
         option = getLineChart();
       } else if (l.type === "pie") {
         option = getPieChart();
+      } else if ((l.type = "rosePie")) {
+        option = pieHalfRoseOption;
       }
       return (
         <div key={l.i} data-grid={l}>
-          <span className="remove" onClick={onRemoveItem(i)}>
-            x
-          </span>
-          <Charts setChartInstance={setChartInstance} renderType={renderType}
-          chartOptions={option}
+          <CloseOutlined
+            className="remove"
+            onClick={() => onRemoveItem(i, l.i)}
+          />
+          <Charts
+            setChartInstance={setChartInstance}
+            chartInstance={chartInstance}
+            chartKey={l.i}
+            renderType={renderType}
+            chartOptions={option}
           ></Charts>
         </div>
       );
@@ -82,78 +70,84 @@ const DragLayout = (props) => {
       w: 3,
       h: 2,
       i: new Date().getTime().toString(),
+      minW: 2,
+      minH: 1,
       type,
     };
-
     const oldWidget = [...widgets];
     setWidgets([...oldWidget, addItem]);
   };
-
-  const onRemoveItem = (i) => {
-    console.log('i', i)
-    // setWidgets(widgets.filter((item, index) => index != i));
-    // // this.setState({
-    // //   widgets: widgets.filter((item, index) => index != i),
-    // // });
+  /**
+   * @description: 点击删除hover的对应的chart
+   */
+  const onRemoveItem = (i, key) => {
+    setWidgets(widgets.filter((item, index) => index != i));
+    // 勿忘删除对应的实例
+    delete chartInstance[key];
   };
-  const handleResizeStop = () => {
-    chartInstance.resize()
+  /**
+   * @description: 重新resize hover选中的chart图表，
+   * 使用hash表类型，通过匹配对应的key来找到对应的实例
+   */
+  const handleResizeStop = (curr) => {
+    const { i: key } = curr;
+    chartInstance[key].resize();
   };
+  /**
+   * @description: 将layout-空白容器，保存
+   */
   const onLayoutChange = (layout, layouts) => {
-    setRenderType("resize");
-    saveToLS("layouts", layouts);
     setLayouts(layouts);
   };
   return (
     <Layout>
-      <Header
-        style={{
-          position: "fixed",
-          zIndex: 1,
-          width: "100%",
-          padding: "0 30px",
-        }}
-      >
-        <Button
-          type="primary"
-          style={{ marginRight: "7px" }}
-          onClick={() => addChart("bar")}
-        >
-          添加柱状图
-        </Button>
-        <Button
-          type="primary"
-          style={{ marginRight: "7px" }}
-          onClick={()=>addChart( "line")}
-        >
-          添加折线图
-        </Button>
-        <Button
-          type="primary"
-          style={{ marginRight: "7px" }}
-          onClick={()=>addChart("pie")}
-        >
-          添加饼图
-        </Button>
-      </Header>
-      <Content style={{ marginTop: 44 }}>
-        <div style={{ background: "#fff", padding: 20, minHeight: 800 }}>
-          <ResponsiveReactGridLayout
-            cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-            rowHeight={180}
-            className="layout"
-            layouts={layouts}
-            onLayoutChange={(layout, layouts) => {
-              onLayoutChange(layout, layouts);
-            }}
-            // onResize={() => handleResizeWidget()}
-            onResizeStop={() => handleResizeStop()}
-            // isResizable={true}
-          >
-            {generateDOM()}
-          </ResponsiveReactGridLayout>
-        </div>
-      </Content>
+      <StickyContainer>
+        <Sticky>
+          {({ style }) => (
+            <div style={{ ...style, zIndex: "1" }}>
+              <Header className="toolBar">
+                <Button
+                  type="primary"
+                  style={{ marginRight: "7px" }}
+                  onClick={() => addChart("bar")}
+                >
+                  添加柱状图
+                </Button>
+                <Button
+                  type="primary"
+                  style={{ marginRight: "7px" }}
+                  onClick={() => addChart("line")}
+                >
+                  添加折线图
+                </Button>
+                <Button
+                  type="primary"
+                  style={{ marginRight: "7px" }}
+                  onClick={() => addChart("pie")}
+                >
+                  添加饼图
+                </Button>
+              </Header>
+            </div>
+          )}
+        </Sticky>
+        <Content>
+          <div style={{ background: "#fff", padding: 20, minHeight: "85vh" }}>
+            <ResponsiveReactGridLayout
+              cols={cols}
+              rowHeight={rowHeight}
+              className="layout"
+              layouts={layouts}
+              onLayoutChange={(layout, layouts) => {
+                onLayoutChange(layout, layouts);
+              }}
+              onResizeStop={(op, pre, curr) => handleResizeStop(curr)}
+            >
+              {generateDOM()}
+            </ResponsiveReactGridLayout>
+          </div>
+        </Content>
+      </StickyContainer>
     </Layout>
   );
 };

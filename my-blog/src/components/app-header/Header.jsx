@@ -10,6 +10,7 @@ const Header = (props) => {
     isMobile: state.getIn(["global", "isMobile"]),
     shallowEqual,
   }));
+
   const [phoneOpen, setPhoneOpen] = useState(false);
   const moment = phoneOpen === undefined ? 300 : null;
   return (

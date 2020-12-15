@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2020-12-13 10:11:33
+ * @LastEditTime: 2020-12-14 22:50:18
  */
 import React, { memo, useState, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -16,11 +16,11 @@ import { fadeIn, fadeInLeft } from "react-animations";
 import DemoLayer from "./DemoLayer";
 import ExplorerElement from "./ExplorerElement";
 import Article from "./Article";
-import Charts from './Charts'
 import {RenderType} from './constants';
 
 
 export default memo(function CamusDemo() {
+
   const { isMobile } = useSelector((state) => ({
     isMobile: state.getIn(["global", "isMobile"]),
     shallowEqual,
@@ -169,7 +169,6 @@ export default memo(function CamusDemo() {
   return (
     <ContainerApp>
       <DemoLayer></DemoLayer>
-      <Charts RenderType={RenderType}/>
       {/* <SearchResult></SearchResult> */}
       {isMobile ? null : (
         <ExplorerPanel>

@@ -7,7 +7,7 @@
  * @Author: camus
  * @Date: 2020-12-13 12:23:45
  * @LastEditors: camus
- * @LastEditTime: 2020-12-15 14:09:20
+ * @LastEditTime: 2020-12-15 20:06:44
  */
 import React, { useState, useEffect } from "react";
 import { Layout, Button } from "antd";
@@ -28,12 +28,19 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const { Header, Content } = Layout;
 
 const DragLayout = (props) => {
+  // 画布初始配置
   const cols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
   const rowHeight = 180;
+
   const [widgets, setWidgets] = useState([]);
   const [layouts, setLayouts] = useState({});
   const [renderType, setRenderType] = useState("");
+  // 状态提升，将chart的instance保存在此，方便后续操作
+  // 因为chart组件是渲染在函数里的，那么，拿到还是很难的，不能通过ref拿取
   const [chartInstance, setChartInstance] = useState({});
+  /**
+   * @description: 渲染对应画布内的内容
+   */
   const generateDOM = (props) => {
     return _.map(widgets, (l, i) => {
       let option;
@@ -63,6 +70,9 @@ const DragLayout = (props) => {
       );
     });
   };
+  /**
+   * @description: 添加一个chart容器，定制初始宽度高度位置
+   */
   const addChart = (type) => {
     const addItem = {
       x: (widgets.length * 3) % 12,
@@ -70,7 +80,7 @@ const DragLayout = (props) => {
       w: 3,
       h: 2,
       i: new Date().getTime().toString(),
-      minW: 2,
+      minW: 1,
       minH: 1,
       type,
     };
@@ -104,7 +114,7 @@ const DragLayout = (props) => {
       <StickyContainer>
         <Sticky>
           {({ style }) => (
-            <div style={{ ...style, zIndex: "1" }}>
+            <div style={{ ...style, zIndex: 100 }}>
               <Header className="toolBar">
                 <Button
                   type="primary"

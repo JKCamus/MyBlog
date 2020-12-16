@@ -2,9 +2,10 @@ import React from "react";
 
 import { Redirect } from "react-router-dom";
 // import Home from 'pages/Home';
-import CLayout from 'pages/Layout';
-import Demo from 'pages/Demo';
-import DragChart from 'pages/Demo/drag-charts';
+import CLayout from "pages/Layout";
+import Demo from "pages/Demo";
+import DragChart from "pages/Demo/drag-charts";
+import Login from "components/login";
 
 const routes = [
   {
@@ -16,7 +17,7 @@ const routes = [
     ),
   },
   {
-    path:"/home",
+    path: "/home",
     component: CLayout,
     exact: true,
     // routes:[
@@ -38,7 +39,10 @@ const routes = [
     exact: true,
     component: DragChart,
   },
-
-
+  {
+    path: "/login",
+    exact: true,
+    component: Login,
+  },
 ];
 export default routes;

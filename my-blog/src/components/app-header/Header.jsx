@@ -63,9 +63,9 @@ const Header = (props) => {
           moment={moment}
           reverse={!!phoneOpen}
         >
-          <a to={"#"} className={"menu-item"}>
+          <NavLink to={"/login"} className={"menu-item"}>
             Login
-          </a>
+          </NavLink>
           <NavLink to={"/demo"} className={"menu-item"}>
             Demo
           </NavLink>

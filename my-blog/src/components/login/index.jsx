@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector, shallowEqual } from "react-redux";
 import * as Components from "./Components.js";
 import useForm from "./useForm";
 
@@ -9,15 +10,20 @@ const Login = () => {
   const loginForm = React.useRef(null);
   const [slideUp, toggle] = React.useState(false);
 
+  const { isMobile } = useSelector((state) => ({
+    isMobile: state.getIn(["global", "isMobile"]),
+    shallowEqual,
+  }));
+
   const [signupValues, signupFormChange, resetSignupForm] = useForm({
     name: "",
     email: "",
-    password: ""
+    password: "",
   });
 
   const [signinValues, signinFormChange, resetSigninForm] = useForm({
     email: "",
-    password: ""
+    password: "",
   });
 
   const handleSignup = () => {
@@ -32,85 +38,87 @@ const Login = () => {
 
   return (
     <React.Fragment>
-      <Components.Root>
-        <Components.SignupContainer signUp ref={signupForm} slideUp={slideUp}>
-          <Components.SignupFormTitle
-            ref={toggleSignup}
-            onClick={() => {
-              toggle(false);
-              resetSignupForm();
-            }}
-            slideUp={slideUp}
-          >
-            Sign Up
-          </Components.SignupFormTitle>
-          <Components.SignupForm slideUp={slideUp}>
-            <Components.SignupInput
-              type="text"
-              placeholder="Name"
-              name="name"
-              value={signupValues.name}
-              onChange={signupFormChange}
-            />
-            <Components.SignupInput
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={signupValues.email}
-              onChange={signupFormChange}
-            />
-            <Components.SignupInput
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={signupValues.password}
-              onChange={signupFormChange}
-            />
-          </Components.SignupForm>
-          <Components.SignupButton
-            slideUp={slideUp}
-            onClick={() => handleSignup()}
-          >
-            Sign Up
-          </Components.SignupButton>
-        </Components.SignupContainer>
-        <Components.LoginContainer ref={loginForm} slideUp={slideUp}>
-          <Components.CenterWrapper slideUp={slideUp}>
-            <Components.LoginTitle
-              ref={toggleLogin}
-              slideUp={slideUp}
+      <div>
+        <Components.Root isMobile={isMobile}>
+          <Components.SignupContainer signUp ref={signupForm} slideUp={slideUp}>
+            <Components.SignupFormTitle
+              ref={toggleSignup}
               onClick={() => {
-                toggle(true);
-                resetSigninForm();
+                toggle(false);
+                resetSignupForm();
               }}
+              slideUp={slideUp}
             >
-              Login
-            </Components.LoginTitle>
-            <Components.LoginFormContainer slideUp={slideUp}>
-              <Components.LoginInput
+              Sign Up
+            </Components.SignupFormTitle>
+            <Components.SignupForm slideUp={slideUp}>
+              <Components.SignupInput
+                type="text"
+                placeholder="Name"
+                name="name"
+                value={signupValues.name}
+                onChange={signupFormChange}
+              />
+              <Components.SignupInput
                 type="email"
                 placeholder="Email"
                 name="email"
-                value={signinValues.email}
-                onChange={signinFormChange}
+                value={signupValues.email}
+                onChange={signupFormChange}
               />
-              <Components.LoginInput
+              <Components.SignupInput
                 type="password"
                 placeholder="Password"
                 name="password"
-                value={signinValues.password}
-                onChange={signinFormChange}
+                value={signupValues.password}
+                onChange={signupFormChange}
               />
-            </Components.LoginFormContainer>
-            <Components.LoginButton
+            </Components.SignupForm>
+            <Components.SignupButton
               slideUp={slideUp}
-              onClick={() => handleSignin()}
+              onClick={() => handleSignup()}
             >
-              Login
-            </Components.LoginButton>
-          </Components.CenterWrapper>
-        </Components.LoginContainer>
-      </Components.Root>
+              Sign Up
+            </Components.SignupButton>
+          </Components.SignupContainer>
+          <Components.LoginContainer ref={loginForm} slideUp={slideUp}>
+            <Components.CenterWrapper slideUp={slideUp}>
+              <Components.LoginTitle
+                ref={toggleLogin}
+                slideUp={slideUp}
+                onClick={() => {
+                  toggle(true);
+                  resetSigninForm();
+                }}
+              >
+                Login
+              </Components.LoginTitle>
+              <Components.LoginFormContainer slideUp={slideUp}>
+                <Components.LoginInput
+                  type="email"
+                  placeholder="Email"
+                  name="email"
+                  value={signinValues.email}
+                  onChange={signinFormChange}
+                />
+                <Components.LoginInput
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={signinValues.password}
+                  onChange={signinFormChange}
+                />
+              </Components.LoginFormContainer>
+              <Components.LoginButton
+                slideUp={slideUp}
+                onClick={() => handleSignin()}
+              >
+                Login
+              </Components.LoginButton>
+            </Components.CenterWrapper>
+          </Components.LoginContainer>
+        </Components.Root>
+      </div>
     </React.Fragment>
   );
 };

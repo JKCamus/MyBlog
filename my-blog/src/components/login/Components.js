@@ -11,7 +11,14 @@ export const Root = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   top: 50%;
-
+  /* 手机端缩小登录 */
+  ${(props) =>
+    props.isMobile
+      ? `
+      position:relative;
+      transform: scale(0.8) translate(-62.5%,0);
+    `
+      : null}
   &::after {
     content: "";
     opacity: 0.8;
@@ -38,9 +45,9 @@ export const SignupContainer = styled.div`
   ${(props) =>
     props.slideUp === true
       ? `top: 5%;
-   -webkit-transform: translate(-50%, 0%);
-   -webkit-transition: all 0.3s ease;`
-      : null}
+      -webkit-transform: translate(-50%, 0%);
+      -webkit-transition: all 0.3s ease;`
+      : null};
 `;
 
 export const SignupForm = styled.div`
@@ -111,7 +118,7 @@ export const SignupInput = styled.input`
   outline: none;
   box-shadow: none;
   display: block;
-  height: 30px;
+  height: 40px;
   line-height: 30px;
   padding: 8px 15px;
   border-bottom: 1px solid #eee;
@@ -204,8 +211,8 @@ export const LoginFormContainer = styled.div`
   ${(props) =>
     props.slideUp === false
       ? `opacity: 0;
-   visibility: hidden;
-   transition: all 0.3s ease;`
+    visibility: hidden;
+    transition: all 0.3s ease;`
       : null}
 `;
 
@@ -214,7 +221,7 @@ export const LoginInput = styled.input`
   outline: none;
   box-shadow: none;
   display: block;
-  height: 30px;
+  height: 40px;
   line-height: 30px;
   padding: 8px 15px;
   border-bottom: 1px solid #eee;
@@ -229,13 +236,16 @@ export const LoginInput = styled.input`
 `;
 
 export const LoginButton = styled.button`
-  background-color: #6b92a4;
-  color: rgba(256, 256, 256, 0.7);
-  color: #fff;
+  /* background-color: #6b92a4; */
+  background-color: #6b92ca;
+
+  /* color: rgba(256, 256, 256, 0.7); */
+
+  color: #ccc;
   border: 0;
   border-radius: 15px;
   display: block;
-  margin: 15px auto;
+  margin: 30px auto;
   padding: 15px 45px;
   width: 100%;
   font-size: 13px;
@@ -246,8 +256,9 @@ export const LoginButton = styled.button`
   transition: all 0.3s ease;
   &:hover {
     transition: all 0.3s ease;
-    background-color: rgba(0, 0, 0, 0.8);
+    /* background-color: rgba(0, 0, 0, 0.8); */
     background-color: #43a3ef;
+    color: #fff;
   }
 
   ${(props) =>

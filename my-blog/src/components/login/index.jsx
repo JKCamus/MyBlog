@@ -27,18 +27,18 @@ const Login = () => {
   });
 
   const handleSignup = () => {
-    console.log(signupValues);
+    // console.log(signupValues);
     resetSignupForm();
   };
 
   const handleSignin = () => {
-    console.log(signinValues);
+    // console.log(signinValues);
     resetSigninForm();
   };
 
   return (
     <React.Fragment>
-      <div>
+      <Components.BLayout >
         <Components.Root isMobile={isMobile}>
           <Components.SignupContainer signUp ref={signupForm} slideUp={slideUp}>
             <Components.SignupFormTitle
@@ -118,7 +118,7 @@ const Login = () => {
             </Components.CenterWrapper>
           </Components.LoginContainer>
         </Components.Root>
-      </div>
+      </Components.BLayout>
     </React.Fragment>
   );
 };

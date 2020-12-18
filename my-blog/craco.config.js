@@ -14,12 +14,15 @@ module.exports = {
       services: resolve("src/services"),
     },
   },
-
+  // 插件相关配置，一个plugin一个对象
   plugins: [
+    // 配置less
+    // 按需引入antd
     {
       plugin: CracoLessPlugin,
       options: {
         lessLoaderOptions: {
+          // 用于配置主题或者说是标志颜色
           lessOptions: {
             // modifyVars: { "@primary-color": "#1DA57A" },
             modifyVars: { "@primary-color": "#43a3ef" },
@@ -29,6 +32,7 @@ module.exports = {
       },
     },
     {
+    // 配置全局less变量使用，用的是一个少有人知的loader，必须先弄这个配置
       plugin: {
         ...CracoSwcPlugin,
         overrideCracoConfig: ({ cracoConfig }) => {

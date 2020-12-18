@@ -4,9 +4,9 @@ export  const changeIsMobileAction = (isMobile) => ({
   type: actionTypes.CHANGE_IS_MOBILE,
   isMobile,
 });
-export const changePageStyleAction=(routerPath)=>({
-  type: actionTypes.CHANGE_PAGE_STYLE,
-  routerPath,
+export const changeShowLoginAction=(showLogin)=>({
+  type: actionTypes.CHANGE_SHOW_LOGIN,
+  showLogin,
 })
 // export const getSongDetailAction = (isMobile) => {
 //   return (dispatch) => {

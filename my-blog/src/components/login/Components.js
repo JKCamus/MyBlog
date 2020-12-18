@@ -1,6 +1,15 @@
 import styled, { createGlobalStyle } from "styled-components";
 
+export const BLayout = styled.div`
+  background-color: rgba(232, 232, 232, 0.3);
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  position:fixed;
+`;
+
 export const Root = styled.div`
+  z-index: 5;
   /* background-color: #222; */
   background-color: #001529;
   border-radius: 15px;

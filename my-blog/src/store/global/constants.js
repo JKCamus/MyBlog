@@ -1,2 +1,2 @@
 export const CHANGE_IS_MOBILE="global/CHANGE_IS_MOBILE"
-export const CHANGE_PAGE_STYLE="global/CHANGE_PAGE_STYLE"
+export const CHANGE_SHOW_LOGIN="global/CHANGE_SHOW_LOGIN"

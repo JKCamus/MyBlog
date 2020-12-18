@@ -1,11 +1,12 @@
 import React, { memo, useState, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-
+import {changeShowLoginAction} from '../../store/global/actionCreators'
 import TweenOne from "rc-tween-one";
 import { NavLink } from "react-router-dom";
 import "./index.less";
 
 const Header = (props) => {
+  const dispatch=useDispatch()
   const { isMobile } = useSelector((state) => ({
     isMobile: state.getIn(["global", "isMobile"]),
     shallowEqual,
@@ -13,6 +14,12 @@ const Header = (props) => {
 
   const [phoneOpen, setPhoneOpen] = useState(false);
   const moment = phoneOpen === undefined ? 300 : null;
+
+  const handleLogin = () => {
+    dispatch(changeShowLoginAction(true))
+    // console.log('setShowLogin',login )
+  };
+
   return (
     <TweenOne
       component="header"
@@ -27,7 +34,12 @@ const Header = (props) => {
         >
           <NavLink
             to={"/"}
-            style={{ color: "white", fontWeight: "bold", fontSize: "20px",textDecoration:'none' }}
+            style={{
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "20px",
+              textDecoration: "none",
+            }}
           >
             CamusBlog
           </NavLink>
@@ -63,9 +75,9 @@ const Header = (props) => {
           moment={moment}
           reverse={!!phoneOpen}
         >
-          <NavLink to={"/login"} className={"menu-item"}>
+          <span className={"menu-item"} onClick={() => handleLogin()}>
             Login
-          </NavLink>
+          </span>
           <NavLink to={"/demo"} className={"menu-item"}>
             Demo
           </NavLink>
@@ -78,4 +90,4 @@ const Header = (props) => {
   );
 };
 
-export default memo(Header);
+export default Header;

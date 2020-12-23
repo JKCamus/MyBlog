@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-21 22:55:48
  * @LastEditors: camus
- * @LastEditTime: 2020-12-22 14:33:40
+ * @LastEditTime: 2020-12-22 16:05:13
  */
 import React from "react";
 import cx from "classnames";
@@ -15,7 +15,7 @@ export default function Card({ detail, image, type }) {
   const cls = {
     "item--large": type === "large",
     "item--medium": type === "medium",
-    // "item--full": type === "full"
+    "item--full": type === "full"
   };
   return (
     <div

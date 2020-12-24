@@ -16,7 +16,7 @@ const Header = (props) => {
   const moment = phoneOpen === undefined ? 300 : null;
 
   const handleLogin = () => {
-    dispatch(changeShowLoginAction(true))
+    // dispatch(changeShowLoginAction(true))
     // console.log('setShowLogin',login )
   };
 

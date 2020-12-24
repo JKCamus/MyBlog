@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2020-12-18 09:22:16
+ * @LastEditTime: 2020-12-24 10:15:23
  */
 import React, { memo, useEffect, useState } from "react";
 
@@ -40,7 +40,7 @@ const App = () => {
     <Provider store={store}>
       <HashRouter>
       <Header setShowLogin={setShowLogin}></Header>
-        {showLogin && <Login></Login>}
+        {/* {showLogin && <Login></Login>} */}
         {renderRoutes(routes)}
         {/* <Footer></Footer> */}
       </HashRouter>

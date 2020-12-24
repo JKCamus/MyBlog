@@ -1,51 +1,37 @@
 import React, { memo, useState, useCallback, useEffect } from "react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import QueueAnim from "rc-queue-anim";
+import { getPhotosListAction } from "../store/actionCreators";
 
-import { message } from "antd";
 import { photos as images } from "./data";
-import { getPhotoList } from "services/home";
-import { heightType } from "./constant";
 
 const PictureGallery = (props) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
-  const [photos, setPhotos] = useState([]);
+  const dispatch = useDispatch();
+  const { photoList:photos } = useSelector((state) => ({
+    photoList: state.getIn(["home", "photoList"]),
+    shallowEqual,
+  }));
   const styleInit = {
-    header: (base, state) => ({ //头部样式
-      position: 'absolute',
+    header: (base, state) => ({
+      //头部样式
+      position: "absolute",
       top: 20,
       right: 90,
       zIndex: 9999,
     }),
     view: (base, state) => ({
-      textAlign: 'center',
-      height: state.isFullscreen?'100%':900  //当点击全屏的时候图片样式
-    })
-  }
-  useEffect(() => {
-    _getPhotoList();
-  }, []);
-
-  const _getPhotoList = async () => {
-    try {
-      await getPhotoList(1, 12).then((res) => {
-        const photoArray = res.map((item) => {
-          return {
-            // src: `${item.url}${item.width===4?'':'?type=middle'}`,
-            src: `${item.url}`,
-            sizes: ["(min-width: 480px) 50vw,(min-width: 1024px) 33.3vw,100vw"],
-            width: item.width,
-            height: heightType[item.width],
-          };
-        });
-        setPhotos(photoArray);
-      });
-    } catch (error) {
-      message.error("图片请求失败！");
-    }
+      textAlign: "center",
+      height: state.isFullscreen ? "100%" : 900, //当点击全屏的时候图片样式
+    }),
   };
+  useEffect(() => {
+    dispatch(getPhotosListAction(1, 12));
+  }, [dispatch]);
+
   const columns = (containerWidth) => {
     let columns = 1;
     if (containerWidth >= 500) columns = 2;

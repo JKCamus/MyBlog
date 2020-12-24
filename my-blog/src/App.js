@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2020-12-24 10:31:51
+ * @LastEditTime: 2020-12-24 16:12:45
  */
 import React, { memo, useEffect, useState } from "react";
 
@@ -22,12 +22,11 @@ import { changeIsMobileAction } from "./store/global/actionCreators";
 import { Skeleton } from "antd";
 import { enquireScreen } from "enquire-js";
 
-import Footer from "components/app-footer/Footer";
+// import Footer from "src/pages/Home/node_modules/components/app-footer/Footer";
 import Header from "components/app-header/Header";
 import Login from "components/login";
 
 const App = () => {
-
   const [showLogin, setShowLogin] = useState(false);
   useEffect(() => {
     enquireScreen((b) => {

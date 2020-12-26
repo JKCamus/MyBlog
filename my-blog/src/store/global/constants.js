@@ -1,2 +1,2 @@
 export const CHANGE_IS_MOBILE="global/CHANGE_IS_MOBILE"
-export const CHANGE_SHOW_LOGIN="global/CHANGE_SHOW_LOGIN"
+export const LOGGED="global/LOGGED"

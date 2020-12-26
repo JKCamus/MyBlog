@@ -1,18 +1,31 @@
+/*
+ * @Description:photoGallery
+  1.当前photo放于redux中
+  2.需要优化img加载，样式
+ * @version:
+ * @Author: camus
+ * @Date: 2020-12-23 21:49:09
+ * @LastEditors: camus
+ * @LastEditTime: 2020-12-26 10:33:39
+ */
 import React, { memo, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
+
+import QueueAnim from "rc-queue-anim";
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
-import QueueAnim from "rc-queue-anim";
-import { getPhotosListAction } from "../store/actionCreators";
+import styled from "styled-components";
 
+import { getPhotosListAction } from "../store/actionCreators";
 import { photos as images } from "./data";
 
 const PictureGallery = (props) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
   const dispatch = useDispatch();
-  const { photoList:photos } = useSelector((state) => ({
+  const { photoList: photos, isMobile } = useSelector((state) => ({
     photoList: state.getIn(["home", "photoList"]),
+    isMobile: state.getIn(["global", "isMobile"]),
     shallowEqual,
   }));
   const styleInit = {
@@ -20,7 +33,7 @@ const PictureGallery = (props) => {
       //头部样式
       position: "absolute",
       top: 20,
-      right: 90,
+      right: 80,
       zIndex: 9999,
     }),
     view: (base, state) => ({
@@ -29,7 +42,7 @@ const PictureGallery = (props) => {
     }),
   };
   useEffect(() => {
-    dispatch(getPhotosListAction(1, 12));
+    dispatch(getPhotosListAction(1, 20));
   }, [dispatch]);
 
   const columns = (containerWidth) => {
@@ -48,14 +61,17 @@ const PictureGallery = (props) => {
     setViewerIsOpen(false);
   };
   return (
-    <div>
-      <QueueAnim type="bottom" className={`pic-details-demo-title`}>
+    <GalleryWrapper>
+      <QueueAnim
+        type="bottom"
+        className={`pic-details-demo-title`}
+        className={"galleryHeader"}
+      >
         <h1 key="h1">All In Life </h1>
         <p key="p">
           I love you not for who you are, but for who I am with you.
         </p>
       </QueueAnim>
-
       <Gallery
         photos={photos.length ? photos : images}
         onClick={openLightBox}
@@ -65,24 +81,33 @@ const PictureGallery = (props) => {
       />
       <ModalGateway>
         {viewerIsOpen ? (
-          <Modal onClose={closeLightBox}>
+          <Modal onClose={closeLightBox} allowFullscreen={false}>
             <Carousel
               currentIndex={currentImage}
-              styles={styleInit}
-              views={
-                photos.length
-                  ? photos
-                  : images.map((x) => ({
-                      ...x,
-                      srcset: x.srcSet,
-                      caption: x.title,
-                    }))
-              }
+              styles={isMobile ? "" : styleInit}
+              views={photos.map((item) => {
+                return {
+                  ...item,
+                  src: item.src.split("?")[0],
+                };
+              })}
             />
           </Modal>
         ) : null}
       </ModalGateway>
-    </div>
+    </GalleryWrapper>
   );
 };
+
+const GalleryWrapper = styled.div`
+  /* @import url("https://fonts.googleapis.com/css?family=Arvo"); */
+  margin: auto;
+  max-width: 1600px;
+  .galleryHeader {
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 1rem 0;
+  }
+`;
+
 export default memo(PictureGallery);

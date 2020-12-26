@@ -6,14 +6,13 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2020-12-24 16:12:45
+ * @LastEditTime: 2020-12-26 12:19:12
  */
 import React, { memo, useEffect, useState } from "react";
 
 import { HashRouter } from "react-router-dom";
 import routes from "./router";
 import { renderRoutes } from "react-router-config";
-import { useSelector, shallowEqual } from "react-redux";
 
 import { Provider } from "react-redux";
 import store from "./store";
@@ -23,6 +22,7 @@ import { Skeleton } from "antd";
 import { enquireScreen } from "enquire-js";
 
 // import Footer from "src/pages/Home/node_modules/components/app-footer/Footer";
+
 import Header from "components/app-header/Header";
 import Login from "components/login";
 
@@ -38,8 +38,9 @@ const App = () => {
   return (
     <Provider store={store}>
       <HashRouter>
-      <Header ></Header>
-        {/* {showLogin && <Login></Login>} */}
+        <div></div>
+        <Header setShowLogin={setShowLogin}></Header>
+        {showLogin && <Login setShowLogin={setShowLogin}></Login>}
         {renderRoutes(routes)}
         {/* <Footer></Footer> */}
       </HashRouter>

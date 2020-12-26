@@ -1,12 +1,10 @@
 import React, { memo, useState, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import {changeShowLoginAction} from '../../store/global/actionCreators'
 import TweenOne from "rc-tween-one";
 import { NavLink } from "react-router-dom";
 import "./index.less";
 
 const Header = (props) => {
-  const dispatch=useDispatch()
   const { isMobile } = useSelector((state) => ({
     isMobile: state.getIn(["global", "isMobile"]),
     shallowEqual,
@@ -16,7 +14,8 @@ const Header = (props) => {
   const moment = phoneOpen === undefined ? 300 : null;
 
   const handleLogin = () => {
-    // dispatch(changeShowLoginAction(true))
+    const {setShowLogin}=props
+    setShowLogin(true)
     // console.log('setShowLogin',login )
   };
 
@@ -25,7 +24,6 @@ const Header = (props) => {
       component="header"
       animation={{ opacity: 0, type: "from" }}
       className={"header2 home-page-wrapper"}
-      {...props}
     >
       <div className={`home-page${phoneOpen ? " open" : ""}`}>
         <TweenOne
@@ -75,7 +73,7 @@ const Header = (props) => {
           moment={moment}
           reverse={!!phoneOpen}
         >
-          <span className={"menu-item"} onClick={() => handleLogin()}>
+          <span className={"menu-item"} onClick={handleLogin}>
             Login
           </span>
           <NavLink to={"/demo"} className={"menu-item"}>

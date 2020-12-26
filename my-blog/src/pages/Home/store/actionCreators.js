@@ -13,11 +13,12 @@ export const getPhotosListAction = (page, size) => {
       await getPhotoList(page, size).then((res) => {
         const photoList = res.map((item) => {
           return {
-            // src: `${item.url}${item.width===4?'':'?type=middle'}`,
-            src: `${item.url}`,
+            src: `${item.url}?type=middle`,
+            // src: `${item.url}`,
             sizes: ["(min-width: 480px) 50vw,(min-width: 1024px) 33.3vw,100vw"],
             width: item.width,
             height: actionTypes.heightType[item.width],
+            caption:item.title
           };
         });
         dispatch(changePhotosListAction(photoList));

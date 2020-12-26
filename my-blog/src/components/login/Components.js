@@ -5,7 +5,7 @@ export const BLayout = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: 5;
-  position:fixed;
+  position: fixed;
 `;
 
 export const Root = styled.div`
@@ -26,6 +26,8 @@ export const Root = styled.div`
       ? `
       position:relative;
       transform: scale(0.8) translate(-62.5%,0);
+      top: 0;
+
     `
       : null}
   &::after {
@@ -40,6 +42,20 @@ export const Root = styled.div`
     background-position: left bottom;
     background-size: 500px;
     /* background-image: url("https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bf884ad570b50659c5fa2dc2cfb20ecf&auto=format&fit=crop&w=1000&q=100"); */
+  }
+
+  .closeLogin {
+    z-index: 6;
+    color: #fff;
+    right: 13px;
+    top: 13px;
+    position: absolute;
+    font-size: 16px;
+    &:hover {
+      background-color: #43a3ef;
+      border-radius: 8px;
+      padding: 1px;
+    }
   }
 `;
 

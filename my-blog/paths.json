@@ -7,7 +7,7 @@
       "pages/*": ["src/pages/*"],
       "components/*": ["src/components/*"],
       "services/*": ["src/services/*"],
-      "store/*": ["src/store/*"],
+      "store/*": ["src/store/*"]
     },
     "target": "ES6",
     "module": "commonjs",

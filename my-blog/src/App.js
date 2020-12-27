@@ -6,11 +6,17 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2020-12-26 12:19:12
+ * @LastEditTime: 2020-12-27 14:04:55
  */
 import React, { memo, useEffect, useState } from "react";
 
-import { HashRouter } from "react-router-dom";
+import {
+  HashRouter,
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import routes from "./router";
 import { renderRoutes } from "react-router-config";
 
@@ -37,14 +43,19 @@ const App = () => {
   }, []);
   return (
     <Provider store={store}>
-      <HashRouter>
-        <div></div>
+      <Router>
         <Header setShowLogin={setShowLogin}></Header>
         {showLogin && <Login setShowLogin={setShowLogin}></Login>}
-        {renderRoutes(routes)}
-        {/* <Footer></Footer> */}
-      </HashRouter>
+        <Switch>
+          {routes.map(({ path, component, ...routes }) => (
+            <Route key={path} path={path} component={component} {...routes} />
+          ))}
+          {/* <Route path="/backend" component={Backend} />
+          <Route path="/admin" component={Admin} /> */}
+        </Switch>
+      </Router>
     </Provider>
   );
 };
+
 export default App;

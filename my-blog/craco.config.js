@@ -13,6 +13,7 @@ module.exports = {
       common: resolve("src/common"),
       services: resolve("src/services"),
       store: resolve("src/store"),
+      utils: resolve("src/utils"),
     },
   },
   // 插件相关配置，一个plugin一个对象

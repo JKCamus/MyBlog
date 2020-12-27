@@ -7,6 +7,7 @@ const defaultState = Map({
   userInfo:{}
 });
 
+
 function reducer(state = defaultState, action) {
   switch (action.type) {
     case actionTypes.CHANGE_IS_MOBILE:

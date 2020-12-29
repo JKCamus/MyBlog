@@ -38,14 +38,12 @@ const Login = (props) => {
     resetSignUpForm();
   };
 
-  const handleSignIn = async () => {
-    try {
-   const a=  await dispatch(loginAction(signInValues));
-   console.log('sss', a)
-      // resetSignInForm();
-    } catch (error) {
-      message.error(error);
-    }
+  const handleSignIn = () => {
+    dispatch(
+      loginAction(signInValues, (status) => {
+        setShowLogin(status);
+      })
+    );
   };
 
   const handleCancel = () => {

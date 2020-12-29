@@ -14,8 +14,8 @@ const Home = (props) => {
   }
   return (
     <>
-      <Button onClick={handleAuth}>验证权限</Button>
-      <Button onClick={handleRemove}>移除权限</Button>
+      {/* <Button onClick={handleAuth}>验证权限</Button>
+      <Button onClick={handleRemove}>移除权限</Button> */}
       <Banner></Banner>
       <PictureGallery></PictureGallery>
       <Footer></Footer>

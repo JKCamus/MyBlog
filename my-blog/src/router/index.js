@@ -44,11 +44,11 @@ const routes = [
     exact: true,
     component: Login,
   },
-  {
-    path: "/profile",
-    exact: true,
-    component: Profile,
-  },
+  // {
+  //   path: "/profile",
+  //   exact: true,
+  //   component: Profile,
+  // },
 
 ];
 export default routes;

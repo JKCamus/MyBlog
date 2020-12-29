@@ -3,6 +3,8 @@ import { message } from "antd";
 
 import { BASE_URL, TIMEOUT } from "./config";
 
+import {} from 'utils/token';
+
 const instance = axios.create({
   baseURL: BASE_URL,
   timeout: TIMEOUT,

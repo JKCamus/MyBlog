@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2020-12-27 14:04:55
+ * @LastEditTime: 2020-12-28 21:29:25
  */
 import React, { memo, useEffect, useState } from "react";
 
@@ -18,14 +18,16 @@ import {
   Switch,
 } from "react-router-dom";
 import routes from "./router";
-import { renderRoutes } from "react-router-config";
 
+import { renderRoutes } from "react-router-config";
 import { Provider } from "react-redux";
 import store from "./store";
 import { changeIsMobileAction } from "./store/global/actionCreators";
 // 动效库，用于判断是否是手机
 import { Skeleton } from "antd";
 import { enquireScreen } from "enquire-js";
+import AuthorizedRoute from "@/router/AuthorizedRoute";
+import privateRoutes from "@/router/privateRoutes";
 
 // import Footer from "src/pages/Home/node_modules/components/app-footer/Footer";
 
@@ -49,6 +51,9 @@ const App = () => {
         <Switch>
           {routes.map(({ path, component, ...routes }) => (
             <Route key={path} path={path} component={component} {...routes} />
+          ))}
+          {privateRoutes.map((route) => (
+            <AuthorizedRoute key={route.path} {...route} user={{role: ['user']}}></AuthorizedRoute>
           ))}
           {/* <Route path="/backend" component={Backend} />
           <Route path="/admin" component={Admin} /> */}

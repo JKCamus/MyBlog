@@ -3,6 +3,9 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import TweenOne from "rc-tween-one";
 import { NavLink } from "react-router-dom";
 import "./index.less";
+import { Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import checkLogin from "utils/checkLogin";
 
 const Header = (props) => {
   const { isMobile } = useSelector((state) => ({
@@ -14,8 +17,8 @@ const Header = (props) => {
   const moment = phoneOpen === undefined ? 300 : null;
 
   const handleLogin = () => {
-    const {setShowLogin}=props
-    setShowLogin(true)
+    const { setShowLogin } = props;
+    setShowLogin(true);
     // console.log('setShowLogin',login )
   };
 
@@ -42,6 +45,12 @@ const Header = (props) => {
             CamusBlog
           </NavLink>
         </TweenOne>
+
+        {/* {!isMobile && (
+          <div className={"avatar"}>
+            <Avatar size={36} icon={<UserOutlined />} />
+          </div>
+        )} */}
         {isMobile && (
           <div
             className={"header2-mobile-menu"}
@@ -73,14 +82,23 @@ const Header = (props) => {
           moment={moment}
           reverse={!!phoneOpen}
         >
-          <span className={"menu-item"} onClick={handleLogin}>
-            Login
-          </span>
+          {!checkLogin() ? (
+            <span className={"menu-item"} onClick={handleLogin}>
+              Login
+            </span>
+          ) : (
+            <span className={"menu-item"}>
+              <Avatar size={36} icon={<UserOutlined />} />
+            </span>
+          )}
           <NavLink to={"/demo"} className={"menu-item"}>
             Demo
           </NavLink>
           <NavLink to={"/charts"} className={"menu-item"}>
             Charts
+          </NavLink>
+          <NavLink to={"/profile"} className={"menu-item"}>
+            Profile
           </NavLink>
         </TweenOne>
       </div>

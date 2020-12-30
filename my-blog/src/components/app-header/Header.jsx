@@ -91,13 +91,26 @@ const Header = (props) => {
               <Avatar size={36} icon={<UserOutlined />} />
             </span>
           )}
-          <NavLink to={"/demo"} className={"menu-item"}>
+
+          <NavLink
+            to={"/demo"}
+            className={"menu-item"}
+            onClick={() => setPhoneOpen(!phoneOpen)}
+          >
             Demo
           </NavLink>
-          <NavLink to={"/charts"} className={"menu-item"}>
+          <NavLink
+            to={"/charts"}
+            className={"menu-item"}
+            onClick={() => setPhoneOpen(!phoneOpen)}
+          >
             Charts
           </NavLink>
-          <NavLink to={"/profile"} className={"menu-item"}>
+          <NavLink
+            to={"/profile"}
+            className={"menu-item"}
+            onClick={() => setPhoneOpen(!phoneOpen)}
+          >
             Profile
           </NavLink>
         </TweenOne>

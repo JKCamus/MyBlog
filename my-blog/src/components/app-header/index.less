@@ -1,6 +1,6 @@
-@header2: header2;
+@header: header;
 
-.@{header2} {
+.@{header} {
   background: @template-nav-bg-color;
   width: 100%;
   z-index: 1;
@@ -50,21 +50,24 @@
         border-bottom: 2px solid @primary-color;
       }
     }
+
   }
 
-  .avatar {
-    margin: 0 20px;
-    float: right;
-    line-height: 62px;
-    cursor: pointer;
-    height: 64px;
-    position: relative;
+}
 
+.dropDownMenu {
+  & a {
+    text-decoration: none;
+  }
+
+  &.active,
+  &:hover {
+    background-color: @primary-color  !important;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .@{header2} {
+  .@{header} {
     &-logo {
       z-index: 101;
     }
@@ -127,7 +130,7 @@
     & .open {
       height: auto;
 
-      .@{header2}-mobile-menu {
+      .@{header}-mobile-menu {
         em {
           &:nth-child(1) {
             transform: translateY(6px) rotate(45deg);
@@ -143,7 +146,7 @@
         }
       }
 
-      .@{header2}-menu {
+      .@{header}-menu {
         opacity: 1;
         pointer-events: auto;
       }

@@ -3,14 +3,14 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import TweenOne from "rc-tween-one";
 import { NavLink } from "react-router-dom";
 import "./index.less";
-import { Avatar, Menu, Dropdown } from "antd";
+import { Avatar, Menu, Dropdown, Popconfirm, } from "antd";
+import { getUerInfo,removeToken } from "utils/token";
 
 import { UserOutlined } from "@ant-design/icons";
 import checkLogin from "utils/checkLogin";
 
 const Header = (props) => {
   const { Item, SubMenu } = Menu;
-
   const { isMobile } = useSelector((state) => ({
     isMobile: state.getIn(["global", "isMobile"]),
     shallowEqual,
@@ -25,21 +25,67 @@ const Header = (props) => {
     // console.log('setShowLogin',login )
   };
 
-  const menu = (
-    <Menu theme="dark">
-      <Menu.Item className={"dropDownMenu"}>
-        <NavLink
-          to={"/profile"}
-          // onClick={() => setPhoneOpen(!phoneOpen)}
+  const handleLoginOut = (params) => {
+    removeToken()
+    setPhoneOpen(!phoneOpen);
+  };
+
+
+  const renderMenu = (params) => {
+    const userInfo = getUerInfo();
+    const menu = (
+      <Menu theme="dark" className="menuD">
+        <Menu.Item className={"dropDownMenu"}>
+          <NavLink to={"/profile"}>Profile</NavLink>
+        </Menu.Item>
+        <Menu.Item className={"dropDownMenu"}>
+          <span>Logout</span>
+        </Menu.Item>
+      </Menu>
+    );
+    return isMobile ? (
+      <Menu mode={"inline"} theme={"dark"}>
+        <SubMenu
+          icon={<UserOutlined />}
+          title={userInfo.name}
+          style={{ color: "#fff" }}
         >
-          Profile
-        </NavLink>
-      </Menu.Item>
-      <Menu.Item className={"dropDownMenu"}>
-        <span>Logout</span>
-      </Menu.Item>
-    </Menu>
-  );
+          <Menu.Item
+            className={"dropDownMenu"}
+            onClick={() => setPhoneOpen(!phoneOpen)}
+          >
+            <NavLink to={"/profile"}>Profile</NavLink>
+          </Menu.Item>
+          <Menu.Item
+            className={"dropDownMenu"}
+          >
+            <Popconfirm
+            title="Are you sure to logout ?"
+            onConfirm={handleLoginOut}
+            okText="Yes"
+            cancelText="No"
+            >
+
+            <span >Logout</span>
+            </Popconfirm>
+          </Menu.Item>
+        </SubMenu>
+      </Menu>
+    ) : (
+      <Dropdown
+        overlay={menu}
+        theme="dark"
+        trigger={["click"]}
+        // style={{padding:0}}
+        className={"menu-item"}
+      >
+        <div>
+          <Avatar size={36} onClick={(e) => e.preventDefault()} />
+        </div>
+      </Dropdown>
+    );
+  };
+
   return (
     <TweenOne
       component="header"
@@ -99,35 +145,8 @@ const Header = (props) => {
               Login
             </span>
           ) : (
-            // <Dropdown
-            //   overlay={menu}
-            //   // overlayClassName={"avatarStyle"}
-            //   theme="dark"
-            //   trigger={["click"]}
-            //   className={"menu-item"}
-            //   // overlayStyle={{backgroundColor:'red'}}
-            // >
-            //   <div>
-            //     <Avatar size={36} onClick={(e) => e.preventDefault()} />
-            //   </div>
-            // </Dropdown>
-            <Menu
-              theme="dark"
-              className={`${isMobile ? "" : "menu-item"}`}
-              mode={isMobile ? "inline" : "horizontal"}
-              // overflowedIndicator={<UserOutlined />}
-            >
-              <SubMenu
-                key="sub1"
-                // title="Navigation One"
-                icon={<UserOutlined />}
-              >
-                <Menu.Item key="1">Option 1</Menu.Item>
-                <Menu.Item key="2">Option 2</Menu.Item>
-              </SubMenu>
-            </Menu>
+            renderMenu()
           )}
-
           <NavLink
             to={"/demo"}
             className={"menu-item"}
@@ -142,13 +161,13 @@ const Header = (props) => {
           >
             Charts
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to={"/profile"}
             className={"menu-item"}
             onClick={() => setPhoneOpen(!phoneOpen)}
           >
             Profile
-          </NavLink>
+          </NavLink> */}
 
           {/* {!checkLogin() ? (
             <span className={"menu-item"} onClick={handleLogin}>

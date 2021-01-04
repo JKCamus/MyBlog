@@ -7,6 +7,7 @@ import Demo from "pages/Demo";
 import DragChart from "pages/Demo/drag-charts";
 import Login from "components/login";
 import Profile from '@/pages/Profile';
+import UploadDemo from "pages/Profile/upload";
 
 const routes = [
   {
@@ -44,11 +45,7 @@ const routes = [
     exact: true,
     component: Login,
   },
-  // {
-  //   path: "/profile",
-  //   exact: true,
-  //   component: Profile,
-  // },
+
 
 ];
 export default routes;

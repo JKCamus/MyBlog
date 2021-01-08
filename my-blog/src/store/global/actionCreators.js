@@ -16,7 +16,7 @@ export const loginAction = (info, resolve) => {
   return async (dispatch) => {
     try {
       const userInfo = await login(info);
-      if (!userInfo.config) {
+      if (userInfo) {
         dispatch(loggedAction(userInfo));
         setToken(userInfo);
         resolve(false);
@@ -24,7 +24,8 @@ export const loginAction = (info, resolve) => {
         resolve(true);
       }
     } catch (error) {
-      console.log("loginAction", error);
+      message.error(error.message)
+      console.log("loginAction", error.message);
     }
   };
 };

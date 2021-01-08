@@ -4,10 +4,10 @@
  * @Author: camus
  * @Date: 2020-12-27 14:30:08
  * @LastEditors: camus
- * @LastEditTime: 2021-01-03 13:47:39
+ * @LastEditTime: 2021-01-07 20:31:12
  */
 import Profile from "pages/Profile";
-import UploadDemo from "pages/Profile/upload";
+// import UploadDemo from "@/pages/Profile/pictureManage/upload";
 const privateRoutes = [
   {
     path: "/profile",

@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-12-23 21:49:09
  * @LastEditors: camus
- * @LastEditTime: 2020-12-26 10:33:39
+ * @LastEditTime: 2021-01-07 20:41:03
  */
 import React, { memo, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -110,4 +110,4 @@ const GalleryWrapper = styled.div`
   }
 `;
 
-export default memo(PictureGallery);
+export default (PictureGallery);

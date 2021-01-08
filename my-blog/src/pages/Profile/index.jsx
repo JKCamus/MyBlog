@@ -14,7 +14,8 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import AuthorizedRoute from "@/router/AuthorizedRoute";
-import UploadDemo from "pages/Profile/upload";
+import UploadDemo from "@/pages/Profile/pictureManage/upload";
+import GeneralList from "./pictureManage/General";
 import { ProfileWrapper } from "./styles";
 
 const Profile = (props) => {
@@ -28,7 +29,7 @@ const Profile = (props) => {
       <div className={"sideMenu"}>
         <Menu
           onClick={handleClick}
-          style={{ width: 256,height:'100%'}}
+          style={{ width: 256, height: "100%" }}
           defaultSelectedKeys={["1"]}
           defaultOpenKeys={["sub1"]}
           mode="inline"
@@ -38,7 +39,9 @@ const Profile = (props) => {
               <Menu.Item key="1">
                 <NavLink to={"/profile/upload"}>上传</NavLink>
               </Menu.Item>
-              <Menu.Item key="2">Option 2</Menu.Item>
+              <Menu.Item key="2">
+                <NavLink to={"/profile/general"}>图片概览</NavLink>
+              </Menu.Item>
             </Menu.ItemGroup>
             <Menu.ItemGroup key="g2" title="Item 2">
               <Menu.Item key="3">Option 3</Menu.Item>
@@ -76,6 +79,13 @@ const Profile = (props) => {
             exact
             key={"/profile/upload"}
             component={UploadDemo}
+            user={{ role: ["user"] }}
+          ></AuthorizedRoute>
+          <AuthorizedRoute
+            path="/profile/general"
+            exact
+            key={"/profile/general"}
+            component={GeneralList}
             user={{ role: ["user"] }}
           ></AuthorizedRoute>
         </Switch>

@@ -45,7 +45,9 @@ instance.interceptors.response.use(
           console.log("其他错误信息");
       }
     }
-    return err;
+    // 不是直接返回err而是需要返回Promise包装的err
+    // 否则try catch不能捕捉，且，await等待错误之后为一个错误对象，即try catch失效
+    return Promise.reject(err);
   }
 );
 

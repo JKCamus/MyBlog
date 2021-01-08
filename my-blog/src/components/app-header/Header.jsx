@@ -3,8 +3,8 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import TweenOne from "rc-tween-one";
 import { NavLink } from "react-router-dom";
 import "./index.less";
-import { Avatar, Menu, Dropdown, Popconfirm, } from "antd";
-import { getUerInfo,removeToken } from "utils/token";
+import { Avatar, Menu, Dropdown, Popconfirm } from "antd";
+import { getUerInfo, removeToken } from "utils/token";
 
 import { UserOutlined } from "@ant-design/icons";
 import checkLogin from "utils/checkLogin";
@@ -26,10 +26,9 @@ const Header = (props) => {
   };
 
   const handleLoginOut = (params) => {
-    removeToken()
+    removeToken();
     setPhoneOpen(!phoneOpen);
   };
-
 
   const renderMenu = (params) => {
     const userInfo = getUerInfo();
@@ -39,7 +38,14 @@ const Header = (props) => {
           <NavLink to={"/profile"}>Profile</NavLink>
         </Menu.Item>
         <Menu.Item className={"dropDownMenu"}>
-          <span>Logout</span>
+          <Popconfirm
+            title="Are you sure to logout ?"
+            onConfirm={handleLoginOut}
+            okText="Yes"
+            cancelText="No"
+          >
+            <span>Logout</span>
+          </Popconfirm>
         </Menu.Item>
       </Menu>
     );
@@ -56,17 +62,14 @@ const Header = (props) => {
           >
             <NavLink to={"/profile"}>Profile</NavLink>
           </Menu.Item>
-          <Menu.Item
-            className={"dropDownMenu"}
-          >
+          <Menu.Item className={"dropDownMenu"}>
             <Popconfirm
-            title="Are you sure to logout ?"
-            onConfirm={handleLoginOut}
-            okText="Yes"
-            cancelText="No"
+              title="Are you sure to logout ?"
+              onConfirm={handleLoginOut}
+              okText="Yes"
+              cancelText="No"
             >
-
-            <span >Logout</span>
+              <span>Logout</span>
             </Popconfirm>
           </Menu.Item>
         </SubMenu>
@@ -206,4 +209,4 @@ const Header = (props) => {
   );
 };
 
-export default memo(Header);
+export default Header;

@@ -45,7 +45,7 @@ const UploadDemo = (props) => {
     formData.append("title", title);
     formData.append("content", content);
     formData.append("width", width);
-    if (dragger.length) {
+    if (dragger&&dragger.length) {
       formData.append("photo", dragger[0].originFileObj);
     }
     _uploadPhoto(formData);

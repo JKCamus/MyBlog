@@ -1,19 +1,24 @@
 import React, { memo, useEffect, useState } from "react";
-import { Table, Tag, Space } from "antd";
-import { getPhotoList } from "services/home";
+import { Table, Tag, Space, Modal, Form, Select,Button} from "antd";
+import { getAllPhotoList } from "services/home";
+import Upload from "./upload";
+
 const General = (props) => {
   const [photoList, setPhotoList] = useState([]);
+  const [uploadModalVisible, setUploadModalVisible] = useState(false);
+  useEffect(() => {
+    _getPhotoList();
+  }, []);
   const _getPhotoList = async () => {
     try {
-      const photos = await getPhotoList(1, 20);
+      const photos = await getAllPhotoList(1, 20);
       setPhotoList(photos);
     } catch (error) {
       console.log("err", error);
     }
   };
-  useEffect(() => {
-    _getPhotoList();
-  }, []);
+
+
 
   const columns = [
     {
@@ -48,20 +53,47 @@ const General = (props) => {
       key: "width",
     },
     {
+      title: "status",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
       title: "Action",
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <a>编辑 </a>
+          <a onClick={()=>setUploadModalVisible(true)}>编辑</a>
           <a>删除</a>
         </Space>
       ),
     },
   ];
 
+  const handleModalOk = () => {
+    console.log("ok");
+  };
+  const handleModalCancel = () => {
+    setUploadModalVisible(false)
+    console.log("cancel");
+  };
+
+const handleEdit = (params) => {
+
+}
+
   return (
     <div>
+      <Button onClick={()=>{handleEdit()}}>添加</Button>
       <Table columns={columns} dataSource={photoList} />
+      <Modal
+        title="图片上传"
+        visible={uploadModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+        footer={null}
+      >
+        <Upload></Upload>
+      </Modal>
     </div>
   );
 };

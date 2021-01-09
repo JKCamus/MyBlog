@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import { Menu } from "antd";
+import React, { memo,useState } from "react";
+import { Menu,Button } from "antd";
 import {
   NavLink,
   HashRouter,
@@ -19,20 +19,25 @@ import GeneralList from "./pictureManage/General";
 import { ProfileWrapper } from "./styles";
 
 const Profile = (props) => {
-  console.log("props", props);
+  const [collapsed, setCollapsed] = useState(false)
+  // console.log("props", props);
   const { SubMenu } = Menu;
   const handleClick = (e) => {
     // console.log("sss", e);
   };
+const handleCollapse = (params) => {
+  setCollapsed(!collapsed)
+}
   return (
     <ProfileWrapper>
       <div className={"sideMenu"}>
         <Menu
           onClick={handleClick}
-          style={{ width: 256, height: "100%" }}
+          style={{ width:'256px', height: "100%" }}
           defaultSelectedKeys={["2"]}
           defaultOpenKeys={["sub1"]}
           mode="inline"
+          inlineCollapsed={collapsed}
         >
           <SubMenu key="sub1" icon={<MailOutlined />} title="管理">
             <Menu.ItemGroup key="g1" title="照片管理">

@@ -1,24 +1,27 @@
-import React, { memo, useState } from "react";
-import { Form, Select, Slider, Button, Upload, Input, Col,Radio } from "antd";
+import React, { memo, useState, useImperativeHandle,forwardRef } from "react";
+import { Form, Select, Slider, Button, Upload, Input, Col, Radio } from "antd";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 import { uploadPhoto } from "services/profile";
 
-const UploadDemo = (props) => {
+const UploadDemo = (props, GeneralRef) => {
   const [fileList, setFileList] = useState([]);
   const [imgs, setImgs] = useState("");
   const { Option } = Select;
+  const [form] = Form.useForm();
   const formItemLayout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 14 },
   };
   const _uploadPhoto = async (data) => {
     try {
-      const res = await uploadPhoto(data);
-      console.log("resd", res);
+      await uploadPhoto(data);
     } catch (error) {
       console.log("await");
     }
   };
+  useImperativeHandle(GeneralRef, () => ({
+    form: form,
+  }));
   const handleBeforeUploadFile = (file) => {
     // 使用 beforeUpload 會失去在選擇圖片後馬上看到圖片的功能，因此利用FileReader方法來實現預覽效果
     let reader = new FileReader();
@@ -41,21 +44,20 @@ const UploadDemo = (props) => {
 
   const onFinish = (values) => {
     const formData = new FormData();
-    const { dragger,content,title,width=4} = values;
+    const { dragger, content, title, width = 4 } = values;
     formData.append("title", title);
     formData.append("content", content);
     formData.append("width", width);
-    if (dragger&&dragger.length) {
+    if (dragger && dragger.length) {
       formData.append("photo", dragger[0].originFileObj);
     }
     _uploadPhoto(formData);
-
   };
-
   return (
     <div>
       <Form
         name="validate_other"
+        form={form}
         {...formItemLayout}
         onFinish={onFinish}
         initialValues={{
@@ -71,9 +73,16 @@ const UploadDemo = (props) => {
           <Input.TextArea></Input.TextArea>
         </Form.Item>
         <Form.Item name="width" label="content">
-          <Radio.Group defaultValue={4} buttonStyle="solid">
+          <Radio.Group  buttonStyle="solid">
             <Radio.Button value={4}>Horizontal</Radio.Button>
             <Radio.Button value={3}>Vertical</Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item name="status" label="content">
+          <Radio.Group  buttonStyle="solid">
+            <Radio.Button value={0}>删除</Radio.Button>
+            <Radio.Button value={1}>展示</Radio.Button>
+            <Radio.Button value={2}>隐藏</Radio.Button>
           </Radio.Group>
         </Form.Item>
         <Form.Item label="Dragger">
@@ -115,4 +124,4 @@ const UploadDemo = (props) => {
     </div>
   );
 };
-export default memo(UploadDemo);
+export default forwardRef(UploadDemo);

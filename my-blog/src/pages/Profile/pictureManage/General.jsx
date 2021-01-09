@@ -78,6 +78,7 @@ const General = (props) => {
   const _deletePhotos = async () => {
     try {
       await deletePhotos();
+      await _getPhotoList();
     } catch (error) {
       console.log("deletePhotos error");
     }
@@ -117,7 +118,7 @@ const General = (props) => {
       render: (text, record) => (
         <Space size="middle">
           <a onClick={() => handleEdit(record)}>编辑</a>
-          <a>删除</a>
+          {/* <a>删除</a> */}
         </Space>
       ),
     },

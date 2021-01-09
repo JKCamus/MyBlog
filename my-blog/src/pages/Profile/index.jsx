@@ -30,25 +30,25 @@ const Profile = (props) => {
         <Menu
           onClick={handleClick}
           style={{ width: 256, height: "100%" }}
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["2"]}
           defaultOpenKeys={["sub1"]}
           mode="inline"
         >
-          <SubMenu key="sub1" icon={<MailOutlined />} title="Navigation One">
-            <Menu.ItemGroup key="g1" title="Item 1">
-              <Menu.Item key="1">
-                <NavLink to={"/profile/upload"}>上传</NavLink>
-              </Menu.Item>
+          <SubMenu key="sub1" icon={<MailOutlined />} title="管理">
+            <Menu.ItemGroup key="g1" title="照片管理">
               <Menu.Item key="2">
                 <NavLink to={"/profile/general"}>图片概览</NavLink>
               </Menu.Item>
+              <Menu.Item key="1">
+                <NavLink to={"/profile/upload"}>上传，废弃</NavLink>
+              </Menu.Item>
             </Menu.ItemGroup>
-            <Menu.ItemGroup key="g2" title="Item 2">
+            {/* <Menu.ItemGroup key="g2" title="Item 2">
               <Menu.Item key="3">Option 3</Menu.Item>
               <Menu.Item key="4">Option 4</Menu.Item>
-            </Menu.ItemGroup>
+            </Menu.ItemGroup> */}
           </SubMenu>
-          <SubMenu
+          {/* <SubMenu
             key="sub2"
             icon={<AppstoreOutlined />}
             title="Navigation Two"
@@ -69,7 +69,7 @@ const Profile = (props) => {
             <Menu.Item key="10">Option 10</Menu.Item>
             <Menu.Item key="11">Option 11</Menu.Item>
             <Menu.Item key="12">Option 12</Menu.Item>
-          </SubMenu>
+          </SubMenu> */}
         </Menu>
       </div>
       <div className="content">

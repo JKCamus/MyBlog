@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2021-01-05 21:10:55
  * @LastEditors: camus
- * @LastEditTime: 2021-01-06 20:59:32
+ * @LastEditTime: 2021-01-09 21:05:24
  */
 import request from "./request";
 
@@ -16,5 +16,11 @@ export function uploadPhoto(data) {
       "Content-Type": "multipart/form-data",
     },
     data,
+  });
+}
+export function deletePhotos() {
+  return request({
+    url: "/photo/clearPhotos",
+    method: "delete",
   });
 }

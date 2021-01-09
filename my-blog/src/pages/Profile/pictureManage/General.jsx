@@ -10,19 +10,21 @@ import {
   Upload,
   Input,
   Radio,
+  message,
 } from "antd";
 import { getAllPhotoList } from "services/home";
 // import Upload from "./upload";
 import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 
-import { uploadPhoto } from "services/profile";
+import { uploadPhoto, deletePhotos } from "services/profile";
 
 const General = (props) => {
   const [photoList, setPhotoList] = useState([]);
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
   const [fileList, setFileList] = useState([]);
-  const [imgs, setImgs] = useState("");
-  const { Option } = Select;
+  const [tempRow, setTempRow] = useState({});
+  const [tableLoading, setTableLoading] = useState(false);
+  // const [imgs, setImgs] = useState("");
   const [form] = Form.useForm();
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -32,9 +34,24 @@ const General = (props) => {
   useEffect(() => {
     _getPhotoList();
   }, []);
+  useEffect(() => {
+    if (!uploadModalVisible) {
+      form.setFieldsValue({
+        content: "",
+        dragger: [],
+        status: 1,
+        title: "",
+        width: 4,
+      });
+      setFileList([]);
+      setTempRow({});
+    }
+  }, [uploadModalVisible]);
+
   // 请求所有照片信息
   const _getPhotoList = async () => {
     try {
+      setTableLoading(true);
       const photos = await getAllPhotoList(1, 20);
       const newPhotos = photos.map((item) => {
         return {
@@ -43,8 +60,9 @@ const General = (props) => {
         };
       });
       setPhotoList(newPhotos);
+      setTableLoading(false);
     } catch (error) {
-      console.log("err", error);
+      console.log("_getPhotoList", error);
     }
   };
 
@@ -53,7 +71,15 @@ const General = (props) => {
     try {
       await uploadPhoto(data);
     } catch (error) {
-      console.log("await");
+      console.log("uploadPhoto err");
+    }
+  };
+
+  const _deletePhotos = async () => {
+    try {
+      await deletePhotos();
+    } catch (error) {
+      console.log("deletePhotos error");
     }
   };
 
@@ -97,9 +123,9 @@ const General = (props) => {
     },
   ];
 
-  const handleModalOk = () => {
-    console.log("ok");
-  };
+  // const handleModalOk = () => {
+  //   console.log("ok");
+  // };
 
   const handleModalCancel = () => {
     setUploadModalVisible(false);
@@ -108,35 +134,71 @@ const General = (props) => {
 
   const handleEdit = (row) => {
     // const { current } = uploadRef;
-    if (row.id) {
-      form && form.setFieldsValue(row);
-    }
     // console.log("form", form);
+    if (row.id) {
+      form &&
+        form.setFieldsValue({
+          ...row,
+          dragger: [
+            {
+              uid: row.id,
+              name: row.title,
+              status: "done",
+              url: row.url,
+            },
+          ],
+        });
+      setFileList([
+        {
+          url: row.url,
+        },
+      ]);
+      setTempRow(row);
+    }
     setUploadModalVisible(true);
-    // console.log("current", current);
   };
 
-  const onFinish = (values) => {
-    const formData = new FormData();
-    const { dragger, content, title, width = 4 } = values;
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("width", width);
-    if (dragger && dragger.length) {
-      formData.append("photo", dragger[0].originFileObj);
+  const onFinish = async (values) => {
+    try {
+      const formData = new FormData();
+      const { dragger, content, title, width = 4, status } = values;
+      if (!dragger.length) {
+        throw new Error("noFile");
+      }
+      formData.append("title", title);
+      formData.append("content", content);
+      formData.append("width", width);
+      formData.append("status", status);
+      if (dragger && dragger.length) {
+        formData.append("photo", dragger[0].originFileObj);
+      }
+      if (tempRow.id) {
+        formData.append("filename", tempRow.filename);
+        formData.append("mimetype", tempRow.mimetype);
+        formData.append("size", tempRow.size);
+        formData.append("id", tempRow.id);
+      }
+      await _uploadPhoto(formData);
+      setUploadModalVisible(false);
+      await _getPhotoList();
+    } catch (error) {
+      if (error.message === "noFile") {
+        message.error("请上传图片");
+      }
+      console.log("error", error);
     }
-    _uploadPhoto(formData);
   };
 
   const handleBeforeUploadFile = (file) => {
     // 使用 beforeUpload 會失去在選擇圖片後馬上看到圖片的功能，因此利用FileReader方法來實現預覽效果
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = function () {
-      setFileList([{ uid: file.uid, url: reader.result }]);
-      setImgs(reader.result);
-      // this.setState({fileList: [{uid: file.uid, url: reader.result}],image:reader.result})
-    }.bind(this);
+    // let reader = new FileReader();
+    // reader.readAsDataURL(file);
+    // reader.onloadend = function () {
+    //   setFileList([{ uid: file.uid, url: reader.result }]);
+    //   setImgs(reader.result);
+    //   // this.setState({fileList: [{uid: file.uid, url: reader.result}],image:reader.result})
+    // }.bind(this);
+
     // 使用 beforeUpload 回傳 false 可以停止上傳
     return false;
   };
@@ -149,15 +211,43 @@ const General = (props) => {
     return e && e.fileList;
   };
 
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
+  const onPreview = async (file) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow.document.write(image.outerHTML);
+  };
+
+  const handleDeletePhotos = () => {
+    _deletePhotos();
+  };
+
   return (
     <div>
       <Button onClick={handleEdit}>添加</Button>
-      <Table columns={columns} dataSource={photoList} rowKey="id" />
-      {/* <Test ref={uploadRef}></Test> */}
+      <Button onClick={handleDeletePhotos}>clear</Button>
+      <Table
+        columns={columns}
+        dataSource={photoList}
+        rowKey="id"
+        loading={tableLoading}
+      />
       <Modal
         title="图片上传"
         visible={uploadModalVisible}
-        onOk={handleModalOk}
+        // onOk={handleModalOk}
         onCancel={handleModalCancel}
         footer={null}
         destroyOnClose={true}
@@ -168,53 +258,67 @@ const General = (props) => {
           form={form}
           {...formItemLayout}
           onFinish={onFinish}
-          initialValues={{
-            ["input-number"]: 3,
-            ["checkbox-group"]: ["A", "B"],
-            rate: 3.5,
-          }}
+          // initialValues={{
+          //   ["id"]: undefined,
+          // }}
         >
-          <Form.Item name="title" label="title">
+          <Form.Item
+            name="title"
+            label="title"
+            rules={[
+              { required: true, message: "Please input photo's title !" },
+            ]}
+          >
             <Input></Input>
           </Form.Item>
           <Form.Item name="content" label="content">
             <Input.TextArea></Input.TextArea>
           </Form.Item>
-          <Form.Item name="width" label="content">
+          <Form.Item
+            name="width"
+            label="scale"
+            rules={[{ required: true, message: "Please select photo scale !" }]}
+          >
             <Radio.Group buttonStyle="solid">
-              <Radio.Button value={4}>Horizontal</Radio.Button>
-              <Radio.Button value={3}>Vertical</Radio.Button>
+              <Radio.Button value={4}>4:3</Radio.Button>
+              <Radio.Button value={3}>3:4</Radio.Button>
+              <Radio.Button value={1}>1:1</Radio.Button>
             </Radio.Group>
           </Form.Item>
-          <Form.Item name="status" label="content">
+          <Form.Item
+            name="status"
+            label="visible"
+            rules={[
+              { required: true, message: "Please select photo visible !" },
+            ]}
+          >
             <Radio.Group buttonStyle="solid">
-              <Radio.Button value={0}>删除</Radio.Button>
-              <Radio.Button value={1}>展示</Radio.Button>
-              <Radio.Button value={2}>隐藏</Radio.Button>
+              <Radio.Button value={1}>show</Radio.Button>
+              <Radio.Button value={2}>hidden</Radio.Button>
+              <Radio.Button value={0}>delete</Radio.Button>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="Dragger">
+          <Form.Item
+            label="upload"
+            rules={[{ required: true, message: "Please upload photo !" }]}
+          >
             <Form.Item
               name="dragger"
               valuePropName="fileList"
               getValueFromEvent={normFile}
+              label="Dragger"
               noStyle
             >
-              <Upload.Dragger
-                name="files"
-                action="/upload.do"
+              <Upload
+                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                listType="picture-card"
+                // fileList={fileList}
+                onChange={onChange}
+                onPreview={onPreview}
                 beforeUpload={handleBeforeUploadFile}
               >
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">
-                  Click or drag file to this area to upload
-                </p>
-                <p className="ant-upload-hint">
-                  Support for a single or bulk upload.
-                </p>
-              </Upload.Dragger>
+                {fileList.length < 1 && "+ Upload"}
+              </Upload>
             </Form.Item>
           </Form.Item>
           <Form.Item

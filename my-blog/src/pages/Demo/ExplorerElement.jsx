@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-11 14:15:50
  * @LastEditors: camus
- * @LastEditTime: 2020-12-11 22:15:08
+ * @LastEditTime: 2021-01-10 21:35:03
  */
 // React
 import React, { Component } from "react";
@@ -37,13 +37,12 @@ class ExplorerElement extends Component {
       return (
         <Element
           className="explorerElement"
-          onClick={() =>
-           {
-             this.props.scrollToArticle(
+          onClick={() => {
+            this.props.scrollToArticle(
               this.props.details.article,
               this.props.index
-            )}
-          }
+            );
+          }}
         >
           {indicator} {this.props.details.article}
         </Element>
@@ -53,7 +52,6 @@ class ExplorerElement extends Component {
     }
   }
 }
-
 
 const Element = styled.div`
   padding: 5px;

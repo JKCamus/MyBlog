@@ -3,16 +3,21 @@ import React, { Component } from "react";
 // import PlainTextEditor from "./PlainTextEditor";
 import ReadTextEditor from "./ReadTextEditor";
 import styled from "styled-components";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 const ArticleView = (props) => {
+  const { isMobile } = useSelector((state) => ({
+    isMobile: state.getIn(["global", "isMobile"]),
+    shallowEqual,
+  }));
   return (
-    <Container className="articleView">
+    <Container className="articleView" isMobile={isMobile}>
       <Button onClick={props.changeView}>
         <i className="fa fa-angle-left"></i> Retour
       </Button>
       {/* <EditDate>
       </EditDate> */}
-      <Title> {props.content.article} </Title>
+      <Title isMobile={isMobile}> {props.content.article} </Title>
       {/* <div dangerouslySetInnerHTML={{ __html: this.state.content.htmlContent }}></div> */}
       <ReadTextEditor content={props.content} />
     </Container>
@@ -21,7 +26,12 @@ const ArticleView = (props) => {
 
 /* STYLE */
 const Container = styled.div`
-  width: 60vw;
+  ${(props) =>
+    props.isMobile
+      ? `
+      width: 100vw;
+    `
+      : `width: 60vw;`}
   height: 100vh;
   background-color: white;
 `;
@@ -34,7 +44,12 @@ const EditDate = styled.p`
 const Title = styled.h3`
   color: #212121;
   text-align: center;
-  font-size: 5em;
+  ${(props) =>
+    props.isMobile
+      ? `
+      font-size: 2rem;
+    `
+      : `font-size: 4rem;`}
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   padding: 10%;

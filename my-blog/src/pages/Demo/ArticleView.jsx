@@ -13,11 +13,11 @@ const ArticleView = (props) => {
   return (
     <Container className="articleView" isMobile={isMobile}>
       <Button onClick={props.changeView}>
-        <i className="fa fa-angle-left"></i> Retour
+        <i className="fa fa-angle-left"></i> Back
       </Button>
       {/* <EditDate>
       </EditDate> */}
-      <Title isMobile={isMobile}> {props.content.article} </Title>
+      {/* <Title isMobile={isMobile}> {props.content.article} </Title> */}
       {/* <div dangerouslySetInnerHTML={{ __html: this.state.content.htmlContent }}></div> */}
       <ReadTextEditor content={props.content} />
     </Container>
@@ -59,7 +59,7 @@ const Button = styled.button`
   position: fixed;
   top: 20px;
   right: 20px;
-
+  z-index: 1;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 

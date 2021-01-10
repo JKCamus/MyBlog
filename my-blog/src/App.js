@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2021-01-03 13:07:24
+ * @LastEditTime: 2021-01-10 15:54:11
  */
 import React, { memo, useEffect, useState } from "react";
 
@@ -45,7 +45,7 @@ const App = () => {
   }, []);
   return (
     <Provider store={store}>
-      <Router>
+      <HashRouter>
         <Header setShowLogin={setShowLogin}></Header>
         {showLogin && <Login setShowLogin={setShowLogin}></Login>}
         <Switch>
@@ -58,7 +58,7 @@ const App = () => {
           {/* <Route path="/backend" component={Backend} />
           <Route path="/admin" component={Admin} /> */}
         </Switch>
-      </Router>
+      </HashRouter>
     </Provider>
   );
 };

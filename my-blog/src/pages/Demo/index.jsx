@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2020-12-24 09:51:16
+ * @LastEditTime: 2021-01-10 13:24:40
  */
 import React, { memo, useState, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -173,7 +173,7 @@ export default memo(function CamusDemo() {
       {/* <SearchResult></SearchResult> */}
       {isMobile ? null : (
         <ExplorerPanel>
-          {explorer}
+          {/* {explorer} */}
           {lastArticlesTitle}
         </ExplorerPanel>
       )}

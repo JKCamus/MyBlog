@@ -1,5 +1,5 @@
 // React
-import React, { Component } from "react";
+import React, { Component, useRef, useState } from "react";
 // import PlainTextEditor from "./PlainTextEditor";
 import ReadTextEditor from "./ReadTextEditor";
 import styled from "styled-components";
@@ -21,22 +21,23 @@ const ArticleView = (props) => {
       {/* <div dangerouslySetInnerHTML={{ __html: this.state.content.htmlContent }}></div> */}
       {/* <ReadTextEditor content={props.content} /> */}
       <iframe
-      id={'iframe'}
+        id={"iframe"}
         style={{
           width: "100%",
           overflow: "visible",
         }}
         onLoad={() => {
           // console.log('sss', document.getElementById("iframe").contentWindow)
-
-          // document.getElementById("iframe").height=document.getElementById("iframe").contentWindow.document.body.scrollHeight;
+          document.getElementById("iframe").height = document.getElementById(
+            "iframe"
+          ).contentWindow.document.body.scrollHeight;
           // const obj = ReactDOM.findDOMNode(this);
           // this.setState({
           //   iFrameHeight: obj.contentWindow.document.body.scrollHeight + "px",
           // });
         }}
-        // srcDoc={`${props.content.htmlContent}`}
-        src={`${props.content.htmlContent}`}
+        srcDoc={`${props.content.htmlContent}`}
+        // src={`${props.content.htmlContent}`}
         width="100%"
         height={"100%"}
         scrolling="no"

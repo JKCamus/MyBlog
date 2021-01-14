@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-01-12 21:33:23
+ * @LastEditTime: 2021-01-14 20:52:05
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -47,7 +47,7 @@ export default memo(function CamusDemo() {
         return {
           ...item,
           visible: item.status === 1,
-          article:item.title
+          article: item.title,
         };
       });
       setArticlesData(articles);
@@ -57,7 +57,7 @@ export default memo(function CamusDemo() {
   // 滚动到对应的card
   const scrollToArticle = (element, selected) => {
     if (view.type === "grid") {
-      const selectedChildren = login === true ? 1 : 0;
+      const selectedChildren = login === true ? 0 : 0;
       if (element) {
         const articles = document.querySelectorAll(".article");
         articles.forEach((currentElement, index) => {
@@ -92,7 +92,6 @@ export default memo(function CamusDemo() {
         selected: index,
       });
     } else {
-      console.log("-------");
       setView({
         type: "grid",
         selected: null,

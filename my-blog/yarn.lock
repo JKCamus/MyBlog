@@ -6163,19 +6163,6 @@ iferr@^0.1.5:
   resolved "https://registry.npm.taobao.org/iferr/download/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
   integrity sha1-xg7taebY/bazEEofy8ocGS3FtQE=
 
-iframe-resizer-react@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npm.taobao.org/iframe-resizer-react/download/iframe-resizer-react-1.1.0.tgz#5009e019b7a5c7f1c009bff5bcdf0dbf33557465"
-  integrity sha1-UAngGbelx/HACb/1vN8NvzNVdGU=
-  dependencies:
-    iframe-resizer "^4.3.0"
-    warning "^4.0.3"
-
-iframe-resizer@^4.3.0:
-  version "4.3.1"
-  resolved "https://registry.npm.taobao.org/iframe-resizer/download/iframe-resizer-4.3.1.tgz#7aca964ac02ba1fd2b8099b8ef30bc9a1f4f72ca"
-  integrity sha1-esqWSsArof0rgJm47zC8mh9Pcso=
-
 ignore@^4.0.6:
   version "4.0.6"
   resolved "https://registry.npm.taobao.org/ignore/download/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"

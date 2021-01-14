@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-11 15:36:24
  * @LastEditors: camus
- * @LastEditTime: 2020-12-11 17:24:49
+ * @LastEditTime: 2021-01-14 20:49:37
  */
 // React
 import React, { Component } from "react";
@@ -38,7 +38,7 @@ class Article extends Component {
           className="article"
           onClick={() => this.props.changeView(index)}
         >
-          {indicator}
+          {/* {indicator} */}
           <Title>{this.props.details.article}</Title>
           <img src={this.props.details.img} alt="article" width="60%" />
           <Preview>{this.props.details.preview}</Preview>

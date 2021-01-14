@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-11 15:36:24
  * @LastEditors: camus
- * @LastEditTime: 2021-01-14 20:49:37
+ * @LastEditTime: 2021-01-14 20:56:43
  */
 // React
 import React, { Component } from "react";
@@ -20,17 +20,17 @@ class Article extends Component {
       this.login = false;
     }
 
-    let indicator = this.props.details.visible ? (
-      <OnlineIndicator>
-        <i className="fa fa-circle"></i> En ligne
-      </OnlineIndicator>
-    ) : (
-      <OfflineIndicator>
-        <i className="fa fa-circle"></i> Hors-ligne
-      </OfflineIndicator>
-    );
+    // let indicator = this.props.details.visible ? (
+    //   <OnlineIndicator>
+    //     <i className="fa fa-circle"></i> En ligne
+    //   </OnlineIndicator>
+    // ) : (
+    //   <OfflineIndicator>
+    //     <i className="fa fa-circle"></i> Hors-ligne
+    //   </OfflineIndicator>
+    // );
 
-    indicator = this.login ? indicator : null;
+    // indicator = this.login ? indicator : null;
 
     if (this.props.details.visible || this.login) {
       return (

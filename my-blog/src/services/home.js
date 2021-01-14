@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-08 19:42:11
  * @LastEditors: camus
- * @LastEditTime: 2021-01-08 13:41:44
+ * @LastEditTime: 2021-01-14 22:15:45
  */
 import request from "./request";
 
@@ -28,9 +28,16 @@ export function getAllPhotoList(page, size) {
   });
 }
 
-
 export function authTest() {
   return request({
     url: "/test",
   });
 }
+
+
+// export function getUserAvatar(id) {
+//   return request({
+//     url: `/users/${id}/avatar`,
+//     method: "get",
+//   });
+// }

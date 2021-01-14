@@ -8,6 +8,7 @@ import { getUerInfo, removeToken } from "utils/token";
 
 import { UserOutlined } from "@ant-design/icons";
 import checkLogin from "utils/checkLogin";
+import { BASE_URL } from "services/config";
 
 const Header = (props) => {
   const { Item, SubMenu } = Menu;
@@ -29,7 +30,14 @@ const Header = (props) => {
     removeToken();
     setPhoneOpen(!phoneOpen);
   };
-
+  // const _getUserAvatar = async (userId) => {
+  //   try {
+  //     const avatarUrl = await getUserAvatar(userId);
+  //     console.log("avatar", avatarUrl);
+  //   } catch (error) {
+  //     console.log("", error);
+  //   }
+  // };
   const renderMenu = (params) => {
     const userInfo = getUerInfo();
     const menu = (
@@ -79,11 +87,14 @@ const Header = (props) => {
         overlay={menu}
         theme="dark"
         trigger={["click"]}
-        // style={{padding:0}}
         className={"menu-item"}
       >
         <div>
-          <Avatar size={36} onClick={(e) => e.preventDefault()} />
+          <Avatar
+            src={`${BASE_URL}/users/${userInfo.id}/avatar`}
+            size={36}
+            onClick={(e) => e.preventDefault()}
+          />
         </div>
       </Dropdown>
     );
@@ -155,7 +166,7 @@ const Header = (props) => {
             className={"menu-item"}
             onClick={() => setPhoneOpen(!phoneOpen)}
           >
-            Demo
+            Notes
           </NavLink>
           <NavLink
             to={"/charts"}

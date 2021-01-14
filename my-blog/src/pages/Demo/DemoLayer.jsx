@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-11 14:06:30
  * @LastEditors: camus
- * @LastEditTime: 2020-12-11 17:30:12
+ * @LastEditTime: 2021-01-14 21:11:52
  */
 // React
 import React, { Component } from 'react'
@@ -22,7 +22,7 @@ class Home extends Component {
     return (
       <Container className="Home">
         <Title>
-          <Span>D</Span>emo<Span>.</Span>
+          <Span>N</Span>otes<Span>.</Span>
         </Title>
       </Container>
     )

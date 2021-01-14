@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-01-14 20:52:05
+ * @LastEditTime: 2021-01-14 22:25:56
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -151,7 +151,7 @@ export default memo(function CamusDemo() {
     : null;
   // 侧栏标题
   const lastArticlesTitle = articlesData ? (
-    <ExplorerTitle>Derniers Articles</ExplorerTitle>
+    <ExplorerTitle>Camus Notes</ExplorerTitle>
   ) : null;
   // const disconnect = () => {
   //   this.setState({

@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-01-14 22:25:56
+ * @LastEditTime: 2021-01-14 22:55:54
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -171,10 +171,11 @@ export default memo(function CamusDemo() {
       {view.type === "grid" ? (
         <ContainerGrid className="articlesGrid">{articles}</ContainerGrid>
       ) : (
-        <ArticleView
-          content={articlesData[view.selected]}
-          changeView={changeView}
-        ></ArticleView>
+        <div>ssss</div>
+        // <ArticleView
+        //   content={articlesData[view.selected]}
+        //   changeView={changeView}
+        // ></ArticleView>
       )}
     </ContainerApp>
   );

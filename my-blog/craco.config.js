@@ -15,6 +15,26 @@ module.exports = {
       store: resolve("src/store"),
       utils: resolve("src/utils"),
     },
+    //抽离公用模块
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          commons: {
+            chunks: "initial",
+            minChunks: 2,
+            maxInitialRequests: 5,
+            minSize: 0,
+          },
+          vendor: {
+            test: /node_modules/,
+            chunks: "initial",
+            name: "vendor",
+            priority: 10,
+            enforce: true,
+          },
+        },
+      },
+    },
   },
   // 插件相关配置，一个plugin一个对象
   plugins: [
@@ -34,7 +54,7 @@ module.exports = {
       },
     },
     {
-    // 配置全局less变量使用，用的是一个少有人知的loader，必须先弄这个配置
+      // 配置全局less变量使用，用的是一个少有人知的loader，必须先弄这个配置
       plugin: {
         ...CracoSwcPlugin,
         overrideCracoConfig: ({ cracoConfig }) => {

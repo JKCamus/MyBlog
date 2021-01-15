@@ -32,7 +32,7 @@ const routes = [
   },
   {
     path: "/demo",
-    exact: true,
+    // exact: true,
     component: Demo,
   },
   {

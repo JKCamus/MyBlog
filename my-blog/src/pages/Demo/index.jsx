@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-01-14 22:55:54
+ * @LastEditTime: 2021-01-15 23:18:20
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -19,8 +19,18 @@ import Article from "./Article";
 import ArticleView from "./ArticleView";
 import { RenderType } from "./constants";
 import { getDemoList } from "services/demo";
+import {
+  NavLink,
+  HashRouter,
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+  Link,
+} from "react-router-dom";
+import SelectAll from "../Demo/SelectAll";
 
-export default memo(function CamusDemo() {
+export default memo(function CamusDemo(props) {
   const { isMobile } = useSelector((state) => ({
     isMobile: state.getIn(["global", "isMobile"]),
     shallowEqual,
@@ -91,6 +101,8 @@ export default memo(function CamusDemo() {
         type: "article",
         selected: index,
       });
+
+      props.history.push("/demo/2");
     } else {
       setView({
         type: "grid",
@@ -113,21 +125,6 @@ export default memo(function CamusDemo() {
         </ArticleContainer>
       ))
     : null;
-  let viewRender =
-    view.type === "grid" ? (
-      <ContainerGrid className="articlesGrid">{articles}</ContainerGrid>
-    ) : (
-      <ArticleView
-        content={articlesData[0]}
-        changeView={changeView}
-      ></ArticleView>
-    );
-  // view =
-  //   isSearch === true ? (
-  //     <SearchContainer>{searchedArticles}</SearchContainer>
-  //   ) : (
-  //     view
-  //   );
   // 侧栏
   const explorer = articlesData
     ? Object.keys(articles).map((key, index) => {
@@ -170,13 +167,22 @@ export default memo(function CamusDemo() {
       )}
       {view.type === "grid" ? (
         <ContainerGrid className="articlesGrid">{articles}</ContainerGrid>
+      ) : // <div>sasss</div>
+      articlesData[view.selected].status !== 2 ? (
+        <ArticleView
+          content={articlesData[view.selected]}
+          changeView={changeView}
+        ></ArticleView>
       ) : (
-        <div>ssss</div>
-        // <ArticleView
-        //   content={articlesData[view.selected]}
-        //   changeView={changeView}
-        // ></ArticleView>
+        <div>
+          <Route path="/demo/2" component={SelectAll} />
+          <ArticleView
+            content={articlesData[view.selected]}
+            changeView={changeView}
+          ></ArticleView>
+        </div>
       )}
+      {/* <Route path="inbox" component={Inbox}></Route> */}
     </ContainerApp>
   );
 });

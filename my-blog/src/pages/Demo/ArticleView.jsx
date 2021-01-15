@@ -1,7 +1,7 @@
 // React
 import React, { Component, useRef, useState } from "react";
 // import PlainTextEditor from "./PlainTextEditor";
-import ReadTextEditor from "./ReadTextEditor";
+// import ReadTextEditor from "./ReadTextEditor";
 import styled from "styled-components";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 

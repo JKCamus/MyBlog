@@ -69,41 +69,21 @@ module.exports = {
       },
       //抽离公用模块
       optimization: {
-        minimize: process.env.REACT_APP_ENV !== "development" ? true : false,
+        // minimize: process.env.REACT_APP_ENV !== "development" ? true : false,
         splitChunks: {
-          chunks: "all", // initial、async和all
-          minSize: 30000, // 形成一个新代码块最小的体积
-          maxAsyncRequests: 5, // 按需加载时候最大的并行请求数
-          maxInitialRequests: 3, // 最大初始化请求数
-          automaticNameDelimiter: "~", // 打包分割符
-          name: true,
           cacheGroups: {
-            // commons: {
-            //   chunks: "initial",
-            //   minChunks: 2,
-            //   maxInitialRequests: 5,
-            //   minSize: 0,
-            // },
-            // vendor: {
-            //   test: /node_modules/,
-            //   chunks: "initial",
-            //   name: "vendor",
-            //   priority: 10,
-            //   enforce: true,
-            // },
-            "async-commons": {
-              // 其余异步加载包
-              chunks: "async",
-              minChunks: 2,
-              name: "async-commons",
-              priority: 90,
-            },
             commons: {
-              // 其余同步加载包
-              chunks: "all",
+              chunks: "initial",
               minChunks: 2,
-              name: "commons",
-              priority: 80,
+              maxInitialRequests: 5,
+              minSize: 0,
+            },
+            vendor: {
+              test: /node_modules/,
+              chunks: "initial",
+              name: "vendor",
+              priority: 10,
+              enforce: true,
             },
           },
         },
@@ -117,21 +97,21 @@ module.exports = {
       ...whenProd(
         () => [
           // 压缩js 同时删除console debug等
-          new TerserPlugin({
-            // parallel: true, // 多线程
-            // terserOptions: {
-            //   ie8: true,
-            //   // 删除注释
-            //   output: {
-            //     comments: false,
-            //   },
-            //   //删除console 和 debugger  删除警告
-            //   compress: {
-            //     drop_debugger: true,
-            //     drop_console: true,
-            //   },
-            // },
-          }),
+          // new TerserPlugin({
+          //   parallel: true, // 多线程
+          //   terserOptions: {
+          //     ie8: true,
+          //     // 删除注释
+          //     output: {
+          //       comments: false,
+          //     },
+          //     //删除console 和 debugger  删除警告
+          //     compress: {
+          //       drop_debugger: true,
+          //       drop_console: true,
+          //     },
+          //   },
+          // }),
           // 开启gzip
           // new CompressionWebpackPlugin({
           //   // 是否删除源文件，默认: false

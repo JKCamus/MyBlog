@@ -4,16 +4,12 @@
  * @Author: camus
  * @Date: 2020-12-11 14:06:30
  * @LastEditors: camus
- * @LastEditTime: 2021-01-14 21:11:52
+ * @LastEditTime: 2021-01-15 22:02:56
  */
 // React
 import React, { Component } from 'react'
 
 // Components
-
-// semantic-ui
-//import { Header } from 'semantic-ui-react'
-
 // Styled components
 import styled from 'styled-components'
 

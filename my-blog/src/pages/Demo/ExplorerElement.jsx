@@ -4,54 +4,27 @@
  * @Author: camus
  * @Date: 2020-12-11 14:15:50
  * @LastEditors: camus
- * @LastEditTime: 2021-01-10 21:35:03
+ * @LastEditTime: 2021-01-15 22:52:40
  */
 // React
-import React, { Component } from "react";
-
+import React, { Component, memo } from "react";
 // Styled components
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
-class ExplorerElement extends Component {
-  render() {
-    if (this.props.login) {
-      this.login = true;
-    } else {
-      this.login = false;
-    }
-    let indicator = this.props.details.visible ? (
-      <i
-        className="fa fa-circle"
-        style={{ color: "#81C784", marginRight: "5px" }}
-      ></i>
-    ) : (
-      <i
-        className="fa fa-circle"
-        style={{ color: "#FF8A80", marginRight: "5px" }}
-      ></i>
-    );
-
-    indicator = this.login ? indicator : null;
-
-    if (this.props.details.visible || this.login) {
-      return (
-        <Element
-          className="explorerElement"
-          onClick={() => {
-            this.props.scrollToArticle(
-              this.props.details.article,
-              this.props.index
-            );
-          }}
-        >
-          {indicator} {this.props.details.article}
-        </Element>
-      );
-    } else {
-      return null;
-    }
-  }
-}
+const ExplorerElement = (props) => {
+  const {details}=props
+  return (
+    <Element
+      className="explorerElement"
+      onClick={() => {
+        props.scrollToArticle(details.article, props.index);
+      }}
+    >
+      {props.details.article}
+    </Element>
+  );
+};
 
 const Element = styled.div`
   padding: 5px;
@@ -71,4 +44,4 @@ const Element = styled.div`
   }
 `;
 
-export default ExplorerElement;
+export default memo(ExplorerElement);

@@ -4,11 +4,19 @@ const CracoSwcPlugin = require("craco-swc");
 const cracoPluginStyleResourcesLoader = require("craco-plugin-style-resources-loader");
 const babelPluginStyledComponents = require("babel-plugin-styled-components");
 const resolve = (dir) => path.resolve(__dirname, dir); //dirname 目录路径
-
+// 确实去除了sourceMap
 process.env.GENERATE_SOURCEMAP = "false";
+// 添加webpack速度分析,在webpack那边假如smp
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasurePlugin();
+
+const { POSTCSS_MODES, whenProd } = require("@craco/craco");
+
+const threadLoader = require("thread-loader");
+const WebpackBar = require("webpackbar");
 
 module.exports = {
-  webpack: {
+  webpack: smp.wrap({
     alias: {
       "@": resolve("src"),
       components: resolve("src/components"),
@@ -38,7 +46,40 @@ module.exports = {
         },
       },
     },
-  },
+    plugins: [
+      // webpack进度条
+      new WebpackBar({ color: "green", profile: true }),
+      // 打包时，启动插件
+      // ...whenProd(
+      //   () => [
+      //     // 压缩js 同时删除console debug等
+      //     new TerserPlugin({
+      //       parallel: true, // 多线程
+      //       terserOptions: {
+      //         ie8: true,
+      //         // 删除注释
+      //         output: {
+      //           comments: false,
+      //         },
+      //         //删除console 和 debugger  删除警告
+      //         compress: {
+      //           drop_debugger: true,
+      //           drop_console: true,
+      //         },
+      //       },
+      //     }),
+      //     // 开启gzip
+      //     new CompressionWebpackPlugin({
+      //       // 是否删除源文件，默认: false
+      //       deleteOriginalAssets: false,
+      //     }),
+      //     // 打包分析
+      //     new BundleAnalyzerPlugin(),
+      //   ],
+      //   []
+      // ),
+    ],
+  }),
   // 插件相关配置，一个plugin一个对象
   plugins: [
     // 配置less

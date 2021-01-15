@@ -4,6 +4,9 @@ const CracoSwcPlugin = require("craco-swc");
 const cracoPluginStyleResourcesLoader = require("craco-plugin-style-resources-loader");
 const babelPluginStyledComponents = require("babel-plugin-styled-components");
 const resolve = (dir) => path.resolve(__dirname, dir); //dirname 目录路径
+
+process.env.GENERATE_SOURCEMAP = "false";
+
 module.exports = {
   webpack: {
     alias: {

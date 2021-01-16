@@ -14,7 +14,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import AuthorizedRoute from "@/router/AuthorizedRoute";
-import UploadDemo from "@/pages/Profile/pictureManage/upload";
+import NotesGeneral from "@/pages/Profile/pictureManage/NotesGeneral";
 import GeneralList from "./pictureManage/General";
 import { ProfileWrapper } from "./styles";
 
@@ -45,7 +45,7 @@ const handleCollapse = (params) => {
                 <NavLink to={"/profile/general"}>图片概览</NavLink>
               </Menu.Item>
               <Menu.Item key="1">
-                <NavLink to={"/profile/upload"}>上传，废弃</NavLink>
+                <NavLink to={"/profile/notes-general"}>笔记概览</NavLink>
               </Menu.Item>
             </Menu.ItemGroup>
             {/* <Menu.ItemGroup key="g2" title="Item 2">
@@ -80,10 +80,10 @@ const handleCollapse = (params) => {
       <div className="content">
         <Switch>
           <AuthorizedRoute
-            path="/profile/upload"
+            path="/profile/notes-general"
             exact
-            key={"/profile/upload"}
-            component={UploadDemo}
+            key={"/profile/notes-general"}
+            component={NotesGeneral}
             user={{ role: ["user"] }}
           ></AuthorizedRoute>
           <AuthorizedRoute

@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-01-15 23:18:20
+ * @LastEditTime: 2021-01-15 23:22:50
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -174,13 +174,16 @@ export default memo(function CamusDemo(props) {
           changeView={changeView}
         ></ArticleView>
       ) : (
-        <div>
-          <Route path="/demo/2" component={SelectAll} />
+        <DemoRouterWrapper>
+          <Route
+            path={`/demo/${articlesData[view.selected].id}`}
+            component={SelectAll}
+          />
           <ArticleView
             content={articlesData[view.selected]}
             changeView={changeView}
           ></ArticleView>
-        </div>
+        </DemoRouterWrapper>
       )}
       {/* <Route path="inbox" component={Inbox}></Route> */}
     </ContainerApp>
@@ -188,6 +191,10 @@ export default memo(function CamusDemo(props) {
 });
 
 const fadeInAnimation = keyframes`${fadeIn}`;
+
+const DemoRouterWrapper = styled.div`
+  background-color: #fff;
+`;
 
 const ContainerApp = styled.div`
   position: absolute;

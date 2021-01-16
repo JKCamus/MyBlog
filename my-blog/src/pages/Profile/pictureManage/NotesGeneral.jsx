@@ -14,16 +14,23 @@ import {
 } from "antd";
 import { getAllPhotoList } from "services/home";
 // import Upload from "./upload";
-import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 
-import { uploadPhoto, deletePhotos } from "services/profile";
+import {
+  uploadPhoto,
+  deletePhotos,
+  getDemoList,
+  uploadNotes,
+} from "services/profile";
 
-const General = (props) => {
+const NotesGeneral = (props) => {
   const [photoList, setPhotoList] = useState([]);
+  const [notesList, setNotesList] = useState([]);
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [tempRow, setTempRow] = useState({});
   const [tableLoading, setTableLoading] = useState(false);
+  const [htmlList, setHtmlList] = useState([]);
   // const [imgs, setImgs] = useState("");
   const [form] = Form.useForm();
   const formItemLayout = {
@@ -31,44 +38,38 @@ const General = (props) => {
     wrapperCol: { span: 14 },
   };
   useEffect(() => {
-    _getPhotoList();
+    _getDemoList();
   }, []);
   useEffect(() => {
     if (!uploadModalVisible) {
       form.setFieldsValue({
-        content: "",
-        dragger: [],
+        preview: "",
+        img: [],
+        htmlFile: [],
         status: 1,
         title: "",
-        width: 4,
       });
       setFileList([]);
+      setHtmlList([]);
       setTempRow({});
     }
   }, [uploadModalVisible]);
 
-  // 请求所有照片信息
-  const _getPhotoList = async () => {
+  const _getDemoList = async () => {
     try {
       setTableLoading(true);
-      const photos = await getAllPhotoList(1, 20);
-      const newPhotos = photos.map((item) => {
-        return {
-          ...item,
-          key: item.id,
-        };
-      });
-      setPhotoList(newPhotos);
+      const notes = await getDemoList(1, 20);
+      setNotesList(notes);
       setTableLoading(false);
     } catch (error) {
-      console.log("_getPhotoList", error);
+      console.log("getDemoList", error);
     }
   };
 
-  // 上传图片请求
-  const _uploadPhoto = async (data) => {
+  // 上传筆記请求
+  const _uploadNotes = async (data) => {
     try {
-      await uploadPhoto(data);
+      await uploadNotes(data);
     } catch (error) {
       console.log("uploadPhoto err");
     }
@@ -77,7 +78,7 @@ const General = (props) => {
   const _deletePhotos = async () => {
     try {
       await deletePhotos();
-      await _getPhotoList();
+      await _getDemoList();
     } catch (error) {
       console.log("deletePhotos error");
     }
@@ -93,20 +94,23 @@ const General = (props) => {
       dataIndex: "title",
     },
     {
-      title: "Content",
-      dataIndex: "content",
+      title: "Preview",
+      dataIndex: "preview",
+      ellipsis: true,
     },
     {
-      title: "Size",
-      dataIndex: "size",
+      title: "htmlUrl",
+      dataIndex: "htmlUrl",
+      ellipsis: true,
     },
     {
-      title: "url",
-      dataIndex: "url",
+      title: "imgUrl",
+      dataIndex: "img",
+      ellipsis: true,
     },
     {
-      title: "width",
-      dataIndex: "width",
+      title: "htmlName",
+      dataIndex: "htmlName",
     },
     {
       title: "status",
@@ -136,21 +140,39 @@ const General = (props) => {
     // const { current } = uploadRef;
     // console.log("form", form);
     if (row.id) {
+      console.log("row", row);
       form &&
         form.setFieldsValue({
           ...row,
-          dragger: [
+          img: [
             {
               uid: row.id,
               name: row.title,
               status: "done",
-              url: row.url,
+              url: row.img,
             },
           ],
+          // htmlFile: [
+          //   {
+          //     uid: row.id,
+          //     name: row.title,
+          //     status: "done",
+          //     url: row.htmlUrl,
+          //   },
+          // ],
         });
+      row.htmlUrl &&
+        setHtmlList([
+          {
+            uid: row.id,
+            name: row.title,
+            status: "done",
+            url: row.htmlUrl,
+          },
+        ]);
       setFileList([
         {
-          url: row.url,
+          url: row.img,
         },
       ]);
       setTempRow(row);
@@ -161,50 +183,43 @@ const General = (props) => {
   const onFinish = async (values) => {
     try {
       const formData = new FormData();
-      const { dragger, content, title, width = 4, status } = values;
-      if (!dragger.length) {
+      console.log("values", values);
+      const { img, title, htmlFile, status, preview } = values;
+      formData.append("title", title);
+      formData.append("preview", preview);
+      formData.append("status", status);
+      if (!img.length) {
         throw new Error("noFile");
       }
-      formData.append("title", title);
-      formData.append("content", content);
-      formData.append("width", width);
-      formData.append("status", status);
-      if (dragger && dragger.length) {
-        formData.append("photo", dragger[0].originFileObj);
+      if (img && img.length) {
+        !img[0].url && formData.append("image", img[0].originFileObj);
       }
+      if (htmlFile && htmlFile.length) {
+        formData.append("htmlContent", htmlFile[0].originFileObj);
+      }
+
       if (tempRow.id) {
-        formData.append("filename", tempRow.filename);
-        formData.append("mimetype", tempRow.mimetype);
-        formData.append("size", tempRow.size);
+        htmlList.length && formData.append("htmlName", tempRow.htmlName);
         formData.append("id", tempRow.id);
       }
-      await _uploadPhoto(formData);
+
+      await _uploadNotes(formData);
       setUploadModalVisible(false);
-      await _getPhotoList();
+      await _getDemoList();
     } catch (error) {
       if (error.message === "noFile") {
-        message.error("请上传图片");
+        message.error("请上传封面");
       }
       console.log("error", error);
     }
   };
 
   const handleBeforeUploadFile = (file) => {
-    // 使用 beforeUpload 會失去在選擇圖片後馬上看到圖片的功能，因此利用FileReader方法來實現預覽效果
-    // let reader = new FileReader();
-    // reader.readAsDataURL(file);
-    // reader.onloadend = function () {
-    //   setFileList([{ uid: file.uid, url: reader.result }]);
-    //   setImgs(reader.result);
-    //   // this.setState({fileList: [{uid: file.uid, url: reader.result}],image:reader.result})
-    // }.bind(this);
-
-    // 使用 beforeUpload 回傳 false 可以停止上傳
     return false;
   };
 
   const normFile = (e) => {
-    console.log("Upload event:", e);
+    // console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -229,6 +244,9 @@ const General = (props) => {
     const imgWindow = window.open(src);
     imgWindow.document.write(image.outerHTML);
   };
+  const handleRemoveHtml = () => {
+    setHtmlList([]);
+  };
 
   const handleDeletePhotos = () => {
     _deletePhotos();
@@ -240,50 +258,34 @@ const General = (props) => {
       <Button onClick={handleDeletePhotos}>clear</Button>
       <Table
         columns={columns}
-        dataSource={photoList}
+        dataSource={notesList}
         rowKey="id"
         loading={tableLoading}
       />
       <Modal
         title="图片上传"
         visible={uploadModalVisible}
-        // onOk={handleModalOk}
         onCancel={handleModalCancel}
         footer={null}
         destroyOnClose={true}
       >
-        {/* <Upload ref={uploadRef} ></Upload> */}
         <Form
           name="validate_other"
           form={form}
           {...formItemLayout}
           onFinish={onFinish}
-          // initialValues={{
-          //   ["id"]: undefined,
-          // }}
         >
           <Form.Item
             name="title"
             label="title"
             rules={[
-              { required: true, message: "Please input photo's title !" },
+              { required: true, message: "Please input title !" },
             ]}
           >
             <Input></Input>
           </Form.Item>
-          <Form.Item name="content" label="content">
+          <Form.Item name="preview" label="preview">
             <Input.TextArea></Input.TextArea>
-          </Form.Item>
-          <Form.Item
-            name="width"
-            label="scale"
-            rules={[{ required: true, message: "Please select photo scale !" }]}
-          >
-            <Radio.Group buttonStyle="solid">
-              <Radio.Button value={4}>4:3</Radio.Button>
-              <Radio.Button value={3}>3:4</Radio.Button>
-              <Radio.Button value={1}>1:1</Radio.Button>
-            </Radio.Group>
           </Form.Item>
           <Form.Item
             name="status"
@@ -293,20 +295,45 @@ const General = (props) => {
             ]}
           >
             <Radio.Group buttonStyle="solid">
-              <Radio.Button value={1}>show</Radio.Button>
-              <Radio.Button value={2}>hidden</Radio.Button>
+              <Radio.Button value={1}>html</Radio.Button>
+              <Radio.Button value={2}>html&&demo</Radio.Button>
               <Radio.Button value={0}>delete</Radio.Button>
             </Radio.Group>
           </Form.Item>
           <Form.Item
-            label="upload"
+            label="htmlFile"
             rules={[{ required: true, message: "Please upload photo !" }]}
           >
             <Form.Item
-              name="dragger"
+              name="htmlFile"
+              valuePropName="htmlList"
+              getValueFromEvent={normFile}
+              label="htmlFile"
+              noStyle
+            >
+              <Upload
+                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                // listType="picture-card"
+                defaultFileList={htmlList}
+                onRemove={handleRemoveHtml}
+                // fileList={htmlList}
+                // onChange={onChange}
+                // onPreview={onPreview}
+                beforeUpload={handleBeforeUploadFile}
+              >
+                <Button icon={<UploadOutlined />}>Click to HtmlFile</Button>
+              </Upload>
+            </Form.Item>
+          </Form.Item>
+          <Form.Item
+            label="uploadCover"
+            rules={[{ required: true, message: "Please upload photo !" }]}
+          >
+            <Form.Item
+              name="img"
               valuePropName="fileList"
               getValueFromEvent={normFile}
-              label="Dragger"
+              label="img"
               noStyle
             >
               <Upload
@@ -321,6 +348,7 @@ const General = (props) => {
               </Upload>
             </Form.Item>
           </Form.Item>
+
           <Form.Item
             wrapperCol={{
               span: 12,
@@ -336,4 +364,4 @@ const General = (props) => {
     </div>
   );
 };
-export default memo(General);
+export default memo(NotesGeneral);

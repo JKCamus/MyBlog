@@ -7,7 +7,7 @@ import Demo from "pages/Demo";
 import DragChart from "pages/Demo/drag-charts";
 import Login from "components/login";
 import Profile from '@/pages/Profile';
-import UploadDemo from "@/pages/Profile/pictureManage/upload";
+import UploadDemo from "@/pages/Profile/pictureManage/NotesGeneral";
 
 const routes = [
   {

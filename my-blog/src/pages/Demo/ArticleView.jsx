@@ -79,7 +79,7 @@ const Title = styled.h3`
 
 const Button = styled.button`
   position: fixed;
-  top: 20px;
+  top: 10rem;
   right: 20px;
   z-index: 1;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,

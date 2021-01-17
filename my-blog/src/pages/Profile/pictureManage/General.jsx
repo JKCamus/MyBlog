@@ -18,7 +18,7 @@ import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
 
 import { uploadPhoto, deletePhotos } from "services/profile";
 
-const General = (props) => {
+const General = () => {
   const [photoList, setPhotoList] = useState([]);
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
   const [fileList, setFileList] = useState([]);

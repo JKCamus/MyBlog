@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2021-01-05 21:10:55
  * @LastEditors: camus
- * @LastEditTime: 2021-01-16 15:52:55
+ * @LastEditTime: 2021-01-16 21:21:22
  */
 import request from "./request";
 
@@ -42,5 +42,11 @@ export function uploadNotes(data) {
       "Content-Type": "multipart/form-data",
     },
     data,
+  });
+}
+export function clearNotes() {
+  return request({
+    url: "/demo/clearNotes",
+    method: "delete",
   });
 }

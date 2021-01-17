@@ -21,9 +21,10 @@ import {
   deletePhotos,
   getDemoList,
   uploadNotes,
+  clearNotes
 } from "services/profile";
 
-const NotesGeneral = (props) => {
+const NotesGeneral = () => {
   const [photoList, setPhotoList] = useState([]);
   const [notesList, setNotesList] = useState([]);
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
@@ -75,9 +76,9 @@ const NotesGeneral = (props) => {
     }
   };
 
-  const _deletePhotos = async () => {
+  const _clearNotes = async () => {
     try {
-      await deletePhotos();
+      await clearNotes();
       await _getDemoList();
     } catch (error) {
       console.log("deletePhotos error");
@@ -249,7 +250,7 @@ const NotesGeneral = (props) => {
   };
 
   const handleDeletePhotos = () => {
-    _deletePhotos();
+    _clearNotes();
   };
 
   return (

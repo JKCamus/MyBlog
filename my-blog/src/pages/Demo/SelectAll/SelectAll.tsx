@@ -5,8 +5,7 @@ interface optionT {
   key: string;
   label: string;
 }
-// FormComponentProps
-const SelectAll = (props) => {
+const SelectAll = () => {
   const [formVisible, setFormVisible] = useState(false);
   const [form] = Form.useForm();
   const { setFieldsValue, validateFields } = form;
@@ -18,33 +17,38 @@ const SelectAll = (props) => {
     };
     children.push(value);
   }
+  /**
+   * @description: Modal确认，表单提交与验证
+   */
   const handleOk = async () => {
     try {
+      // 4.x与3.X版本不一样，validateFields被封装成立Promise
       const values = await validateFields();
-      // if(values.selectAll.length===26)throw new Error('taicahngle')
+      // if (values.selectAll.length === 26) throw new Error("请不要全选");
       message.info(`这里是表单所有数据：${JSON.stringify(values)}`, 3);
       form.resetFields();
-      console.log("ssss", values);
     } catch (info) {
       console.log("Validate Failed:", info);
     }
-    /* selectAll可以定为最后提交数据的那个字段需做处理获得其value */
-    // console.log("这里是表单所有数据", value);
-    // setFormVisible(false);
-    // message.info(`这里是表单所有数据：${JSON.stringify(value)}`, 3);
-    //  validateFields()
-    //     .then((values) => {
-    //       console.log('values', values)
-    //       form.resetFields();
-    //     })
-    //     .catch((info) => {
-    //       console.log("Validate Failed:", info);
-    //     });
-
   };
+  /**
+   * @description: CheckBox全选与反选
+   */
+  const handleCheckBox = (e) => {
+    if (e.target.checked === true) {
+      setFieldsValue({
+        selectAll: children,
+      });
+    } else {
+      setFieldsValue({
+        selectAll: [],
+      });
+    }
+  };
+
   return (
     <>
-      <Divider style={{ marginBottom: "10px" }}></Divider>
+      {/* <Divider style={{ marginBottom: "10px" }}></Divider> */}
       <Button onClick={() => setFormVisible(true)}> 表单弹出</Button>
       <Modal
         visible={formVisible}
@@ -55,6 +59,7 @@ const SelectAll = (props) => {
         <Form name="selectAll" form={form}>
           <Form.Item
             label="selectAll"
+            // 给出当前表单值，会影响提交表单的key
             name="selectAll"
             rules={[{ required: true, message: "Choose what you like" }]}
           >
@@ -68,19 +73,12 @@ const SelectAll = (props) => {
                   <div>
                     <div
                       style={{ padding: "4px 8px 8px 8px", cursor: "pointer" }}
+                      // 阻止事件冒泡
                       onMouseDown={(e) => e.preventDefault()}
                     >
                       <Checkbox
                         onChange={(e) => {
-                          if (e.target.checked === true) {
-                            setFieldsValue({
-                              selectAll: children,
-                            });
-                          } else {
-                            setFieldsValue({
-                              selectAll: [],
-                            });
-                          }
+                          handleCheckBox(e);
                         }}
                       >
                         全选

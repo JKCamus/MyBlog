@@ -33,13 +33,13 @@ const General = () => {
   }, []);
   useEffect(() => {
     if (!uploadModalVisible) {
-      form.setFieldsValue({
-        content: "",
-        dragger: [],
-        status: 1,
-        title: "",
-        width: 4,
-      });
+      // form.setFieldsValue({
+      //   content: "",
+      //   dragger: [],
+      //   status: 1,
+      //   title: "",
+      //   width: 4,
+      // });
       setFileList([]);
       setTempRow({});
     }
@@ -121,18 +121,13 @@ const General = () => {
     },
   ];
 
-  // const handleModalOk = () => {
-  //   console.log("ok");
-  // };
-
   const handleModalCancel = () => {
+    form.resetFields();
     setUploadModalVisible(false);
-    // console.log("cancel");
   };
 
   const handleEdit = (row) => {
-    // const { current } = uploadRef;
-    // console.log("form", form);
+
     if (row.id) {
       form &&
         form.setFieldsValue({
@@ -177,6 +172,7 @@ const General = () => {
         formData.append("id", tempRow.id);
       }
       await _uploadPhoto(formData);
+      form.resetFields();
       setUploadModalVisible(false);
       await _getPhotoList();
     } catch (error) {
@@ -202,7 +198,7 @@ const General = () => {
   };
 
   const normFile = (e) => {
-    console.log("Upload event:", e);
+    // console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -252,7 +248,7 @@ const General = () => {
       >
         {/* <Upload ref={uploadRef} ></Upload> */}
         <Form
-          name="validate_other"
+          name="photoGeneral"
           form={form}
           {...formItemLayout}
           onFinish={onFinish}

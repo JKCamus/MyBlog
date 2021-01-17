@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-01-17 18:49:28
+ * @LastEditTime: 2021-01-17 22:19:19
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -21,7 +21,6 @@ import ArticleView from "./ArticleView";
 import { getDemoList } from "services/demo";
 import { Route } from "react-router-dom";
 import SelectAll from "../Demo/SelectAll/SelectAll";
-
 
 export default memo(function CamusDemo(props) {
   const { isMobile } = useSelector((state) => ({
@@ -172,10 +171,18 @@ export default memo(function CamusDemo(props) {
       ) : (
         <DemoRouterWrapper>
           {articlesData[view.selected].status === 2 && (
-            <Route
-              path={`/demo/${articlesData[view.selected].id}`}
-              component={SelectAll}
-            />
+            <SelectAllWrapper>
+              <p className="selectAllTitle">
+                {articlesData[view.selected].title}
+              </p>
+              <div className="selectAllDemo">
+                <span className={"label"}>Demo实例:</span>
+                <Route
+                  path={`/demo/${articlesData[view.selected].id}`}
+                  component={SelectAll}
+                />
+              </div>
+            </SelectAllWrapper>
           )}
           <ArticleView
             content={articlesData[view.selected]}
@@ -229,6 +236,28 @@ const SearchContainer = styled.div`
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
+`;
+const SelectAllWrapper = styled.div`
+  .selectAllTitle {
+    /* font-family: "Abril Fatface", cursive; */
+    font-size: 2rem;
+    text-align: center;
+    color: #212121;
+    font-weight: bold;
+    padding: 40px 0;
+  }
+  .selectAllDemo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color:#001529; */
+    .label {
+      /* color:#fff; */
+      font-weight: bold;
+      font-size: 24px;
+      margin-right: 20px;
+    }
+  }
 `;
 
 const fadeInLeftAnimation = keyframes`${fadeInLeft}`;

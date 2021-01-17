@@ -12,27 +12,17 @@ import {
   Radio,
   message,
 } from "antd";
-import { getAllPhotoList } from "services/home";
-// import Upload from "./upload";
 import { UploadOutlined } from "@ant-design/icons";
 
-import {
-  uploadPhoto,
-  deletePhotos,
-  getDemoList,
-  uploadNotes,
-  clearNotes
-} from "services/profile";
+import { getDemoList, uploadNotes, clearNotes } from "services/profile";
 
 const NotesGeneral = () => {
-  const [photoList, setPhotoList] = useState([]);
   const [notesList, setNotesList] = useState([]);
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [tempRow, setTempRow] = useState({});
   const [tableLoading, setTableLoading] = useState(false);
   const [htmlList, setHtmlList] = useState([]);
-  // const [imgs, setImgs] = useState("");
   const [form] = Form.useForm();
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -43,13 +33,6 @@ const NotesGeneral = () => {
   }, []);
   useEffect(() => {
     if (!uploadModalVisible) {
-      form.setFieldsValue({
-        preview: "",
-        img: [],
-        htmlFile: [],
-        status: 1,
-        title: "",
-      });
       setFileList([]);
       setHtmlList([]);
       setTempRow({});
@@ -122,26 +105,19 @@ const NotesGeneral = () => {
       render: (text, record) => (
         <Space size="middle">
           <a onClick={() => handleEdit(record)}>编辑</a>
-          {/* <a>删除</a> */}
         </Space>
       ),
     },
   ];
 
-  // const handleModalOk = () => {
-  //   console.log("ok");
-  // };
-
   const handleModalCancel = () => {
+    form.resetFields();
     setUploadModalVisible(false);
-    // console.log("cancel");
   };
 
   const handleEdit = (row) => {
-    // const { current } = uploadRef;
-    // console.log("form", form);
     if (row.id) {
-      console.log("row", row);
+      // console.log("row", row);
       form &&
         form.setFieldsValue({
           ...row,
@@ -153,14 +129,6 @@ const NotesGeneral = () => {
               url: row.img,
             },
           ],
-          // htmlFile: [
-          //   {
-          //     uid: row.id,
-          //     name: row.title,
-          //     status: "done",
-          //     url: row.htmlUrl,
-          //   },
-          // ],
         });
       row.htmlUrl &&
         setHtmlList([
@@ -184,7 +152,7 @@ const NotesGeneral = () => {
   const onFinish = async (values) => {
     try {
       const formData = new FormData();
-      console.log("values", values);
+      // console.log("values", values);
       const { img, title, htmlFile, status, preview } = values;
       formData.append("title", title);
       formData.append("preview", preview);
@@ -203,8 +171,8 @@ const NotesGeneral = () => {
         htmlList.length && formData.append("htmlName", tempRow.htmlName);
         formData.append("id", tempRow.id);
       }
-
       await _uploadNotes(formData);
+      form.resetFields();
       setUploadModalVisible(false);
       await _getDemoList();
     } catch (error) {
@@ -218,19 +186,19 @@ const NotesGeneral = () => {
   const handleBeforeUploadFile = (file) => {
     return false;
   };
-
+// 更改图片提交后的格式
   const normFile = (e) => {
-    // console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
     }
     return e && e.fileList;
   };
-
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
-
+  /**
+   * @description: 预览图片
+   */
   const onPreview = async (file) => {
     let src = file.url;
     if (!src) {
@@ -245,10 +213,11 @@ const NotesGeneral = () => {
     const imgWindow = window.open(src);
     imgWindow.document.write(image.outerHTML);
   };
+  // 移除html文件
   const handleRemoveHtml = () => {
     setHtmlList([]);
   };
-
+  // 点击清除按钮
   const handleDeletePhotos = () => {
     _clearNotes();
   };
@@ -279,9 +248,7 @@ const NotesGeneral = () => {
           <Form.Item
             name="title"
             label="title"
-            rules={[
-              { required: true, message: "Please input title !" },
-            ]}
+            rules={[{ required: true, message: "Please input title !" }]}
           >
             <Input></Input>
           </Form.Item>
@@ -313,13 +280,8 @@ const NotesGeneral = () => {
               noStyle
             >
               <Upload
-                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                // listType="picture-card"
                 defaultFileList={htmlList}
                 onRemove={handleRemoveHtml}
-                // fileList={htmlList}
-                // onChange={onChange}
-                // onPreview={onPreview}
                 beforeUpload={handleBeforeUploadFile}
               >
                 <Button icon={<UploadOutlined />}>Click to HtmlFile</Button>
@@ -338,9 +300,7 @@ const NotesGeneral = () => {
               noStyle
             >
               <Upload
-                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 listType="picture-card"
-                // fileList={fileList}
                 onChange={onChange}
                 onPreview={onPreview}
                 beforeUpload={handleBeforeUploadFile}
@@ -349,7 +309,6 @@ const NotesGeneral = () => {
               </Upload>
             </Form.Item>
           </Form.Item>
-
           <Form.Item
             wrapperCol={{
               span: 12,

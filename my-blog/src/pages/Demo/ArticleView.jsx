@@ -4,7 +4,6 @@ import React, { Component, useRef, useState } from "react";
 // import ReadTextEditor from "./ReadTextEditor";
 import styled from "styled-components";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-
 const ArticleView = (props) => {
   const { isMobile } = useSelector((state) => ({
     isMobile: state.getIn(["global", "isMobile"]),

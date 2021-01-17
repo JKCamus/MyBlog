@@ -4,12 +4,12 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-01-15 23:22:50
+ * @LastEditTime: 2021-01-17 16:55:38
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
-import { Layout, Menu } from "antd";
+// import { Layout, Menu } from "antd";
 import styled, { keyframes } from "styled-components";
 import { fadeIn, fadeInLeft } from "react-animations";
 
@@ -17,18 +17,11 @@ import DemoLayer from "./DemoLayer";
 import ExplorerElement from "./ExplorerElement";
 import Article from "./Article";
 import ArticleView from "./ArticleView";
-import { RenderType } from "./constants";
+// import { RenderType } from "./constants";
 import { getDemoList } from "services/demo";
-import {
-  NavLink,
-  HashRouter,
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-  Link,
-} from "react-router-dom";
+import { Route } from "react-router-dom";
 import SelectAll from "../Demo/SelectAll";
+
 
 export default memo(function CamusDemo(props) {
   const { isMobile } = useSelector((state) => ({
@@ -42,13 +35,22 @@ export default memo(function CamusDemo(props) {
     selected: undefined,
   });
   // const [renderType, setRenderType] = useState('')
-  const [isSearch, setIsSearch] = useState(false);
+  // const [isSearch, setIsSearch] = useState(false);
   // const [changeView, setChangeView] = useState(false)
 
   // article数据
   useEffect(() => {
     _getDemoList();
   }, []);
+
+  useEffect(() => {
+    if (props.location.pathname === "/demo") {
+      setView({
+        type: "grid",
+        selected: null,
+      });
+    }
+  }, [props.location.pathname]);
 
   const _getDemoList = async () => {
     try {
@@ -83,9 +85,9 @@ export default memo(function CamusDemo(props) {
         });
       }
     } else if (view.type === "article") {
-      const articles = articlesData;
-      Object.keys(articles).forEach((key) => {
-        if (articles[key].article === element) {
+      Object.keys(articlesData).forEach((key) => {
+        if (articlesData[key].article === element) {
+          props.history.push(`/demo/${articlesData[key].id}`);
           setView({
             type: "article",
             selected: key,
@@ -101,9 +103,9 @@ export default memo(function CamusDemo(props) {
         type: "article",
         selected: index,
       });
-
-      props.history.push("/demo/2");
+      props.history.push(`/demo/${articlesData[index].id}`);
     } else {
+      props.history.push(`/demo`);
       setView({
         type: "grid",
         selected: null,
@@ -167,25 +169,20 @@ export default memo(function CamusDemo(props) {
       )}
       {view.type === "grid" ? (
         <ContainerGrid className="articlesGrid">{articles}</ContainerGrid>
-      ) : // <div>sasss</div>
-      articlesData[view.selected].status !== 2 ? (
-        <ArticleView
-          content={articlesData[view.selected]}
-          changeView={changeView}
-        ></ArticleView>
       ) : (
         <DemoRouterWrapper>
-          <Route
-            path={`/demo/${articlesData[view.selected].id}`}
-            component={SelectAll}
-          />
+          {articlesData[view.selected].status === 2 && (
+            <Route
+              path={`/demo/${articlesData[view.selected].id}`}
+              component={SelectAll}
+            />
+          )}
           <ArticleView
             content={articlesData[view.selected]}
             changeView={changeView}
           ></ArticleView>
         </DemoRouterWrapper>
       )}
-      {/* <Route path="inbox" component={Inbox}></Route> */}
     </ContainerApp>
   );
 });

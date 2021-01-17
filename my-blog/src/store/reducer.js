@@ -6,7 +6,7 @@ import {reducer as homeReducer} from 'pages/Home/store';
 
 const cReducer = combineReducers({
   global: globalReducer,
-  home:homeReducer
+  home:homeReducer,
 });
 
 export default cReducer;

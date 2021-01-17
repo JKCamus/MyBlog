@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-01-17 16:55:38
+ * @LastEditTime: 2021-01-17 18:49:28
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -20,7 +20,7 @@ import ArticleView from "./ArticleView";
 // import { RenderType } from "./constants";
 import { getDemoList } from "services/demo";
 import { Route } from "react-router-dom";
-import SelectAll from "../Demo/SelectAll";
+import SelectAll from "../Demo/SelectAll/SelectAll";
 
 
 export default memo(function CamusDemo(props) {

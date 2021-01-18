@@ -11,9 +11,11 @@ const ArticleView = (props) => {
   }));
   return (
     <Container className="articleView" isMobile={isMobile}>
-      <Button onClick={props.changeView}>
-        <i className="fa fa-angle-left"></i> Back
-      </Button>
+      {!isMobile && (
+        <Button onClick={props.changeView}>
+          <i className="fa fa-angle-left"></i> Back
+        </Button>
+      )}
       {/* <EditDate>
       </EditDate> */}
       {/* <Title isMobile={isMobile}> {props.content.article} </Title> */}

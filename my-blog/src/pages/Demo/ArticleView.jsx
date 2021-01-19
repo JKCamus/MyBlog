@@ -25,13 +25,21 @@ const ArticleView = (props) => {
         id={"iframe"}
         style={{
           width: "100%",
+
           overflow: "visible",
+          height: "100%",
+          minHeight: "100%",
         }}
         onLoad={() => {
           // console.log('sss', document.getElementById("iframe").contentWindow)
           document.getElementById("iframe").height = document.getElementById(
             "iframe"
           ).contentWindow.document.body.scrollHeight;
+          console.log(
+            "height",
+            document.getElementById("iframe").contentWindow.document.body
+              .scrollHeight
+          );
           // const obj = ReactDOM.findDOMNode(this);
           // this.setState({
           //   iFrameHeight: obj.contentWindow.document.body.scrollHeight + "px",

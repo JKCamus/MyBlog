@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-12-23 21:49:09
  * @LastEditors: camus
- * @LastEditTime: 2021-01-07 20:41:03
+ * @LastEditTime: 2021-01-20 17:07:04
  */
 import React, { memo, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -16,18 +16,20 @@ import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import styled from "styled-components";
 
-import { getPhotosListAction } from "../store/actionCreators";
+import { getPhotosListAction,testFuncAction } from "../store/actionCreators";
 import { photos as images } from "./data";
 
 const PictureGallery = (props) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
   const dispatch = useDispatch();
+
   const { photoList: photos, isMobile } = useSelector((state) => ({
     photoList: state.getIn(["home", "photoList"]),
     isMobile: state.getIn(["global", "isMobile"]),
     shallowEqual,
   }));
+
   const styleInit = {
     header: (base, state) => ({
       //头部样式
@@ -41,8 +43,12 @@ const PictureGallery = (props) => {
       height: state.isFullscreen ? "100%" : 900, //当点击全屏的时候图片样式
     }),
   };
+
   useEffect(() => {
     dispatch(getPhotosListAction(1, 20));
+    dispatch(testFuncAction(styleInit))
+
+
   }, [dispatch]);
 
   const columns = (containerWidth) => {

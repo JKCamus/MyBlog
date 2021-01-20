@@ -56,8 +56,10 @@ const Login = (props) => {
         <QueueAnim
           className="demo-content"
           key="demo"
-          // type={["right", "left"]}
-          // ease={["easeOutQuart", "easeInOutQuart"]}
+          animConfig={[
+            { opacity: [1, 0], translateY: [0, 50] },
+            { opacity: [1, 0], translateY: [0, -50] }
+          ]}
         >
           <Components.Root key='root' isMobile={isMobile}>
             <CloseOutlined className={"closeLogin"} onClick={handleCancel} />

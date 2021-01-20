@@ -19,7 +19,7 @@ export const Root = styled.div`
   overflow: hidden;
   left: 50%;
   transform: translate(-50%, -50%);
-  top: 50%;
+  top: 25%;
   /* 手机端缩小登录 */
   ${(props) =>
     props.isMobile

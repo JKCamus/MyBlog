@@ -7,6 +7,12 @@ export const changePhotosListAction = (photoList) => ({
   photoList,
 });
 
+export const testFuncAction = (func) => ({
+  type: actionTypes.TESTFUNC,
+  test:func,
+});
+
+
 export const getPhotosListAction = (page, size) => {
   return async (dispatch) => {
     try {
@@ -28,3 +34,5 @@ export const getPhotosListAction = (page, size) => {
     }
   };
 };
+
+

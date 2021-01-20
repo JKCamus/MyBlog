@@ -1,7 +1,7 @@
 /* 转成不可变对象 */
-import {Map} from "immutable";
+import { Map } from "immutable";
 /* 默认数据 */
-import * as actionTypes from './constants';
+import * as actionTypes from "./constants";
 
 const defaultState = Map({
   photoList: [],
@@ -10,7 +10,11 @@ const defaultState = Map({
 function reducer(state = defaultState, action) {
   switch (action.type) {
     case actionTypes.CHANGE_PHOTO_LIST:
-      return state.set("photoList",action.photoList)
+      return state.set("photoList", action.photoList);
+    case actionTypes.TESTFUNC:
+    //  return  { ...state, testFunc: action.payload }
+    console.log('', action.test)
+      return state.set("testFunc", action.test);
     default:
       return state;
   }

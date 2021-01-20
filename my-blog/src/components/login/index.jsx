@@ -1,13 +1,14 @@
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
-import { message } from "antd";
+// import { message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import * as Components from "./Components.js";
 
 import useForm from "./useForm";
-import { login } from "services/login.js";
+// import { login } from "services/login.js";
 import { loginAction } from "store/global/actionCreators";
+import QueueAnim from "rc-queue-anim";
 
 const Login = (props) => {
   const toggleLogin = useRef(null);
@@ -52,86 +53,97 @@ const Login = (props) => {
   return (
     <React.Fragment>
       <Components.BLayout>
-        <Components.Root isMobile={isMobile}>
-          <CloseOutlined className={"closeLogin"} onClick={handleCancel} />
-          <Components.SignupContainer signUp ref={signUpForm} slideUp={slideUp}>
-            <Components.SignupFormTitle
-              ref={toggleSignUp}
-              onClick={() => {
-                toggle(false);
-                resetSignUpForm();
-              }}
+        <QueueAnim
+          className="demo-content"
+          key="demo"
+          // type={["right", "left"]}
+          // ease={["easeOutQuart", "easeInOutQuart"]}
+        >
+          <Components.Root key='root' isMobile={isMobile}>
+            <CloseOutlined className={"closeLogin"} onClick={handleCancel} />
+            <Components.SignupContainer
+              signUp
+              ref={signUpForm}
               slideUp={slideUp}
             >
-              Sign Up
-            </Components.SignupFormTitle>
-            <Components.SignupForm slideUp={slideUp}>
-              <Components.SignupInput
-                type="text"
-                placeholder="Name"
-                name="name"
-                value={signUpValues.name}
-                onChange={signUpFormChange}
-              />
-              <Components.SignupInput
-                type="email"
-                placeholder="Email"
-                name="email"
-                value={signUpValues.email}
-                onChange={signUpFormChange}
-              />
-              <Components.SignupInput
-                type="password"
-                placeholder="Password"
-                name="password"
-                value={signUpValues.password}
-                onChange={signUpFormChange}
-              />
-            </Components.SignupForm>
-            <Components.SignupButton
-              slideUp={slideUp}
-              onClick={() => handleSignUp()}
-            >
-              Sign Up
-            </Components.SignupButton>
-          </Components.SignupContainer>
-          <Components.LoginContainer ref={loginForm} slideUp={slideUp}>
-            <Components.CenterWrapper slideUp={slideUp}>
-              <Components.LoginTitle
-                ref={toggleLogin}
-                slideUp={slideUp}
+              <Components.SignupFormTitle
+                ref={toggleSignUp}
                 onClick={() => {
-                  toggle(true);
-                  resetSignInForm();
+                  toggle(false);
+                  resetSignUpForm();
                 }}
+                slideUp={slideUp}
               >
-                Login
-              </Components.LoginTitle>
-              <Components.LoginFormContainer slideUp={slideUp}>
-                <Components.LoginInput
-                  type="name"
-                  placeholder="name"
+                Sign Up
+              </Components.SignupFormTitle>
+              <Components.SignupForm slideUp={slideUp}>
+                <Components.SignupInput
+                  type="text"
+                  placeholder="Name"
                   name="name"
-                  value={signInValues.name}
-                  onChange={signInFormChange}
+                  value={signUpValues.name}
+                  onChange={signUpFormChange}
                 />
-                <Components.LoginInput
+                <Components.SignupInput
+                  type="email"
+                  placeholder="Email"
+                  name="email"
+                  value={signUpValues.email}
+                  onChange={signUpFormChange}
+                />
+                <Components.SignupInput
                   type="password"
                   placeholder="Password"
                   name="password"
-                  value={signInValues.password}
-                  onChange={signInFormChange}
+                  value={signUpValues.password}
+                  onChange={signUpFormChange}
                 />
-              </Components.LoginFormContainer>
-              <Components.LoginButton
+              </Components.SignupForm>
+              <Components.SignupButton
                 slideUp={slideUp}
-                onClick={() => handleSignIn()}
+                onClick={() => handleSignUp()}
               >
-                Login
-              </Components.LoginButton>
-            </Components.CenterWrapper>
-          </Components.LoginContainer>
-        </Components.Root>
+                Sign Up
+              </Components.SignupButton>
+            </Components.SignupContainer>
+            <Components.LoginContainer ref={loginForm} slideUp={slideUp}>
+              <Components.CenterWrapper slideUp={slideUp}>
+                <Components.LoginTitle
+                  ref={toggleLogin}
+                  slideUp={slideUp}
+                  onClick={() => {
+                    toggle(true);
+                    resetSignInForm();
+                  }}
+                >
+                  Login
+                </Components.LoginTitle>
+                <Components.LoginFormContainer slideUp={slideUp}>
+                  <Components.LoginInput
+                    type="name"
+                    placeholder="name"
+                    name="name"
+                    value={signInValues.name}
+                    onChange={signInFormChange}
+                  />
+                  <Components.LoginInput
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value={signInValues.password}
+                    onChange={signInFormChange}
+                  />
+                </Components.LoginFormContainer>
+                <Components.LoginButton
+                  slideUp={slideUp}
+                  onClick={() => handleSignIn()}
+                >
+                  Login
+                </Components.LoginButton>
+              </Components.CenterWrapper>
+            </Components.LoginContainer>
+          </Components.Root>
+        </QueueAnim>
       </Components.BLayout>
     </React.Fragment>
   );

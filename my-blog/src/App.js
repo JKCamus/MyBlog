@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2021-01-10 15:54:11
+ * @LastEditTime: 2021-01-20 16:18:39
  */
 import React, { memo, useEffect, useState } from "react";
 
@@ -19,12 +19,12 @@ import {
 } from "react-router-dom";
 import routes from "./router";
 
-import { renderRoutes } from "react-router-config";
+// import { renderRoutes } from "react-router-config";
 import { Provider } from "react-redux";
 import store from "./store";
 import { changeIsMobileAction } from "./store/global/actionCreators";
 // 动效库，用于判断是否是手机
-import { Skeleton } from "antd";
+// import { Skeleton } from "antd";
 import { enquireScreen } from "enquire-js";
 import AuthorizedRoute from "@/router/AuthorizedRoute";
 import privateRoutes from "@/router/privateRoutes";

@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-12-23 21:49:09
  * @LastEditors: camus
- * @LastEditTime: 2021-01-20 17:07:04
+ * @LastEditTime: 2021-01-21 10:28:33
  */
 import React, { memo, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -46,7 +46,7 @@ const PictureGallery = (props) => {
 
   useEffect(() => {
     dispatch(getPhotosListAction(1, 20));
-    dispatch(testFuncAction(styleInit))
+    // dispatch(testFuncAction(styleInit))
 
 
   }, [dispatch]);

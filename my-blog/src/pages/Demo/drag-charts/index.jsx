@@ -7,7 +7,7 @@
  * @Author: camus
  * @Date: 2020-12-13 12:23:45
  * @LastEditors: camus
- * @LastEditTime: 2021-01-13 23:38:56
+ * @LastEditTime: 2021-01-21 14:47:36
  */
 import React, { useState, useEffect } from "react";
 import { Layout, Button } from "antd";
@@ -50,7 +50,7 @@ const DragLayout = (props) => {
         option = getLineChart();
       } else if (l.type === "pie") {
         option = getPieChart();
-      } else if ((l.type = "rosePie")) {
+      } else if ((l.type === "rosePie")) {
         option = pieHalfRoseOption;
       }
       return (

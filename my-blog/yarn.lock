@@ -2096,6 +2096,26 @@
     "@typescript-eslint/types" "4.9.0"
     eslint-visitor-keys "^2.0.0"
 
+"@umijs/hooks@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.npm.taobao.org/@umijs/hooks/download/@umijs/hooks-1.9.3.tgz#cc0de9e832714e03c1338aba17969aed2d29afd7"
+  integrity sha1-zA3p6DJxTgPBM4q6F5aa7S0pr9c=
+  dependencies:
+    "@umijs/use-request" "^1.4.3"
+    intersection-observer "^0.7.0"
+    lodash.isequal "^4.5.0"
+    resize-observer-polyfill "^1.5.1"
+    screenfull "^5.0.0"
+
+"@umijs/use-request@^1.4.3":
+  version "1.4.3"
+  resolved "https://registry.npm.taobao.org/@umijs/use-request/download/@umijs/use-request-1.4.3.tgz#bc5fadc4cb07d796eb35f09838d6a15cb12802f7"
+  integrity sha1-vF+txMsH15brNfCYONahXLEoAvc=
+  dependencies:
+    lodash.debounce "^4.0.8"
+    lodash.throttle "^4.1.1"
+    umi-request "^1.2.17"
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.npm.taobao.org/@webassemblyjs/ast/download/@webassemblyjs/ast-1.9.0.tgz#bd850604b4042459a5a41cd7d338cbed695ed964"
@@ -6412,6 +6432,11 @@ internal-slot@^1.0.2:
     has "^1.0.3"
     side-channel "^1.0.2"
 
+intersection-observer@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.npm.taobao.org/intersection-observer/download/intersection-observer-0.7.0.tgz#ee16bee978db53516ead2f0a8154b09b400bbdc9"
+  integrity sha1-7ha+6XjbU1FurS8KgVSwm0ALvck=
+
 invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.npm.taobao.org/invariant/download/invariant-2.2.4.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Finvariant%2Fdownload%2Finvariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
@@ -6786,7 +6811,7 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.npm.taobao.org/isobject/download/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-isomorphic-fetch@^2.1.1:
+isomorphic-fetch@^2.1.1, isomorphic-fetch@^2.2.1:
   version "2.2.1"
   resolved "https://registry.npm.taobao.org/isomorphic-fetch/download/isomorphic-fetch-2.2.1.tgz?cache=0&sync_timestamp=1600844329599&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fisomorphic-fetch%2Fdownload%2Fisomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
   integrity sha1-YRrhrPFPXoH3KVB0coGf6XM1WKk=
@@ -7628,12 +7653,17 @@ lodash._reinterpolate@^3.0.0:
   resolved "https://registry.npm.taobao.org/lodash._reinterpolate/download/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
   integrity sha1-DM8tiRZq8Ds2Y8eWU4t1rG4RTZ0=
 
+lodash.debounce@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.npm.taobao.org/lodash.debounce/download/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
+  integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
+
 lodash.flow@^3.5.0:
   version "3.5.0"
   resolved "https://registry.npm.taobao.org/lodash.flow/download/lodash.flow-3.5.0.tgz#87bf40292b8cf83e4e8ce1a3ae4209e20071675a"
   integrity sha1-h79AKSuM+D5OjOGjrkIJ4gBxZ1o=
 
-lodash.isequal@^4.0.0:
+lodash.isequal@^4.0.0, lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.npm.taobao.org/lodash.isequal/download/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
   integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
@@ -7662,6 +7692,11 @@ lodash.templatesettings@^4.0.0:
   integrity sha1-5IExDwSdPPbUfpEq0JMTsVTw+zM=
   dependencies:
     lodash._reinterpolate "^3.0.0"
+
+lodash.throttle@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npm.taobao.org/lodash.throttle/download/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
+  integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
 lodash.uniq@^4.5.0:
   version "4.5.0"
@@ -9710,6 +9745,11 @@ qs@6.7.0:
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha1-QdwaAV49WB8WIXdr4xr7KHapsbw=
 
+qs@^6.9.1:
+  version "6.9.6"
+  resolved "https://registry.npm.taobao.org/qs/download/qs-6.9.6.tgz?cache=0&sync_timestamp=1610598235973&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fqs%2Fdownload%2Fqs-6.9.6.tgz#26ed3c8243a431b2924aca84cc90471f35d5a0ee"
+  integrity sha1-Ju08gkOkMbKSSsqEzJBHHzXVoO4=
+
 qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
@@ -11180,6 +11220,11 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
+screenfull@^5.0.0:
+  version "5.1.0"
+  resolved "https://registry.npm.taobao.org/screenfull/download/screenfull-5.1.0.tgz?cache=0&sync_timestamp=1608796425569&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fscreenfull%2Fdownload%2Fscreenfull-5.1.0.tgz#85c13c70f4ead4c1b8a935c70010dfdcd2c0e5c8"
+  integrity sha1-hcE8cPTq1MG4qTXHABDf3NLA5cg=
+
 scroll-into-view-if-needed@^2.2.25:
   version "2.2.26"
   resolved "https://registry.npm.taobao.org/scroll-into-view-if-needed/download/scroll-into-view-if-needed-2.2.26.tgz#e4917da0c820135ff65ad6f7e4b7d7af568c4f13"
@@ -12431,6 +12476,14 @@ ua-parser-js@^0.7.18:
   version "0.7.23"
   resolved "https://registry.npm.taobao.org/ua-parser-js/download/ua-parser-js-0.7.23.tgz?cache=0&sync_timestamp=1607578068028&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fua-parser-js%2Fdownload%2Fua-parser-js-0.7.23.tgz#704d67f951e13195fbcd3d78818577f5bc1d547b"
   integrity sha1-cE1n+VHhMZX7zT14gYV39bwdVHs=
+
+umi-request@^1.2.17:
+  version "1.3.5"
+  resolved "https://registry.npm.taobao.org/umi-request/download/umi-request-1.3.5.tgz#2af7e9fbaaeed0086c07d8c4876b3af65c084aea"
+  integrity sha1-Kvfp+6ru0AhsB9jEh2s69lwISuo=
+  dependencies:
+    isomorphic-fetch "^2.2.1"
+    qs "^6.9.1"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

@@ -7,11 +7,10 @@ export const changePhotosListAction = (photoList) => ({
   photoList,
 });
 
-export const testFuncAction = (func) => ({
-  type: actionTypes.TESTFUNC,
-  test:func,
+export const changePhotoRenderAction = (shouldPhotoRender) => ({
+  type: actionTypes.CHANGE_PHOTO_RENDER,
+  shouldPhotoRender,
 });
-
 
 export const getPhotosListAction = (page, size) => {
   return async (dispatch) => {
@@ -24,15 +23,14 @@ export const getPhotosListAction = (page, size) => {
             sizes: ["(min-width: 480px) 50vw,(min-width: 1024px) 33.3vw,100vw"],
             width: item.width,
             height: actionTypes.heightType[item.width],
-            caption:item.title
+            caption: item.title,
           };
         });
         dispatch(changePhotosListAction(photoList));
+        dispatch(changePhotoRenderAction(false))
       });
     } catch (error) {
       message.error("图片请求失败！");
     }
   };
 };
-
-

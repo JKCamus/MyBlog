@@ -4,7 +4,7 @@ import {disableReactDevTools} from 'utils/developerToolClose';
 import "@/assets/css/reset.less";
 
 import App from './App';
-if(process.env.NODE_ENV == 'production'){
+if(process.env.NODE_ENV === 'production'){
   disableReactDevTools();
 }
 

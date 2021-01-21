@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Table,
   Space,
@@ -12,7 +12,9 @@ import {
 } from "antd";
 import { getAllPhotoList } from "services/home";
 // import Upload from "./upload";
-import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+// import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
+import { changePhotoRenderAction } from "pages/Home/store/actionCreators";
+import { useDispatch } from "react-redux";
 
 import { uploadPhoto, deletePhotos } from "services/profile";
 
@@ -22,7 +24,8 @@ const General = () => {
   const [fileList, setFileList] = useState([]);
   const [tempRow, setTempRow] = useState({});
   const [tableLoading, setTableLoading] = useState(false);
-  // const [imgs, setImgs] = useState("");
+  const dispatch = useDispatch();
+
   const [form] = Form.useForm();
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -127,7 +130,6 @@ const General = () => {
   };
 
   const handleEdit = (row) => {
-
     if (row.id) {
       form &&
         form.setFieldsValue({
@@ -175,6 +177,7 @@ const General = () => {
       form.resetFields();
       setUploadModalVisible(false);
       await _getPhotoList();
+      dispatch(changePhotoRenderAction(true));
     } catch (error) {
       if (error.message === "noFile") {
         message.error("请上传图片");

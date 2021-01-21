@@ -124,6 +124,12 @@ module.exports = {
       ),
     ],
   }),
+  // style: {
+  //   // 自适应方案
+  //   postcss: {
+  //     mode: POSTCSS_MODES.file
+  //   }
+  // },
   // 插件相关配置，一个plugin一个对象
   plugins: [
     // 配置less
@@ -201,4 +207,17 @@ module.exports = {
       },
     },
   ],
+  devServer: {
+    proxy: {
+      "/api": {
+        target: "http://47.102.211.145:8086", // 开发路由代理
+        // ws: false, // websocket
+        changeOrigin: true, //是否跨域
+        secure: false, // 如果是https接口，需要配置这个参数
+        pathRewrite: {
+          "^/api": "/",
+        },
+      },
+    },
+  },
 };

@@ -5,16 +5,15 @@ import * as actionTypes from "./constants";
 
 const defaultState = Map({
   photoList: [],
+  shouldPhotoRender:true
 });
 
 function reducer(state = defaultState, action) {
   switch (action.type) {
     case actionTypes.CHANGE_PHOTO_LIST:
       return state.set("photoList", action.photoList);
-    case actionTypes.TESTFUNC:
-    //  return  { ...state, testFunc: action.payload }
-    console.log('', action.test)
-      return state.set("testFunc", action.test);
+    case actionTypes.CHANGE_PHOTO_RENDER:
+      return state.set("shouldPhotoRender", action.shouldPhotoRender);
     default:
       return state;
   }

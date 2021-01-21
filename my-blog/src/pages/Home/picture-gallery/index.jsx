@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-12-23 21:49:09
  * @LastEditors: camus
- * @LastEditTime: 2021-01-21 10:28:33
+ * @LastEditTime: 2021-01-21 22:28:53
  */
 import React, { memo, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -16,7 +16,7 @@ import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import styled from "styled-components";
 
-import { getPhotosListAction,testFuncAction } from "../store/actionCreators";
+import { getPhotosListAction } from "../store/actionCreators";
 import { photos as images } from "./data";
 
 const PictureGallery = (props) => {
@@ -24,9 +24,10 @@ const PictureGallery = (props) => {
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { photoList: photos, isMobile } = useSelector((state) => ({
+  const { photoList: photos, isMobile,shouldPhotoRender } = useSelector((state) => ({
     photoList: state.getIn(["home", "photoList"]),
     isMobile: state.getIn(["global", "isMobile"]),
+    shouldPhotoRender:state.getIn(["home", "shouldPhotoRender"]),
     shallowEqual,
   }));
 
@@ -45,11 +46,8 @@ const PictureGallery = (props) => {
   };
 
   useEffect(() => {
-    dispatch(getPhotosListAction(1, 20));
-    // dispatch(testFuncAction(styleInit))
-
-
-  }, [dispatch]);
+    shouldPhotoRender&&dispatch(getPhotosListAction(1, 20));
+  }, [shouldPhotoRender]);
 
   const columns = (containerWidth) => {
     let columns = 1;

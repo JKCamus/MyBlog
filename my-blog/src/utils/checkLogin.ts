@@ -4,11 +4,11 @@
  * @Author: camus
  * @Date: 2020-12-28 21:07:15
  * @LastEditors: camus
- * @LastEditTime: 2020-12-31 15:49:38
+ * @LastEditTime: 2021-01-21 14:48:54
  */
 import { removeToken } from './token'
 
-export default function () {
+const CheckLogin = () =>{
   const userInfoString = localStorage.getItem("USER");
   if (userInfoString) {
     const expire = localStorage.getItem('TOKEN_EXPIRE')
@@ -23,3 +23,4 @@ export default function () {
     return false
   }
 }
+export default CheckLogin

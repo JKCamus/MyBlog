@@ -1,10 +1,10 @@
 /*
- * @Description:
+ * @Description:用于放在主程序入口文件，配置当为生产环境的时候，关闭dev_tool
  * @version:
  * @Author: camus
  * @Date: 2021-01-21 13:45:42
  * @LastEditors: camus
- * @LastEditTime: 2021-01-21 13:45:56
+ * @LastEditTime: 2021-01-21 14:06:55
  */
 export const disableReactDevTools = (): void => {
   const noop = (): void => undefined;

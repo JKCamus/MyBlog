@@ -12467,11 +12467,6 @@ typescript-plugin-styled-components@^1.4.4:
   resolved "https://registry.npm.taobao.org/typescript-plugin-styled-components/download/typescript-plugin-styled-components-1.4.4.tgz#fff26d516ff213dffe1a5627fe76f23ae3ee6ada"
   integrity sha1-//JtUW/yE9/+GlYn/nbyOuPuato=
 
-typescript@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.npm.taobao.org/typescript/download/typescript-4.1.2.tgz?cache=0&sync_timestamp=1607672921872&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
-  integrity sha1-Y2nvIlFv5eEDBKrlpcSGLbVTgOk=
-
 ua-parser-js@^0.7.18:
   version "0.7.23"
   resolved "https://registry.npm.taobao.org/ua-parser-js/download/ua-parser-js-0.7.23.tgz?cache=0&sync_timestamp=1607578068028&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fua-parser-js%2Fdownload%2Fua-parser-js-0.7.23.tgz#704d67f951e13195fbcd3d78818577f5bc1d547b"

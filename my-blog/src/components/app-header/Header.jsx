@@ -175,6 +175,13 @@ const Header = (props) => {
           >
             Charts
           </NavLink>
+          <NavLink
+            to={"/use"}
+            className={"menu-item"}
+            onClick={() => setPhoneOpen(!phoneOpen)}
+          >
+            use
+          </NavLink>
           {/* <NavLink
             to={"/profile"}
             className={"menu-item"}

@@ -6,8 +6,7 @@ import Home from "pages/Home";
 import Demo from "pages/Demo";
 import DragChart from "pages/Demo/drag-charts";
 import Login from "components/login";
-import Profile from '@/pages/Profile';
-import UploadDemo from "@/pages/Profile/pictureManage/NotesGeneral";
+import MyUseRef from "pages/Demo/useRefHook";
 
 const routes = [
   {
@@ -45,7 +44,10 @@ const routes = [
     exact: true,
     component: Login,
   },
-
-
+  {
+    path: "/use",
+    exact: true,
+    component: MyUseRef,
+  },
 ];
 export default routes;

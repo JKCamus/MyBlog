@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-01-17 22:19:19
+ * @LastEditTime: 2021-02-08 11:06:28
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -129,7 +129,6 @@ export default memo(function CamusDemo(props) {
   // 侧栏
   const explorer = articlesData
     ? Object.keys(articles).map((key, index) => {
-        // console.log(articles);
         if (true) {
           return (
             <ExplorerElement

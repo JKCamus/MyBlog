@@ -1,5 +1,6 @@
-import React, { memo, useState, useEffect } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import React, { useState } from "react";
+import { useSelector, shallowEqual } from "react-redux";
+import { useHistory } from "react-router-dom";
 import TweenOne from "rc-tween-one";
 import { NavLink } from "react-router-dom";
 import "./index.less";
@@ -11,6 +12,7 @@ import checkLogin from "utils/checkLogin";
 import { BASE_URL } from "services/config";
 
 const Header = (props) => {
+  const history = useHistory();
   const { Item, SubMenu } = Menu;
   const { isMobile } = useSelector((state) => ({
     isMobile: state.getIn(["global", "isMobile"]),
@@ -23,11 +25,11 @@ const Header = (props) => {
   const handleLogin = () => {
     const { setShowLogin } = props;
     setShowLogin(true);
-    // console.log('setShowLogin',login )
   };
 
   const handleLoginOut = (params) => {
     removeToken();
+    history.push("/home")
     setPhoneOpen(!phoneOpen);
   };
   // const _getUserAvatar = async (userId) => {
@@ -41,6 +43,7 @@ const Header = (props) => {
   const renderMenu = (params) => {
     const userInfo = getUerInfo();
     const menu = (
+      // pc
       <Menu theme="dark" className="menuD">
         <Menu.Item className={"dropDownMenu"}>
           <NavLink to={"/profile"}>Profile</NavLink>

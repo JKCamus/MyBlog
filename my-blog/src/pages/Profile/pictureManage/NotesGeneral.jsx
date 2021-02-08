@@ -1,11 +1,9 @@
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Table,
-  Tag,
   Space,
   Modal,
   Form,
-  Select,
   Button,
   Upload,
   Input,
@@ -14,7 +12,8 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
-import { getDemoList, uploadNotes, clearNotes } from "services/profile";
+import { getDemoList, uploadNotes, clearNotes,updateNote } from "services/profile";
+
 
 const NotesGeneral = () => {
   const [notesList, setNotesList] = useState([]);
@@ -54,6 +53,13 @@ const NotesGeneral = () => {
   const _uploadNotes = async (data) => {
     try {
       await uploadNotes(data);
+    } catch (error) {
+      console.log("uploadPhoto err");
+    }
+  };
+  const _updateNote = async (data) => {
+    try {
+      await updateNote(data);
     } catch (error) {
       console.log("uploadPhoto err");
     }
@@ -166,12 +172,13 @@ const NotesGeneral = () => {
       if (htmlFile && htmlFile.length) {
         formData.append("htmlContent", htmlFile[0].originFileObj);
       }
-
       if (tempRow.id) {
         htmlList.length && formData.append("htmlName", tempRow.htmlName);
         formData.append("id", tempRow.id);
+        await _updateNote(formData)
+      }else{
+        await _uploadNotes(formData);
       }
-      await _uploadNotes(formData);
       form.resetFields();
       setUploadModalVisible(false);
       await _getDemoList();

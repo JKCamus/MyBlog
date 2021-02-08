@@ -23,9 +23,9 @@ const ArticleView = (props) => {
       {/* <ReadTextEditor content={props.content} /> */}
       <iframe
         id={"iframe"}
+        title={"notes"}
         style={{
           width: "100%",
-
           overflow: "visible",
           // height: "100%",
           minHeight: "100%",

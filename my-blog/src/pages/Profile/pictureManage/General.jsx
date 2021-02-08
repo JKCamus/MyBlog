@@ -16,7 +16,7 @@ import { getAllPhotoList } from "services/home";
 import { changePhotoRenderAction } from "pages/Home/store/actionCreators";
 import { useDispatch } from "react-redux";
 
-import { uploadPhoto, deletePhotos } from "services/profile";
+import { uploadPhoto, deletePhotos, updatePhoto } from "services/profile";
 
 const General = () => {
   const [photoList, setPhotoList] = useState([]);
@@ -70,6 +70,13 @@ const General = () => {
   const _uploadPhoto = async (data) => {
     try {
       await uploadPhoto(data);
+    } catch (error) {
+      console.log("uploadPhoto err");
+    }
+  };
+  const _updatePhoto = async (data) => {
+    try {
+      await updatePhoto(data);
     } catch (error) {
       console.log("uploadPhoto err");
     }
@@ -172,11 +179,13 @@ const General = () => {
         formData.append("mimetype", tempRow.mimetype);
         formData.append("size", tempRow.size);
         formData.append("id", tempRow.id);
+        await _updatePhoto(formData);
+      } else {
+        await _uploadPhoto(formData);
       }
-      await _uploadPhoto(formData);
       form.resetFields();
       setUploadModalVisible(false);
-      await _getPhotoList();
+      _getPhotoList();
       dispatch(changePhotoRenderAction(true));
     } catch (error) {
       if (error.message === "noFile") {
@@ -187,16 +196,6 @@ const General = () => {
   };
 
   const handleBeforeUploadFile = (file) => {
-    // 使用 beforeUpload 會失去在選擇圖片後馬上看到圖片的功能，因此利用FileReader方法來實現預覽效果
-    // let reader = new FileReader();
-    // reader.readAsDataURL(file);
-    // reader.onloadend = function () {
-    //   setFileList([{ uid: file.uid, url: reader.result }]);
-    //   setImgs(reader.result);
-    //   // this.setState({fileList: [{uid: file.uid, url: reader.result}],image:reader.result})
-    // }.bind(this);
-
-    // 使用 beforeUpload 回傳 false 可以停止上傳
     return false;
   };
 

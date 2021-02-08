@@ -19,6 +19,7 @@ import GeneralList from "./pictureManage/General";
 import { ProfileWrapper } from "./styles";
 
 const Profile = (props) => {
+  console.log('props', props)
   const [collapsed, setCollapsed] = useState(false);
   const [menuKey, setMenuKey] = useState(props.location.pathname)
   const { SubMenu } = Menu;

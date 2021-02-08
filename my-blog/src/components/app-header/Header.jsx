@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useSelector, shallowEqual } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import TweenOne from "rc-tween-one";
 import { NavLink } from "react-router-dom";
 import "./index.less";
 import { Avatar, Menu, Dropdown, Popconfirm } from "antd";
 import { getUerInfo, removeToken } from "utils/token";
-
 import { UserOutlined } from "@ant-design/icons";
 import checkLogin from "utils/checkLogin";
 import { BASE_URL } from "services/config";
+import checkRouterPermission from "utils/checkRouterPermission";
 
 const Header = (props) => {
   const history = useHistory();
@@ -29,7 +29,7 @@ const Header = (props) => {
 
   const handleLoginOut = (params) => {
     removeToken();
-    history.push("/home")
+    checkRouterPermission(props.location) && history.push("/home");
     setPhoneOpen(!phoneOpen);
   };
   // const _getUserAvatar = async (userId) => {
@@ -230,4 +230,4 @@ const Header = (props) => {
   );
 };
 
-export default Header;
+export default withRouter(Header);

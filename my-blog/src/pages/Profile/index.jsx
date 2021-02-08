@@ -1,17 +1,13 @@
 import React, { memo, useState } from "react";
-import { Menu, Button } from "antd";
+import { Menu } from "antd";
 import {
   NavLink,
-  HashRouter,
   BrowserRouter as Router,
   Redirect,
-  Route,
   Switch,
 } from "react-router-dom";
 import {
-  AppstoreOutlined,
   MailOutlined,
-  SettingOutlined,
 } from "@ant-design/icons";
 import AuthorizedRoute from "@/router/AuthorizedRoute";
 import NotesGeneral from "@/pages/Profile/pictureManage/NotesGeneral";
@@ -46,10 +42,6 @@ const Profile = (props) => {
               <Menu.Item key="/profile/notes-general">
                 <NavLink to={"/profile/notes-general"}>笔记概览</NavLink>
               </Menu.Item>
-            {/* <Menu.ItemGroup key="g2" title="Item 2">
-              <Menu.Item key="3">Option 3</Menu.Item>
-              <Menu.Item key="4">Option 4</Menu.Item>
-            </Menu.ItemGroup> */}
           </SubMenu>
         </Menu>
       </div>

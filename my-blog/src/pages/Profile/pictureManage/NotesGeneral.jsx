@@ -101,6 +101,7 @@ const NotesGeneral = () => {
     {
       title: "htmlName",
       dataIndex: "htmlName",
+      ellipsis: true,
     },
     {
       title: "status",

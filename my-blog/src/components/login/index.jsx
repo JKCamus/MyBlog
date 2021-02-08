@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 // import { message } from "antd";
@@ -23,6 +23,19 @@ const Login = (props) => {
     shallowEqual,
   }));
 
+  useEffect(() => {
+    document.body.addEventListener("keyup", (e) => {
+      if (window.event) {
+        e = window.event;
+      }
+      e.key === "Enter" && handleSignIn();
+      // console.log('sss', e)
+    });
+    return () => {
+      document.body.removeEventListener("keyup", () => {});
+    };
+  }, []);
+
   const [signUpValues, signUpFormChange, resetSignUpForm] = useForm({
     name: "",
     email: "",
@@ -35,11 +48,12 @@ const Login = (props) => {
   });
 
   const handleSignUp = () => {
-    // console.log(signUpValues);
     resetSignUpForm();
   };
-
+// console.log('sss', signInValues)
   const handleSignIn = () => {
+    // console.log('signInValues',signInValues )
+    // console.log('signInValues',)
     dispatch(
       loginAction(signInValues, (status) => {
         setShowLogin(status);
@@ -58,10 +72,10 @@ const Login = (props) => {
           key="demo"
           animConfig={[
             { opacity: [1, 0], translateY: [0, 50] },
-            { opacity: [1, 0], translateY: [0, -50] }
+            { opacity: [1, 0], translateY: [0, -50] },
           ]}
         >
-          <Components.Root key='root' isMobile={isMobile}>
+          <Components.Root key="root" isMobile={isMobile}>
             <CloseOutlined className={"closeLogin"} onClick={handleCancel} />
             <Components.SignupContainer
               signUp

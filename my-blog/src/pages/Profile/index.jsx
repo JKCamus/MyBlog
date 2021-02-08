@@ -19,9 +19,7 @@ import GeneralList from "./pictureManage/General";
 import { ProfileWrapper } from "./styles";
 
 const Profile = (props) => {
-  console.log('props', props)
   const [collapsed, setCollapsed] = useState(false);
-  const [menuKey, setMenuKey] = useState(props.location.pathname)
   const { SubMenu } = Menu;
   const handleClick = (e) => {
 
@@ -35,16 +33,17 @@ const Profile = (props) => {
         <Menu
           onClick={handleClick}
           style={{ width: "256px", height: "100%" }}
-          defaultSelectedKeys={["2"]}
+          defaultSelectedKeys={["/profile/general"]}
           defaultOpenKeys={["manage"]}
           mode="inline"
           inlineCollapsed={collapsed}
+          selectedKeys={props.location.pathname}
         >
           <SubMenu key="manage" icon={<MailOutlined />} title="管理">
-              <Menu.Item key="2">
+              <Menu.Item key="/profile/general">
                 <NavLink to={"/profile/general"}>图片概览</NavLink>
               </Menu.Item>
-              <Menu.Item key="1">
+              <Menu.Item key="/profile/notes-general">
                 <NavLink to={"/profile/notes-general"}>笔记概览</NavLink>
               </Menu.Item>
             {/* <Menu.ItemGroup key="g2" title="Item 2">

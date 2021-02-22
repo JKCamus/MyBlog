@@ -28,7 +28,7 @@ const ArticleView = (props) => {
           width: "100%",
           overflow: "visible",
           // height: "100%",
-          minHeight: "100%",
+          minHeight: "100vh",
         }}
         onLoad={() => {
           // console.log('sss', document.getElementById("iframe").contentWindow)

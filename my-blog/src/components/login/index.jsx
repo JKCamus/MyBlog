@@ -23,18 +23,18 @@ const Login = (props) => {
     shallowEqual,
   }));
 
-  useEffect(() => {
-    document.body.addEventListener("keyup", (e) => {
-      if (window.event) {
-        e = window.event;
-      }
-      e.key === "Enter" && handleSignIn();
-      // console.log('sss', e)
-    });
-    return () => {
-      document.body.removeEventListener("keyup", () => {});
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.body.addEventListener("keyup", (e) => {
+  //     if (window.event) {
+  //       e = window.event;
+  //     }
+  //     e.key === "Enter" && handleSignIn();
+  //     // console.log('sss', e)
+  //   });
+  //   return () => {
+  //     document.body.removeEventListener("keyup", () => {});
+  //   };
+  // }, []);
 
   const [signUpValues, signUpFormChange, resetSignUpForm] = useForm({
     name: "",

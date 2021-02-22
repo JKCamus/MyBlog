@@ -178,13 +178,13 @@ const Header = (props) => {
           >
             Charts
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to={"/use"}
             className={"menu-item"}
             onClick={() => setPhoneOpen(!phoneOpen)}
           >
             use
-          </NavLink>
+          </NavLink> */}
           {/* <NavLink
             to={"/profile"}
             className={"menu-item"}

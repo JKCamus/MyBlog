@@ -30,7 +30,7 @@ const routes = [
     // ],
   },
   {
-    path: "/demo",
+    path: "/notes",
     // exact: true,
     component: Demo,
   },

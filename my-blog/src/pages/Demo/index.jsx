@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-02-08 11:06:28
+ * @LastEditTime: 2021-02-23 10:46:49
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -43,7 +43,7 @@ export default memo(function CamusDemo(props) {
   }, []);
 
   useEffect(() => {
-    if (props.location.pathname === "/demo") {
+    if (props.location.pathname === "/notes") {
       setView({
         type: "grid",
         selected: null,
@@ -86,7 +86,7 @@ export default memo(function CamusDemo(props) {
     } else if (view.type === "article") {
       Object.keys(articlesData).forEach((key) => {
         if (articlesData[key].article === element) {
-          props.history.push(`/demo/${articlesData[key].id}`);
+          props.history.push(`/notes/${articlesData[key].id}`);
           setView({
             type: "article",
             selected: key,
@@ -102,9 +102,9 @@ export default memo(function CamusDemo(props) {
         type: "article",
         selected: index,
       });
-      props.history.push(`/demo/${articlesData[index].id}`);
+      props.history.push(`/notes/${articlesData[index].id}`);
     } else {
-      props.history.push(`/demo`);
+      props.history.push(`/notes`);
       setView({
         type: "grid",
         selected: null,
@@ -177,7 +177,7 @@ export default memo(function CamusDemo(props) {
               <div className="selectAllDemo">
                 <span className={"label"}>Demo实例:</span>
                 <Route
-                  path={`/demo/${articlesData[view.selected].id}`}
+                  path={`/notes/${articlesData[view.selected].id}`}
                   component={SelectAll}
                 />
               </div>

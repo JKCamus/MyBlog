@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
-// import { message } from "antd";
+import { message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import * as Components from "./Components.js";
 
 import useForm from "./useForm";
-// import { login } from "services/login.js";
 import { loginAction } from "store/global/actionCreators";
 import QueueAnim from "rc-queue-anim";
 
@@ -48,12 +47,10 @@ const Login = (props) => {
   });
 
   const handleSignUp = () => {
+    message.warn('抱歉，暂不开发注册')
     resetSignUpForm();
   };
-// console.log('sss', signInValues)
   const handleSignIn = () => {
-    // console.log('signInValues',signInValues )
-    // console.log('signInValues',)
     dispatch(
       loginAction(signInValues, (status) => {
         setShowLogin(status);

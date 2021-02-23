@@ -165,7 +165,7 @@ const Header = (props) => {
             renderMenu()
           )}
           <NavLink
-            to={"/demo"}
+            to={"/notes"}
             className={"menu-item"}
             onClick={() => setPhoneOpen(!phoneOpen)}
           >

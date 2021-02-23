@@ -13,12 +13,14 @@ class Footer extends React.PureComponent {
             className={"copyright"}
           >
             <span>
-              ©2020{"  "}
-              <a href="#" style={{ color: "rgb(50, 166, 194)" }}>
-                Camus
-              </a>
+              ©{new Date().getFullYear()}
               {"  "}
-              All Rights Reserved
+              <a style={{ color: "rgb(50, 166, 194)" }}>Camus</a>
+              {"  "}• 闽ICP备2021001952号
+              {"  "}• 友情链接:{" "}
+              <a href="https://www.windypath.com/" style={{ color: "#999" }}>
+                风萧古道
+              </a>
             </span>
           </TweenOne>
         </OverPack>

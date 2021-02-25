@@ -50,6 +50,9 @@ const Login = (props) => {
     message.warn('抱歉，暂不开发注册')
     resetSignUpForm();
   };
+  /**
+   * @description: 登录
+   */
   const handleSignIn = () => {
     dispatch(
       loginAction(signInValues, (status) => {

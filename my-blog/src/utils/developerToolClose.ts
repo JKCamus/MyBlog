@@ -4,7 +4,11 @@
  * @Author: camus
  * @Date: 2021-01-21 13:45:42
  * @LastEditors: camus
- * @LastEditTime: 2021-01-21 14:06:55
+ * @LastEditTime: 2021-02-24 22:14:43
+ */
+/**
+ * @description: 开发模式关闭devTool
+ * @param {*} void
  */
 export const disableReactDevTools = (): void => {
   const noop = (): void => undefined;

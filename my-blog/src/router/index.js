@@ -20,18 +20,9 @@ const routes = [
     path: "/home",
     component: Home,
     exact: true,
-    // routes:[
-    //   {
-    //     path: "/discover",
-    //     exact: true,
-    //     render: () => <Redirect to="/discover/recommend" />,
-    //   },
-
-    // ],
   },
   {
     path: "/notes",
-    // exact: true,
     component: Demo,
   },
   {
@@ -44,10 +35,10 @@ const routes = [
     exact: true,
     component: Login,
   },
-  {
-    path: "/use",
-    exact: true,
-    component: MyUseRef,
-  },
+  // {
+  //   path: "/use",
+  //   exact: true,
+  //   component: MyUseRef,
+  // },
 ];
 export default routes;

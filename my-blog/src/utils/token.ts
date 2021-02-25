@@ -1,10 +1,10 @@
 /*
- * @Description:
+ * @Description:Token相关方法
  * @version:
  * @Author: camus
  * @Date: 2020-12-28 20:44:51
  * @LastEditors: camus
- * @LastEditTime: 2020-12-31 16:07:54
+ * @LastEditTime: 2021-02-25 09:09:28
  */
 import axios from "axios";
 export function setToken(userInfo) {

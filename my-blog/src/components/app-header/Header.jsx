@@ -178,52 +178,6 @@ const Header = (props) => {
           >
             Charts
           </NavLink>
-          {/* <NavLink
-            to={"/use"}
-            className={"menu-item"}
-            onClick={() => setPhoneOpen(!phoneOpen)}
-          >
-            use
-          </NavLink> */}
-          {/* <NavLink
-            to={"/profile"}
-            className={"menu-item"}
-            onClick={() => setPhoneOpen(!phoneOpen)}
-          >
-            Profile
-          </NavLink> */}
-
-          {/* {!checkLogin() ? (
-            <span className={"menu-item"} onClick={handleLogin}>
-              Login
-            </span>
-          ) : (
-            <span className={"menu-item"}>
-              <Avatar size={36} icon={<UserOutlined />} />
-            </span>
-          )}
-
-          <NavLink
-            to={"/demo"}
-            className={"menu-item"}
-            onClick={() => setPhoneOpen(!phoneOpen)}
-          >
-            Demo
-          </NavLink>
-          <NavLink
-            to={"/charts"}
-            className={"menu-item"}
-            onClick={() => setPhoneOpen(!phoneOpen)}
-          >
-            Charts
-          </NavLink>
-          <NavLink
-            to={"/profile"}
-            className={"menu-item"}
-            onClick={() => setPhoneOpen(!phoneOpen)}
-          >
-            Profile
-          </NavLink> */}
         </TweenOne>
       </div>
     </TweenOne>

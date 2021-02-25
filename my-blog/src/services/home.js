@@ -4,13 +4,17 @@
  * @Author: camus
  * @Date: 2020-12-08 19:42:11
  * @LastEditors: camus
- * @LastEditTime: 2021-01-14 22:15:45
+ * @LastEditTime: 2021-02-25 09:34:58
  */
 import request from "./request";
 
+/**
+ * @description: 获取gallery展示照片
+ * @param {*} page
+ * @param {*} size
+ */
 export function getPhotoList(page, size) {
   return request({
-    // /photo/getPhotos?page=1&&size=12
     url: "/photo/getPhotos",
     params: {
       page,
@@ -18,6 +22,11 @@ export function getPhotoList(page, size) {
     },
   });
 }
+/**
+ * @description: 获取全部照片
+ * @param {*} page
+ * @param {*} size
+ */
 export function getAllPhotoList(page, size) {
   return request({
     url: "/photo/getAllPhotos",
@@ -27,13 +36,14 @@ export function getAllPhotoList(page, size) {
     },
   });
 }
-
+/**
+ * @description: 权限测试
+ */
 export function authTest() {
   return request({
     url: "/test",
   });
 }
-
 
 // export function getUserAvatar(id) {
 //   return request({

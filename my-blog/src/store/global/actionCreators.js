@@ -11,7 +11,10 @@ export const loggedAction = (userInfo) => ({
   type: actionTypes.LOGGED,
   userInfo,
 });
-
+/**
+ * @description: 登录、保存token
+ * @param {*} loginAction
+ */
 export const loginAction = (info, resolve) => {
   return async (dispatch) => {
     try {

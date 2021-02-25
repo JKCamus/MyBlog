@@ -1,3 +1,15 @@
+/*
+ * @Description:
+ * @version:
+ * @Author: camus
+ * @Date: 2020-11-29 19:45:23
+ * @LastEditors: camus
+ * @LastEditTime: 2021-02-24 22:16:20
+ */
+/**
+ * @description: 单位
+ * @param {*} count
+ */
 export function getCount(count) {
   if (count < 0) return;
   if (count < 10000) {
@@ -8,11 +20,19 @@ export function getCount(count) {
     return Math.floor(count / 10000000) / 10 + "亿";
   }
 }
-
+/**
+ * @description: 获取img大小方法
+ * @param {*} imgUrl
+ * @param {*} size
+ */
 export function getSizeImage(imgUrl, size) {
   return `${imgUrl}?param=${size}x${size}`;
 }
-
+/**
+ * @description: 时间格式化
+ * @param {*} time
+ * @param {*} fmt
+ */
 export function formatDate(time, fmt) {
   let date = new Date(time);
 
@@ -47,6 +67,3 @@ export function formatMinuteSecond(time) {
   return formatDate(time, "mm:ss");
 }
 
-export function getPlaySong(id) {
-  return `https://music.163.com/song/media/outer/url?id=${id}.mp3`;
-}

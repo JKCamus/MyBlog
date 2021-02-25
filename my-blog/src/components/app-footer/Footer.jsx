@@ -18,7 +18,7 @@ class Footer extends React.PureComponent {
               <a style={{ color: "rgb(50, 166, 194)" }}>Camus</a>
               {"  "}• 闽ICP备2021001952号
               {"  "}• 友情链接:{" "}
-              <a href="https://www.windypath.com/" style={{ color: "#999" }}>
+              <a href="https://www.windypath.com/"  target="_blank" rel="noreferrer"   style={{ color: "#999" }}>
                 风萧古道
               </a>
             </span>

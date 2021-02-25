@@ -55,6 +55,17 @@ module.exports = {
               // "babel-loader?cacheDirectory",
             ],
           },
+          {
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            use: ["cache-loader", "babel-loader"],
+          },
+          {
+            test: /\.ts$/,
+            exclude: /node_modules/,
+            // 本质上是依赖于typescript(typescript compiler)
+            use: ["cache-loader", "babel-loader"],
+          },
         ],
       },
       resolve: {
@@ -148,7 +159,7 @@ module.exports = {
       },
     },
     {
-      // 配置全局less变量使用，用的是一个少有人知的loader，必须先弄这个配置
+      // 配置全局less变量使用
       plugin: {
         ...CracoSwcPlugin,
         overrideCracoConfig: ({ cracoConfig }) => {
@@ -185,7 +196,7 @@ module.exports = {
         },
       },
     },
-    // 配置全局less变量使用，用的是一个少有人知的loader
+    // 配置全局less变量使用
     {
       plugin: cracoPluginStyleResourcesLoader,
       options: {

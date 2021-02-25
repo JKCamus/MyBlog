@@ -6,17 +6,11 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2021-01-20 16:18:39
+ * @LastEditTime: 2021-02-25 16:26:55
  */
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState, Suspense } from "react";
 
-import {
-  HashRouter,
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { HashRouter, BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import routes from "./router";
 
 // import { renderRoutes } from "react-router-config";
@@ -24,7 +18,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { changeIsMobileAction } from "./store/global/actionCreators";
 // 动效库，用于判断是否是手机
-// import { Skeleton } from "antd";
+import { Skeleton } from "antd";
 import { enquireScreen } from "enquire-js";
 import AuthorizedRoute from "@/router/AuthorizedRoute";
 import privateRoutes from "@/router/privateRoutes";
@@ -38,9 +32,7 @@ const App = () => {
   const [showLogin, setShowLogin] = useState(false);
   useEffect(() => {
     enquireScreen((b) => {
-      b
-        ? store.dispatch(changeIsMobileAction(b))
-        : store.dispatch(changeIsMobileAction(false));
+      b ? store.dispatch(changeIsMobileAction(b)) : store.dispatch(changeIsMobileAction(false));
     });
   }, []);
   return (
@@ -49,14 +41,18 @@ const App = () => {
         <Header setShowLogin={setShowLogin}></Header>
         {showLogin && <Login setShowLogin={setShowLogin}></Login>}
         <Switch>
-          {routes.map(({ path, component, ...routes }) => (
-            <Route key={path} path={path} component={component} {...routes} />
-          ))}
+          <Suspense fallback={<Skeleton active paragraph={{ rows: 30}}/>}>
+            {routes.map(({ path, component, ...routes }) => (
+              <Route key={path} path={path} component={component} {...routes} />
+            ))}
+          </Suspense>
           {privateRoutes.map((route) => (
-            <AuthorizedRoute key={route.path} {...route} user={{role: ['user']}}></AuthorizedRoute>
+            <AuthorizedRoute
+              key={route.path}
+              {...route}
+              user={{ role: ["user"] }}
+            ></AuthorizedRoute>
           ))}
-          {/* <Route path="/backend" component={Backend} />
-          <Route path="/admin" component={Admin} /> */}
         </Switch>
       </HashRouter>
     </Provider>

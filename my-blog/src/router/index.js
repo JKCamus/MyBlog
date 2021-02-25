@@ -2,11 +2,13 @@ import React from "react";
 
 import { Redirect } from "react-router-dom";
 // import Home from 'pages/Home';
-import Home from "pages/Home";
-import Demo from "pages/Demo";
+// import Demo from "pages/Demo";
 import DragChart from "pages/Demo/drag-charts";
 import Login from "components/login";
 import MyUseRef from "pages/Demo/useRefHook";
+
+const Home = React.lazy(() => import("@/pages/Home"));
+const Notes = React.lazy(() => import("pages/Demo"));
 
 const routes = [
   {
@@ -23,7 +25,7 @@ const routes = [
   },
   {
     path: "/notes",
-    component: Demo,
+    component: Notes,
   },
   {
     path: "/charts",

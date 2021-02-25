@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-02-25 10:25:13
+ * @LastEditTime: 2021-02-25 11:09:17
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -50,7 +50,10 @@ export default memo(function CamusDemo(props) {
       });
     }
   }, [props.location.pathname]);
-
+  /**
+   * @description: 获取notes列表请求
+   * @param {*} _getDemoList
+   */
   const _getDemoList = async () => {
     try {
       const data = await getDemoList(1, 20);
@@ -95,7 +98,10 @@ export default memo(function CamusDemo(props) {
       });
     }
   };
-
+  /**
+   * @description: 根据index打开对应的note
+   * @param {*} index
+   */
   const changeView = (index) => {
     if (view.type === "grid") {
       setView({
@@ -112,7 +118,9 @@ export default memo(function CamusDemo(props) {
     }
   };
 
-  // 文章preview
+  /**
+   * @description: 渲染文章preview
+   */
   const articles = articlesData
     ? Object.keys(articlesData).map((key) => (
         <ArticleContainer key={key}>

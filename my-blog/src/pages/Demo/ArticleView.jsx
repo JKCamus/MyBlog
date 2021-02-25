@@ -35,11 +35,11 @@ const ArticleView = (props) => {
           document.getElementById("iframe").height = document.getElementById(
             "iframe"
           ).contentWindow.document.body.scrollHeight;
-          console.log(
-            "height",
-            document.getElementById("iframe").contentWindow.document.body
-              .scrollHeight
-          );
+          // console.log(
+          //   "height",
+          //   document.getElementById("iframe").contentWindow.document.body
+          //     .scrollHeight
+          // );
           // const obj = ReactDOM.findDOMNode(this);
           // this.setState({
           //   iFrameHeight: obj.contentWindow.document.body.scrollHeight + "px",
@@ -68,24 +68,24 @@ const Container = styled.div`
   background-color: white;
 `;
 
-const EditDate = styled.p`
-  text-align: center;
-  font-style: italic;
-`;
+// const EditDate = styled.p`
+//   text-align: center;
+//   font-style: italic;
+// `;
 
-const Title = styled.h3`
-  color: #212121;
-  text-align: center;
-  ${(props) =>
-    props.isMobile
-      ? `
-      font-size: 2rem;
-    `
-      : `font-size: 4rem;`}
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  padding: 10%;
-`;
+// const Title = styled.h3`
+//   color: #212121;
+//   text-align: center;
+//   ${(props) =>
+//     props.isMobile
+//       ? `
+//       font-size: 2rem;
+//     `
+//       : `font-size: 4rem;`}
+//   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+//     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+//   padding: 10%;
+// `;
 
 const Button = styled.button`
   position: fixed;

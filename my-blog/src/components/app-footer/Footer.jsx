@@ -5,8 +5,8 @@ import "./index.less";
 class Footer extends React.PureComponent {
   render() {
     return (
-      <div className={"home-page-wrapper footer0-wrapper"}>
-        <OverPack className={"home-page footer0"} playScale={0.01}>
+      <div className={"home-page-wrapper footer-wrapper"}>
+        <OverPack className={"home-page footer"} playScale={0.01}>
           <TweenOne
             animation={{ y: "+=30", opacity: 0, type: "from" }}
             key="footer"

@@ -1,6 +1,5 @@
-@header: header;
 
-.@{header} {
+.header{
   background: @template-nav-bg-color;
   width: 100%;
   z-index: 999;
@@ -70,7 +69,7 @@
 
 
 
-  .@{header} {
+  .header {
     &-logo {
       z-index: 101;
     }
@@ -133,7 +132,7 @@
     & .open {
       height: auto;
 
-      .@{header}-mobile-menu {
+      .header-mobile-menu {
         em {
           &:nth-child(1) {
             transform: translateY(6px) rotate(45deg);
@@ -149,7 +148,7 @@
         }
       }
 
-      .@{header}-menu {
+      .header-menu {
         opacity: 1;
         pointer-events: auto;
       }

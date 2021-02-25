@@ -7,13 +7,12 @@
  * @Author: camus
  * @Date: 2020-12-13 12:23:45
  * @LastEditors: camus
- * @LastEditTime: 2021-01-21 14:47:36
+ * @LastEditTime: 2021-02-25 10:35:01
  */
 import React, { useState, useEffect } from "react";
 import { Layout, Button } from "antd";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { StickyContainer, Sticky } from "react-sticky";
-import _ from "lodash";
 import {
   getBarChart,
   getLineChart,
@@ -42,7 +41,7 @@ const DragLayout = (props) => {
    * @description: 渲染对应画布内的内容
    */
   const generateDOM = (props) => {
-    return _.map(widgets, (l, i) => {
+    return widgets.map((l, i) => {
       let option;
       if (l.type === "bar") {
         option = getBarChart();
@@ -68,7 +67,7 @@ const DragLayout = (props) => {
           ></Charts>
         </div>
       );
-    });
+    })
   };
   /**
    * @description: 添加一个chart容器，定制初始宽度高度位置
@@ -91,7 +90,7 @@ const DragLayout = (props) => {
    * @description: 点击删除hover的对应的chart
    */
   const onRemoveItem = (i, key) => {
-    setWidgets(widgets.filter((item, index) => index != i));
+    setWidgets(widgets.filter((item, index) => index !== i));
     // 勿忘删除对应的实例
     delete chartInstance[key];
   };

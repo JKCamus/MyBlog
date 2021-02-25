@@ -125,7 +125,7 @@ const General = () => {
       title: "Action",
       render: (text, record) => (
         <Space size="middle">
-          <a onClick={() => handleEdit(record)}>编辑</a>
+          <a  onClick={() => handleEdit(record)}>编辑</a>
           {/* <a>删除</a> */}
         </Space>
       ),

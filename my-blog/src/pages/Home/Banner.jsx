@@ -2,18 +2,18 @@ import React from "react";
 import { DownOutlined } from "@ant-design/icons";
 import QueueAnim from "rc-queue-anim";
 import TweenOne from "rc-tween-one";
-import "./banner0.less";
+import "./banner.less";
 // import { isImg } from './utils';
 
 class Banner extends React.PureComponent {
   render() {
     return (
-      <div className={"banner0 kibhofepzkt-editor_css"}>
+      <div className={"banner"}>
         <QueueAnim
           key="QueueAnim"
           type={["bottom", "top"]}
           delay={200}
-          className={"banner0-text-wrapper"}
+          className={"banner-text-wrapper"}
         >
           <section className={"mockup-section paint-area"}>
             <div className={"mockup-content"}>
@@ -23,7 +23,9 @@ class Banner extends React.PureComponent {
                   cannot make a difference in this world: those who are afraid
                   to try and those who are afraid you will succeed.
                 </p>
-                <footer className={"paint-area paint-area--text"}>Ray Goforth</footer>
+                <footer className={"paint-area paint-area--text"}>
+                  Ray Goforth
+                </footer>
               </blockquote>
             </div>
           </section>
@@ -35,7 +37,7 @@ class Banner extends React.PureComponent {
             repeat: -1,
             duration: 1000,
           }}
-          className="banner0-icon"
+          className="banner-icon"
           key="icon"
         >
           <DownOutlined />

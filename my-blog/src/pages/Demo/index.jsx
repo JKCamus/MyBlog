@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-02-25 10:05:06
+ * @LastEditTime: 2021-02-25 10:25:13
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -268,9 +268,10 @@ const ExplorerTitle = styled.h4`
 const ExplorerPanel = styled.div`
   height: 100vh;
   width: 260px;
+  /* margin-top:64px; */
   border-right: 1px solid rgba(230, 230, 230);
   position: fixed;
-  top: 0px;
+  top: 0;
   left: -10px;
 
   display: flex;

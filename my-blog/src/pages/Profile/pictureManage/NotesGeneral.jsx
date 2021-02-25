@@ -111,7 +111,7 @@ const NotesGeneral = () => {
       title: "Action",
       render: (text, record) => (
         <Space size="middle">
-          <a onClick={() => handleEdit(record)}>编辑</a>
+          <a  onClick={() => handleEdit(record)}>编辑</a>
         </Space>
       ),
     },

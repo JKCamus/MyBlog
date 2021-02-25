@@ -15,7 +15,7 @@ class Footer extends React.PureComponent {
             <span>
               ©{new Date().getFullYear()}
               {"  "}
-              <a style={{ color: "rgb(50, 166, 194)" }}>Camus</a>
+              <a style={{ color: "rgb(50, 166, 194)" }} >Camus</a>
               {"  "}• 闽ICP备2021001952号
               {"  "}• 友情链接:{" "}
               <a href="https://www.windypath.com/"  target="_blank" rel="noreferrer"   style={{ color: "#999" }}>

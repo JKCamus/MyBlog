@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-12-23 21:49:09
  * @LastEditors: camus
- * @LastEditTime: 2021-01-21 22:28:53
+ * @LastEditTime: 2021-02-25 10:36:59
  */
 import React, { memo, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -68,7 +68,6 @@ const PictureGallery = (props) => {
     <GalleryWrapper>
       <QueueAnim
         type="bottom"
-        className={`pic-details-demo-title`}
         className={"galleryHeader"}
       >
         <h1 key="h1">All In Life </h1>

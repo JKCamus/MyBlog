@@ -82,6 +82,7 @@ const NotesGeneral = () => {
     {
       title: "title",
       dataIndex: "title",
+      ellipsis: true,
     },
     {
       title: "Preview",

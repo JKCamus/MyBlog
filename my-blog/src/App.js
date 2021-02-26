@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2021-02-25 16:26:55
+ * @LastEditTime: 2021-02-26 13:39:33
  */
 import React, { memo, useEffect, useState, Suspense } from "react";
 
@@ -40,12 +40,12 @@ const App = () => {
       <HashRouter>
         <Header setShowLogin={setShowLogin}></Header>
         {showLogin && <Login setShowLogin={setShowLogin}></Login>}
+        <Suspense fallback={<Skeleton active paragraph={{ rows: 30 }} />}>
+          {routes.map(({ path, component, ...routes }) => (
+            <Route key={path} path={path} component={component} {...routes} />
+          ))}
+        </Suspense>
         <Switch>
-          <Suspense fallback={<Skeleton active paragraph={{ rows: 30}}/>}>
-            {routes.map(({ path, component, ...routes }) => (
-              <Route key={path} path={path} component={component} {...routes} />
-            ))}
-          </Suspense>
           {privateRoutes.map((route) => (
             <AuthorizedRoute
               key={route.path}

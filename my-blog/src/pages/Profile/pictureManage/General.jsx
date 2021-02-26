@@ -103,6 +103,7 @@ const General = () => {
     {
       title: "Content",
       dataIndex: "content",
+      ellipsis: true,
     },
     {
       title: "Size",

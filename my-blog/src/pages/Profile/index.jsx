@@ -10,8 +10,9 @@ import {
   MailOutlined,
 } from "@ant-design/icons";
 import AuthorizedRoute from "@/router/AuthorizedRoute";
-import NotesGeneral from "@/pages/Profile/pictureManage/NotesGeneral";
-import GeneralList from "./pictureManage/General";
+// import NotesGeneral from "@/pages/Profile/pictureManage/NotesGeneral";
+// import GeneralList from "./pictureManage/General";
+import {PhotoGeneral,NotesGeneral} from './pictureManage/Loadable';
 import { ProfileWrapper } from "./styles";
 
 const Profile = (props) => {
@@ -59,7 +60,7 @@ const Profile = (props) => {
             path="/profile/general"
             exact
             key={"/profile/general"}
-            component={GeneralList}
+            component={PhotoGeneral}
             user={{ role: ["user"] }}
           ></AuthorizedRoute>
         </Switch>

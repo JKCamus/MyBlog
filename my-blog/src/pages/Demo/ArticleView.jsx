@@ -1,5 +1,5 @@
 // React
-import React, { Component, useRef, useState } from "react";
+import React, { memo} from "react";
 // import PlainTextEditor from "./PlainTextEditor";
 // import ReadTextEditor from "./ReadTextEditor";
 import styled from "styled-components";
@@ -125,4 +125,4 @@ const Button = styled.button`
 //   }
 // `;
 
-export default ArticleView;
+export default memo(ArticleView);

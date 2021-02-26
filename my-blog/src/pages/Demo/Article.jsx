@@ -4,14 +4,14 @@
  * @Author: camus
  * @Date: 2020-12-11 15:36:24
  * @LastEditors: camus
- * @LastEditTime: 2021-01-17 15:27:43
+ * @LastEditTime: 2021-02-26 11:10:31
  */
 // React
 import React, { Component } from "react";
 // Styled components
 import styled from "styled-components";
 
-class Article extends Component {
+class Article extends React.PureComponent {
   render() {
     const index = this.props.index;
     if (this.props.login) {

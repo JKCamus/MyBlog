@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-12 10:31:52
  * @LastEditors: camus
- * @LastEditTime: 2020-12-12 10:34:52
+ * @LastEditTime: 2021-02-26 11:02:51
  */
 export type RenderType =
   | "rerender"
@@ -18,3 +18,9 @@ export type RenderType =
 export interface IWidgetProps {
   renderType?: RenderType;
 }
+
+export const pictureHeightType = {
+  4: 3,
+  3: 4,
+  1: 1,
+};

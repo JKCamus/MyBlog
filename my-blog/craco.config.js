@@ -27,7 +27,8 @@ const jsWorkerPool = {
   poolTimeout: 2000,
 };
 threadLoader.warmup(jsWorkerPool, ["babel-loader"]);
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+// 最新版本热更新
+// const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
   webpack: smp.wrap({
@@ -217,9 +218,9 @@ module.exports = {
         fileName: false,
       },
     },
-    {
-      plugin: new ReactRefreshWebpackPlugin(),
-    },
+    // {
+    //   plugin: new ReactRefreshWebpackPlugin(),
+    // },
   ],
   devServer: {
     proxy: {

@@ -2280,6 +2280,18 @@
     schema-utils "^2.6.5"
     source-map "^0.7.3"
 
+"@pmmmwh/react-refresh-webpack-plugin@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.npm.taobao.org/@pmmmwh/react-refresh-webpack-plugin/download/@pmmmwh/react-refresh-webpack-plugin-0.4.3.tgz?cache=0&sync_timestamp=1608987877834&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40pmmmwh%2Freact-refresh-webpack-plugin%2Fdownload%2F%40pmmmwh%2Freact-refresh-webpack-plugin-0.4.3.tgz#1eec460596d200c0236bf195b078a5d1df89b766"
+  integrity sha1-HuxGBZbSAMAja/GVsHil0d+Jt2Y=
+  dependencies:
+    ansi-html "^0.0.7"
+    error-stack-parser "^2.0.6"
+    html-entities "^1.2.1"
+    native-url "^0.2.6"
+    schema-utils "^2.6.5"
+    source-map "^0.7.3"
+
 "@polka/url@^1.0.0-next.9":
   version "1.0.0-next.11"
   resolved "https://registry.npm.taobao.org/@polka/url/download/@polka/url-1.0.0-next.11.tgz#aeb16f50649a91af79dbe36574b66d0f9e4d9f71"

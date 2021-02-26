@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-11 14:06:30
  * @LastEditors: camus
- * @LastEditTime: 2021-01-15 22:02:56
+ * @LastEditTime: 2021-02-26 10:43:09
  */
 // React
 import React, { Component } from 'react'
@@ -14,6 +14,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 
 class Home extends Component {
+
   render() {
     return (
       <Container className="Home">

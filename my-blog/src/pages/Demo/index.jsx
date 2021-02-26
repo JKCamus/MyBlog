@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-02-25 11:09:17
+ * @LastEditTime: 2021-02-26 10:43:48
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -36,7 +36,6 @@ export default memo(function CamusDemo(props) {
   // const [renderType, setRenderType] = useState('')
   // const [isSearch, setIsSearch] = useState(false);
   // const [changeView, setChangeView] = useState(false)
-
   // article数据
   useEffect(() => {
     _getDemoList();

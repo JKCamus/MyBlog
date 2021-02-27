@@ -76,8 +76,11 @@ module.exports = {
           resolve("src"),
           resolve("node_modules"),
         ],
+        // 配置匹配文件后缀名eg:对于引入jsx文件，可以不填写后缀名也可以找到
+        // extensions: [".wasm", ".mjs", ".js", ".json", ".jsx", ".ts", ".vue"],
         alias: {
           "@": resolve("src"), // 缓存src目录为@符号，避免重复寻址
+          pages: resolve("./src/pages"),
         },
       },
       //抽离公用模块
@@ -127,7 +130,7 @@ module.exports = {
           // 开启gzip
           // new CompressionWebpackPlugin({
           //   // 是否删除源文件，默认: false
-          //   deleteOriginalAssets: false,
+          //   // deleteOriginalAssets: false,
           // }),
           // 打包分析
           new BundleAnalyzerPlugin(),
@@ -223,6 +226,8 @@ module.exports = {
     // },
   ],
   devServer: {
+    hot: true,
+    hotOnly: true,//错误修改后不刷新整个页面
     proxy: {
       "/api": {
         target: "http://47.102.211.145:8086", // 开发路由代理
@@ -234,7 +239,6 @@ module.exports = {
         },
       },
     },
-    hot: true,
-    hotOnly: true,
+
   },
 };

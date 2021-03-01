@@ -8,7 +8,6 @@
     "preserveConstEnums": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "jsx": "react",
     "lib": [
       "dom",
       "es5",
@@ -29,12 +28,13 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "jsx": "react-jsx"
   },
   "exclude": [
     "node_modules"
   ],
-  "extends": "./paths.json",
+  "extends": "./base-tsconfig.json",
   "include": [
     "src"
   ]

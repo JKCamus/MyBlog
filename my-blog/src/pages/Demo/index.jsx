@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-02-26 10:58:03
+ * @LastEditTime: 2021-03-01 11:02:45
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -64,7 +64,9 @@ export default memo(function CamusDemo(props) {
         };
       });
       setArticlesData(articles);
-    } catch (error) {}
+    } catch (error) {
+      console.log('error', error)
+    }
   };
 
   // 滚动到对应的card

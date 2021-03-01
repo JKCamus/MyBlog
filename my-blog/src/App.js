@@ -6,11 +6,11 @@
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
  * @LastEditors: camus
- * @LastEditTime: 2021-02-26 13:39:33
+ * @LastEditTime: 2021-03-01 11:12:23
  */
-import React, { memo, useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 
-import { HashRouter, BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import routes from "./router";
 
 // import { renderRoutes } from "react-router-config";

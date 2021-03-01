@@ -24,7 +24,9 @@ instance.interceptors.request.use(
     }
     return config;
   },
-  (err) => {}
+  (err) => {
+    console.log('res=>', err)
+  }
 );
 
 instance.interceptors.response.use(

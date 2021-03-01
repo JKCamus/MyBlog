@@ -6,12 +6,12 @@ import { Button } from "antd";
 import { authTest } from "services/home";
 
 const Home = (props) => {
-  const handleAuth = () => {
-    authTest();
-  };
-  const handleRemove = (params) => {
+  // const handleAuth = () => {
+  //   authTest();
+  // };
+  // const handleRemove = (params) => {
 
-  }
+  // }
   return (
     <>
       {/* <Button onClick={handleAuth}>验证权限</Button>

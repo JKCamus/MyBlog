@@ -5,13 +5,13 @@
 /.pnp
 .pnp.js
 .env.dev
+/src/services/config.js
 
 # testing
 /coverage
 
 # production
 /build
-/src/services/config.js
 # misc
 .DS_Store
 .env.local

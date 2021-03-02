@@ -26,4 +26,5 @@ export function getUerInfo(){
     const userInfo = JSON.parse(userInfoString);
     return userInfo
   }
+  return undefined
 }

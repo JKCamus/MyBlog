@@ -4,10 +4,12 @@
  * @Author: camus
  * @Date: 2020-12-12 10:38:09
  * @LastEditors: camus
- * @LastEditTime: 2020-12-14 22:41:21
+ * @LastEditTime: 2021-03-08 10:00:43
  */
-import React, { memo, useEffect, useState, useRef } from "react";
-import * as echarts from "echarts";
+import React, { memo, useEffect, useRef } from "react";
+// import * as echarts from "echarts";
+import echarts from '@/common/ECharts.js';
+
 
 const Charts = (props) => {
   let instance = undefined;
@@ -39,8 +41,6 @@ const Charts = (props) => {
 
     setChartInstance({ ...chartInstance, [chartKey]: instance });
   };
-  return (
-    <div id={"main"} style={{ height: "100%", width: "100%" }} ref={chartRef} />
-  );
+  return <div id={"main"} style={{ height: "100%", width: "100%" }} ref={chartRef} />;
 };
-export default Charts;
+export default memo(Charts);

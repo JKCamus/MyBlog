@@ -112,25 +112,26 @@ module.exports = {
       ...whenProd(
         () => [
           // 压缩js 同时删除console debug等
-          // new TerserPlugin({
-          //   parallel: true, // 多线程
-          //   terserOptions: {
-          //     ie8: true,
-          //     // 删除注释
-          //     output: {
-          //       comments: false,
-          //     },
-          //     //删除console 和 debugger  删除警告
-          //     compress: {
-          //       drop_debugger: true,
-          //       drop_console: true,
-          //     },
-          //   },
-          // }),
+          new TerserPlugin({
+            parallel: true,
+            extractComments: false,
+            terserOptions: {
+              ie8: true,
+              // 删除注释
+              output: {
+                comments: false,
+              },
+              //删除console 和 debugger  删除警告
+              compress: {
+                drop_debugger: true,
+                drop_console: true,
+              },
+            },
+          }),
           // 开启gzip
           // new CompressionWebpackPlugin({
           //   // 是否删除源文件，默认: false
-          //   // deleteOriginalAssets: false,
+          //   deleteOriginalAssets: false,
           // }),
           // 打包分析
           new BundleAnalyzerPlugin(),
@@ -227,7 +228,7 @@ module.exports = {
   ],
   devServer: {
     hot: true,
-    hotOnly: true,//错误修改后不刷新整个页面
+    hotOnly: true, //错误修改后不刷新整个页面
     proxy: {
       "/api": {
         target: "http://47.102.211.145:8086", // 开发路由代理
@@ -239,6 +240,5 @@ module.exports = {
         },
       },
     },
-
   },
 };

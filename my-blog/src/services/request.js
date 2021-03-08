@@ -1,6 +1,6 @@
 import axios from "axios";
 import { message } from "antd";
-
+// 接口相关，未上传git
 import { BASE_URL, TIMEOUT } from "./config";
 
 import {} from 'utils/token';
@@ -9,7 +9,9 @@ const instance = axios.create({
   baseURL: BASE_URL,
   timeout: TIMEOUT,
 });
-
+/**
+ * @description: 请求拦截
+ */
 instance.interceptors.request.use(
   (config) => {
     // 1.发送网络请求时, 在界面的中间位置显示Loading的组件
@@ -28,7 +30,9 @@ instance.interceptors.request.use(
     console.log('res=>', err)
   }
 );
-
+/**
+ * @description: 响应拦截
+ */
 instance.interceptors.response.use(
   (res) => {
     return res.data;

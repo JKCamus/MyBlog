@@ -4,11 +4,11 @@
  * @Author: camus
  * @Date: 2020-12-12 10:38:09
  * @LastEditors: camus
- * @LastEditTime: 2021-03-08 10:00:43
+ * @LastEditTime: 2021-03-08 13:15:33
  */
 import React, { memo, useEffect, useRef } from "react";
 // import * as echarts from "echarts";
-import echarts from '@/common/ECharts.js';
+import echarts from '@/common/echarts.js';
 
 
 const Charts = (props) => {

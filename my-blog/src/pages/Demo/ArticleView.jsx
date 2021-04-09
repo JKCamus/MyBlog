@@ -1,5 +1,5 @@
 // React
-import React, { memo} from "react";
+import React, { memo } from "react";
 // import PlainTextEditor from "./PlainTextEditor";
 // import ReadTextEditor from "./ReadTextEditor";
 import styled from "styled-components";
@@ -21,7 +21,7 @@ const ArticleView = (props) => {
       {/* <Title isMobile={isMobile}> {props.content.article} </Title> */}
       {/* <div dangerouslySetInnerHTML={{ __html: this.state.content.htmlContent }}></div> */}
       {/* <ReadTextEditor content={props.content} /> */}
-      <iframe
+      {/* <iframe
         id={"iframe"}
         title={"notes"}
         style={{
@@ -51,7 +51,8 @@ const ArticleView = (props) => {
         height={"100%"}
         scrolling="no"
         frameBorder="0"
-      />
+      /> */}
+      <div dangerouslySetInnerHTML={{__html:props.content.htmlContent}}></div>
     </Container>
   );
 };
@@ -92,8 +93,8 @@ const Button = styled.button`
   top: 10rem;
   right: 20px;
   z-index: 1;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
   width: 150px;
   height: 50px;

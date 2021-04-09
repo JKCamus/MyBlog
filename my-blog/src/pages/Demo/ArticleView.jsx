@@ -21,38 +21,7 @@ const ArticleView = (props) => {
       {/* <Title isMobile={isMobile}> {props.content.article} </Title> */}
       {/* <div dangerouslySetInnerHTML={{ __html: this.state.content.htmlContent }}></div> */}
       {/* <ReadTextEditor content={props.content} /> */}
-      {/* <iframe
-        id={"iframe"}
-        title={"notes"}
-        style={{
-          width: "100%",
-          overflow: "visible",
-          // height: "100%",
-          minHeight: "100vh",
-        }}
-        onLoad={() => {
-          // console.log('sss', document.getElementById("iframe").contentWindow)
-          document.getElementById("iframe").height = document.getElementById(
-            "iframe"
-          ).contentWindow.document.body.scrollHeight;
-          // console.log(
-          //   "height",
-          //   document.getElementById("iframe").contentWindow.document.body
-          //     .scrollHeight
-          // );
-          // const obj = ReactDOM.findDOMNode(this);
-          // this.setState({
-          //   iFrameHeight: obj.contentWindow.document.body.scrollHeight + "px",
-          // });
-        }}
-        srcDoc={`${props.content.htmlContent}`}
-        // src={`${props.content.htmlContent}`}
-        width="100%"
-        height={"100%"}
-        scrolling="no"
-        frameBorder="0"
-      /> */}
-      <div dangerouslySetInnerHTML={{__html:props.content.htmlContent}}></div>
+      <div  dangerouslySetInnerHTML={{ __html: props.content.htmlContent }}></div>
     </Container>
   );
 };

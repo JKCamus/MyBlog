@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-03-01 11:02:45
+ * @LastEditTime: 2021-04-09 10:35:41
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -65,7 +65,7 @@ export default memo(function CamusDemo(props) {
       });
       setArticlesData(articles);
     } catch (error) {
-      console.log('error', error)
+      console.log("error", error);
     }
   };
 
@@ -76,9 +76,7 @@ export default memo(function CamusDemo(props) {
       if (element) {
         const articles = document.querySelectorAll(".article");
         articles.forEach((currentElement, index) => {
-          if (
-            currentElement.children[selectedChildren].textContent === element
-          ) {
+          if (currentElement.children[selectedChildren].textContent === element) {
             window.scroll({
               top: currentElement.offsetTop - 100,
               left: 0,
@@ -144,17 +142,13 @@ export default memo(function CamusDemo(props) {
             index={key}
             login={login}
             details={articlesData[key]}
-            scrollToArticle={(element, selected) =>
-              scrollToArticle(element, selected)
-            }
+            scrollToArticle={(element, selected) => scrollToArticle(element, selected)}
           />
         );
       })
     : null;
   // 侧栏标题
-  const lastArticlesTitle = articlesData ? (
-    <ExplorerTitle>Camus Notes</ExplorerTitle>
-  ) : null;
+  const lastArticlesTitle = articlesData ? <ExplorerTitle>Camus Notes</ExplorerTitle> : null;
   // const disconnect = () => {
   //   this.setState({
   //     login: false,
@@ -176,22 +170,14 @@ export default memo(function CamusDemo(props) {
         <DemoRouterWrapper>
           {articlesData[view.selected].status === 2 && (
             <SelectAllWrapper>
-              <p className="selectAllTitle">
-                {articlesData[view.selected].title}
-              </p>
+              <p className="selectAllTitle">{articlesData[view.selected].title}</p>
               <div className="selectAllDemo">
                 <span className={"label"}>Demo实例:</span>
-                <Route
-                  path={`/notes/${articlesData[view.selected].id}`}
-                  component={SelectAll}
-                />
+                <Route path={`/notes/${articlesData[view.selected].id}`} component={SelectAll} />
               </div>
             </SelectAllWrapper>
           )}
-          <ArticleView
-            content={articlesData[view.selected]}
-            changeView={changeView}
-          ></ArticleView>
+          <ArticleView content={articlesData[view.selected]} changeView={changeView}></ArticleView>
         </DemoRouterWrapper>
       )}
     </ContainerApp>
@@ -269,8 +255,8 @@ const fadeInLeftAnimation = keyframes`${fadeInLeft}`;
 const ExplorerTitle = styled.h4`
   font-size: 1.2em;
   font-style: italic;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   padding-bottom: 10px;
 `;
 
@@ -282,13 +268,17 @@ const ExplorerPanel = styled.div`
   position: fixed;
   top: 0;
   left: -10px;
-
+  font-size: 12px;
   display: flex;
   justify-content: center;
   flex-direction: column-reverse;
-
+  line-height: 1.5715;
   padding-left: 20px;
   padding-right: 40px;
   animation: 0.5s ${fadeInLeftAnimation};
   transition: 0.5s;
+  h4 {
+    margin: 0;
+    font-weight:500;
+  }
 `;

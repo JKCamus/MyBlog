@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-11 14:06:30
  * @LastEditors: camus
- * @LastEditTime: 2021-02-26 10:57:18
+ * @LastEditTime: 2021-04-09 11:16:39
  */
 // React
 import React, { Component } from "react";
@@ -31,7 +31,7 @@ const Container = styled.div`
 `;
 const Title = styled.h1`
   font-family: "Abril Fatface", cursive;
-  font-size: 8em;
+  font-size: 6rem;
   text-align: center;
   color: #212121;
   /* padding: 10%; */

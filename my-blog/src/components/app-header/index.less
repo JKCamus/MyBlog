@@ -1,5 +1,4 @@
-
-.header{
+.header {
   background: @template-nav-bg-color;
   width: 100%;
   z-index: 999;
@@ -32,6 +31,8 @@
 
     >.menu-item {
       line-height: 62px;
+      font-size: 12px;
+      font-family: Arial, Helvetica, sans-serif !important;
       display: inline-block;
       padding: 0 20px;
       cursor: pointer;
@@ -48,6 +49,10 @@
         color: @primary-color;
         border-bottom: 2px solid @primary-color;
       }
+
+    }
+    a{
+      font-weight: normal;
     }
 
   }
@@ -96,6 +101,7 @@
         line-height: 40px;
         height: 40px;
         margin: 4px 0 8px;
+        font-size: 12px;
 
         &.active,
         &:hover {

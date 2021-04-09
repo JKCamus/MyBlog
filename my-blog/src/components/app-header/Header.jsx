@@ -62,15 +62,8 @@ const Header = (props) => {
     );
     return isMobile ? (
       <Menu mode={"inline"} theme={"dark"}>
-        <SubMenu
-          icon={<UserOutlined />}
-          title={userInfo.name}
-          style={{ color: "#fff" }}
-        >
-          <Menu.Item
-            className={"dropDownMenu"}
-            onClick={() => setPhoneOpen(!phoneOpen)}
-          >
+        <SubMenu icon={<UserOutlined />} title={userInfo.name} style={{ color: "#fff" }}>
+          <Menu.Item className={"dropDownMenu"} onClick={() => setPhoneOpen(!phoneOpen)}>
             <NavLink to={"/profile"}>Profile</NavLink>
           </Menu.Item>
           <Menu.Item className={"dropDownMenu"}>
@@ -86,12 +79,7 @@ const Header = (props) => {
         </SubMenu>
       </Menu>
     ) : (
-      <Dropdown
-        overlay={menu}
-        theme="dark"
-        trigger={["click"]}
-        className={"menu-item"}
-      >
+      <Dropdown overlay={menu} theme="dark" trigger={["click"]} className={"menu-item"}>
         <div>
           <Avatar
             src={`${BASE_URL}/users/${userInfo.id}/avatar`}
@@ -121,6 +109,8 @@ const Header = (props) => {
               fontWeight: "bold",
               fontSize: "20px",
               textDecoration: "none",
+              padding: 0,
+              fontFamily: "Arial, Helvetica, sans-serif",
             }}
           >
             CamusBlog
@@ -164,18 +154,10 @@ const Header = (props) => {
           ) : (
             renderMenu()
           )}
-          <NavLink
-            to={"/notes"}
-            className={"menu-item"}
-            onClick={() => setPhoneOpen(!phoneOpen)}
-          >
+          <NavLink to={"/notes"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
             Notes
           </NavLink>
-          <NavLink
-            to={"/charts"}
-            className={"menu-item"}
-            onClick={() => setPhoneOpen(!phoneOpen)}
-          >
+          <NavLink to={"/charts"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
             Charts
           </NavLink>
         </TweenOne>

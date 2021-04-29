@@ -6,7 +6,7 @@
  * @Author: camus
  * @Date: 2020-12-23 21:49:09
  * @LastEditors: camus
- * @LastEditTime: 2021-02-26 11:09:13
+ * @LastEditTime: 2021-04-29 19:57:23
  */
 import React, { memo, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -24,10 +24,10 @@ const PictureGallery = (props) => {
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { photoList: photos, isMobile,shouldPhotoRender } = useSelector((state) => ({
+  const { photoList: photos, isMobile, shouldPhotoRender } = useSelector((state) => ({
     photoList: state.getIn(["home", "photoList"]),
     isMobile: state.getIn(["global", "isMobile"]),
-    shouldPhotoRender:state.getIn(["home", "shouldPhotoRender"]),
+    shouldPhotoRender: state.getIn(["home", "shouldPhotoRender"]),
     shallowEqual,
   }));
 
@@ -46,7 +46,7 @@ const PictureGallery = (props) => {
   };
 
   useEffect(() => {
-    shouldPhotoRender&&dispatch(getPhotosListAction(1, 20));
+    shouldPhotoRender && dispatch(getPhotosListAction(1, 20));
   }, [shouldPhotoRender]);
 
   const columns = (containerWidth) => {
@@ -66,14 +66,9 @@ const PictureGallery = (props) => {
   };
   return (
     <GalleryWrapper>
-      <QueueAnim
-        type="bottom"
-        className={"galleryHeader"}
-      >
+      <QueueAnim type="bottom" className={"galleryHeader"}>
         <h1 key="h1">All In Life </h1>
-        <p key="p">
-          I love you not for who you are, but for who I am with you.
-        </p>
+        <p key="p">I love you not for who you are, but for who I am with you.</p>
       </QueueAnim>
       <Gallery
         photos={photos.length ? photos : images}
@@ -91,7 +86,7 @@ const PictureGallery = (props) => {
               views={photos.map((item) => {
                 return {
                   ...item,
-                  src: item.src.split("?")[0],
+                  src: isMobile ? item.src : item.src.split("?")[0],
                 };
               })}
             />

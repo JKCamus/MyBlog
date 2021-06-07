@@ -6,9 +6,9 @@ import { Redirect } from "react-router-dom";
 import DragChart from "pages/Demo/drag-charts";
 import Login from "components/login";
 import MyUseRef from "pages/Demo/useRefHook";
-
 const Home = React.lazy(() => import("@/pages/Home"));
 const Notes = React.lazy(() => import("pages/Demo"));
+const About=React.lazy(()=>import('pages/About'))
 
 const routes = [
   {
@@ -37,6 +37,12 @@ const routes = [
     exact: true,
     component: Login,
   },
+  {
+    path: "/about",
+    exact: true,
+    component: About,
+  },
+
   // {
   //   path: "/use",
   //   exact: true,

@@ -15,10 +15,8 @@ const WebpackBar = require("webpackbar");
 const TerserPlugin = require("terser-webpack-plugin");
 // 打包信息配置
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
-// 开启gzip
-const CompressionWebpackPlugin = require("compression-webpack-plugin");
 
-const { POSTCSS_MODES, whenProd } = require("@craco/craco");
+const {  whenProd } = require("@craco/craco");
 
 const threadLoader = require("thread-loader");
 
@@ -128,11 +126,7 @@ module.exports = {
               },
             },
           }),
-          // 开启gzip
-          // new CompressionWebpackPlugin({
-          //   // 是否删除源文件，默认: false
-          //   deleteOriginalAssets: false,
-          // }),
+
           // 打包分析
           new BundleAnalyzerPlugin(),
         ],
@@ -140,12 +134,6 @@ module.exports = {
       ),
     ],
   }),
-  // style: {
-  //   // 自适应方案
-  //   postcss: {
-  //     mode: POSTCSS_MODES.file
-  //   }
-  // },
   // 插件相关配置，一个plugin一个对象
   plugins: [
     // 配置less

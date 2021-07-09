@@ -16,7 +16,7 @@ class Footer extends React.PureComponent {
               ©{new Date().getFullYear()}
               {"  "}
               <a style={{ color: "rgb(50, 166, 194)" }} >Camus</a>
-              {"  "}• 闽ICP备2021001952号
+              <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">•闽ICP备2021001952号-1</a>
               {"  "}• 友情链接:{" "}
               <a href="https://www.windypath.com/"  target="_blank" rel="noreferrer"   style={{ color: "#999" }}>
                 风萧古道

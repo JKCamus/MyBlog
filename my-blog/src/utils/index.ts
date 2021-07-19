@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
  * @Author: camus
  * @Date: 2021-06-08 22:37:50
  * @LastEditors: camus
- * @LastEditTime: 2021-06-08 23:09:11
+ * @LastEditTime: 2021-07-19 21:01:25
  */
 /**
  * @description: mounted hook，mounted的时候回调，更新不回调
@@ -32,3 +32,17 @@ export const useDebounce = (value: any, delay: number) => {
   }, [value, delay]);
   return debounceValue;
 };
+
+//获取文本宽度
+export const getTextWidth = (
+  text: string,
+  fontWeight: string = DEFAULT_FONT_WEIGHT,
+  fontSize: string = DEFAULT_FONT_SIZE,
+  fontFamily: string = DEFAULT_FONT_FAMILY
+): number => {
+  const canvas = utilCanvas || (utilCanvas = document.createElement('canvas'))
+  const context = canvas.getContext('2d')
+  context.font = `${fontWeight} ${fontSize} ${fontFamily}`
+  const metrics = context.measureText(text)
+  return Math.ceil(metrics.width)
+}

@@ -34,15 +34,15 @@ export const useDebounce = (value: any, delay: number) => {
 };
 
 //获取文本宽度
-export const getTextWidth = (
-  text: string,
-  fontWeight: string = DEFAULT_FONT_WEIGHT,
-  fontSize: string = DEFAULT_FONT_SIZE,
-  fontFamily: string = DEFAULT_FONT_FAMILY
-): number => {
-  const canvas = utilCanvas || (utilCanvas = document.createElement('canvas'))
-  const context = canvas.getContext('2d')
-  context.font = `${fontWeight} ${fontSize} ${fontFamily}`
-  const metrics = context.measureText(text)
-  return Math.ceil(metrics.width)
-}
+// export const getTextWidth = (
+//   text: string,
+//   fontWeight: string = DEFAULT_FONT_WEIGHT,
+//   fontSize: string = DEFAULT_FONT_SIZE,
+//   fontFamily: string = DEFAULT_FONT_FAMILY
+// ): number => {
+//   const canvas = utilCanvas || (utilCanvas = document.createElement('canvas'))
+//   const context = canvas.getContext('2d')
+//   context.font = `${fontWeight} ${fontSize} ${fontFamily}`
+//   const metrics = context.measureText(text)
+//   return Math.ceil(metrics.width)
+// }

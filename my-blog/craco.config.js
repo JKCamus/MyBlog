@@ -44,17 +44,17 @@ module.exports = {
       /*在这里添加任何webpack配置选项: https://webpack.js.org/configuration */
       module: {
         rules: [
-          {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            use: [
-              {
-                loader: "thread-loader",
-                options: jsWorkerPool,
-              },
-              // "babel-loader?cacheDirectory",
-            ],
-          },
+          // {
+          //   test: /\.js$/,
+          //   exclude: /node_modules/,
+          //   use: [
+          //     {
+          //       loader: "thread-loader",
+          //       options: jsWorkerPool,
+          //     },
+          //     // "babel-loader?cacheDirectory",
+          //   ],
+          // },
           {
             test: /\.jsx?$/,
             exclude: /node_modules/,
@@ -82,26 +82,26 @@ module.exports = {
         },
       },
       //抽离公用模块
-      optimization: {
-        // minimize: process.env.REACT_APP_ENV !== "development" ? true : false,
-        splitChunks: {
-          cacheGroups: {
-            commons: {
-              chunks: "initial",
-              minChunks: 2,
-              maxInitialRequests: 5,
-              minSize: 0,
-            },
-            vendor: {
-              test: /node_modules/,
-              chunks: "initial",
-              name: "vendor",
-              priority: 10,
-              enforce: true,
-            },
-          },
-        },
-      },
+      // optimization: {
+      //   // minimize: process.env.REACT_APP_ENV !== "development" ? true : false,
+      //   splitChunks: {
+      //     cacheGroups: {
+      //       commons: {
+      //         chunks: "initial",
+      //         minChunks: 2,
+      //         maxInitialRequests: 5,
+      //         minSize: 0,
+      //       },
+      //       vendor: {
+      //         test: /node_modules/,
+      //         chunks: "initial",
+      //         name: "vendor",
+      //         priority: 10,
+      //         enforce: true,
+      //       },
+      //     },
+      //   },
+      // },
     },
     plugins: [
       // webpack进度条
@@ -151,59 +151,59 @@ module.exports = {
         },
       },
     },
-    {
-      // 配置全局less变量使用
-      plugin: {
-        ...CracoSwcPlugin,
-        overrideCracoConfig: ({ cracoConfig }) => {
-          if (typeof cracoConfig.eslint.enable !== "undefined") {
-            cracoConfig.disableEslint = !cracoConfig.eslint.enable;
-          }
-          delete cracoConfig.eslint;
-          return cracoConfig;
-        },
-        overrideWebpackConfig: ({ webpackConfig, cracoConfig }) => {
-          if (
-            typeof cracoConfig.disableEslint !== "undefined" &&
-            cracoConfig.disableEslint === true
-          ) {
-            webpackConfig.plugins = webpackConfig.plugins.filter(
-              (instance) => instance.constructor.name !== "ESLintWebpackPlugin"
-            );
-          }
-          return webpackConfig;
-        },
-      },
-      options: {
-        swcLoaderOptions: {
-          jsc: {
-            externalHelpers: true,
-            target: "es5",
-            parser: {
-              syntax: "typescript",
-              tsx: true,
-              dynamicImport: true,
-              exportDefaultFrom: true,
-            },
-          },
-        },
-      },
-    },
-    // 配置全局less变量使用
-    {
-      plugin: cracoPluginStyleResourcesLoader,
-      options: {
-        patterns: path.join(__dirname, "src/assets/css/reset.less"),
-        /*
-          Please enter supported CSS processor type
-          1. if u use css processor，please type css string
-          2. if u use less processor，please type less string
-          3. if u use sass or scss processor，please type sass or scss string，Choose one of the two
-          4. if u use stylus processor，please type stylus string
-      */
-        styleType: "less",
-      },
-    },
+    // {
+    //   // 配置全局less变量使用
+    //   plugin: {
+    //     ...CracoSwcPlugin,
+    //     overrideCracoConfig: ({ cracoConfig }) => {
+    //       if (typeof cracoConfig.eslint.enable !== "undefined") {
+    //         cracoConfig.disableEslint = !cracoConfig.eslint.enable;
+    //       }
+    //       delete cracoConfig.eslint;
+    //       return cracoConfig;
+    //     },
+    //     overrideWebpackConfig: ({ webpackConfig, cracoConfig }) => {
+    //       if (
+    //         typeof cracoConfig.disableEslint !== "undefined" &&
+    //         cracoConfig.disableEslint === true
+    //       ) {
+    //         webpackConfig.plugins = webpackConfig.plugins.filter(
+    //           (instance) => instance.constructor.name !== "ESLintWebpackPlugin"
+    //         );
+    //       }
+    //       return webpackConfig;
+    //     },
+    //   },
+    //   options: {
+    //     swcLoaderOptions: {
+    //       jsc: {
+    //         externalHelpers: true,
+    //         target: "es5",
+    //         parser: {
+    //           syntax: "typescript",
+    //           tsx: true,
+    //           dynamicImport: true,
+    //           exportDefaultFrom: true,
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // // 配置全局less变量使用
+    // {
+    //   plugin: cracoPluginStyleResourcesLoader,
+    //   options: {
+    //     patterns: path.join(__dirname, "src/assets/css/reset.less"),
+    //     /*
+    //       Please enter supported CSS processor type
+    //       1. if u use css processor，please type css string
+    //       2. if u use less processor，please type less string
+    //       3. if u use sass or scss processor，please type sass or scss string，Choose one of the two
+    //       4. if u use stylus processor，please type stylus string
+    //   */
+    //     styleType: "less",
+    //   },
+    // },
     {
       plugin: babelPluginStyledComponents,
       options: {

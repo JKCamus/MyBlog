@@ -36,6 +36,7 @@
   ],
   "extends": "./base-tsconfig.json",
   "include": [
-    "src"
+    "src",
+    "global.d.ts"
   ]
 }

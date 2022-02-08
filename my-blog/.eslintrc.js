@@ -1,7 +1,7 @@
 module.exports = {
   globals: {
     __dirname: true,
-    process:true,
+    process: true,
   },
   env: {
     browser: true,
@@ -13,6 +13,8 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
   ],
+  // extends: ["alloy", "alloy/react", "alloy/typescript"],
+
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {

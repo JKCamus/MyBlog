@@ -16,7 +16,7 @@
 @template-text-color-light: #fff;
 @template-footer-text-color: #999;
 
-@animate-duration: .45s;
+@animate-duration: 0.45s;
 
 /* 样式的重置 */
 body,
@@ -56,11 +56,6 @@ a {
   color: #666;
 }
 
-a:hover {
-  color: #666;
-  text-decoration: underline;
-}
-
 i,
 em {
   font-style: normal;
@@ -73,6 +68,11 @@ select,
 a {
   outline: none;
   border: none;
+}
+
+a:hover {
+  color: #666;
+  text-decoration: underline;
 }
 
 table {
@@ -95,13 +95,11 @@ button {
   color: #333;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #f5f5f5;
-
 }
-    ::-webkit-scrollbar {
-      display: none
-    }
 
-
+::-webkit-scrollbar {
+  display: none;
+}
 
 /* 详细页图片或框框的样式;
 */
@@ -113,20 +111,14 @@ button {
   border-radius: 6px;
   border: 1px solid @line-color;
   transform: translateY(0);
-  transition: transform .3s @ease-out, box-shadow .3s @ease-out;
+  transition: transform 0.3s @ease-out, box-shadow 0.3s @ease-out;
 
   &:hover {
     .page-shadow();
+
     transform: translateY(-5px);
   }
 }
-
-
-
-
-
-
-
 
 .text-nowrap {
   white-space: nowrap;

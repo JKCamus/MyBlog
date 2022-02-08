@@ -1,4 +1,4 @@
-@import "~assets/css/reset.less";
+@import "@/assets/css/reset.less";
 
 .banner {
   // 如果在第一屏且导航位置为 relative, 一屏为 height: calc(~"100vh - 64px");
@@ -7,20 +7,18 @@
   position: relative;
   text-align: center;
   border-color: #666;
-  background-image: url("~@/assets/img/DSC07241_mobile.jpg");
+  background-image: url("@/assets/img/DSC07241_mobile.jpg");
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
 
   & &-text-wrapper {
     display: inline-block;
-    position: absolute;
     top: 23%;
-    margin: auto;
     left: 0;
     right: 0;
     font-size: 14px;
-    color: #7B7B7F;
+    color: #7b7b7f;
     width: 86vw;
     background-color: #fff;
     overflow: hidden;
@@ -38,7 +36,9 @@
       z-index: 10;
       cursor: default;
       font-weight: 500;
-      font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", "FontAwesome", sans-serif !important;
+      font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo,
+        "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3",
+        "FontAwesome", sans-serif !important;
     }
 
     .mockup-blockquote {
@@ -55,7 +55,7 @@
     }
 
     .mockup-blockquote p::before {
-      content: '“';
+      content: "“";
       font-family: serif;
       font-size: 3em;
       line-height: 0;
@@ -72,7 +72,7 @@
     }
 
     .mockup-blockquote footer::before {
-      content: '\2015 ';
+      content: "\2015 ";
     }
 
     .paint-area {
@@ -82,8 +82,7 @@
       transition: background 0.2s, color 0.2s;
     }
 
-
-    >.queue-anim-leaving {
+    > .queue-anim-leaving {
       position: relative !important;
     }
   }
@@ -111,7 +110,7 @@
     box-shadow: 0 0 0 transparent;
     font-size: 16px;
     height: 40px;
-    transition: background .45s @ease-out, box-shadow .45s @ease-out;
+    transition: background 0.45s @ease-out, box-shadow 0.45s @ease-out;
 
     &:hover {
       color: #fff;
@@ -152,7 +151,7 @@
       width: 90%;
       left: 0;
     }
-    & &-text-wrapper{
+    & &-text-wrapper {
       top: 20%;
       padding: 1.5em 1em;
     }
@@ -166,5 +165,3 @@
     }
   }
 }
-
-

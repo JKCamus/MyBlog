@@ -1,9 +1,10 @@
 import React, { memo } from "react";
-import Parent from "./test-memo/Parent";
+import routes from "./demoRoutes";
 const About = (props) => {
+  console.log("routes", routes);
   return (
     <>
-      <Parent></Parent>
+      <div>90</div>
     </>
   );
 };

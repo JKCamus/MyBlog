@@ -1,9 +1,9 @@
-import React, { memo,useState } from "react";
+import React, { memo, useState } from "react";
 import { Button } from "antd";
 import MemoChild from "./MemoChild";
 import NormalChild from "./NormalChild";
 
-const Parent = (props) => {
+const ReactMemoTest = memo((props) => {
   const [step, setStep] = useState(0);
   const [count, setCount] = useState(0);
   const [number, setNumber] = useState(0);
@@ -24,10 +24,12 @@ const Parent = (props) => {
       <Button onClick={handleSetCount}>count is : {count}</Button>
       <Button onClick={handleCalNumber}>number is : {number} </Button>
       <hr />
-      <MemoChild step={step} count={count} number={number}></MemoChild>
-      <hr/>
-      <NormalChild step={step} count={count} number={number}></NormalChild>
+      <MemoChild step={step} number={number}></MemoChild>
+      <hr />
+      <NormalChild step={step} number={number}></NormalChild>
     </>
   );
-};
-export default memo(Parent);
+});
+ReactMemoTest.displayName = "ReactMemoTest";
+
+export default ReactMemoTest;

@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-09 12:13:18
  * @LastEditors: camus
- * @LastEditTime: 2021-04-09 10:35:41
+ * @LastEditTime: 2022-02-08 17:33:23
  */
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -20,7 +20,7 @@ import ArticleView from "./ArticleView";
 // import { RenderType } from "./constants";
 import { getDemoList } from "services/demo";
 import { Route } from "react-router-dom";
-import SelectAll from "../Demo/SelectAll/SelectAll";
+import SelectAll from "./SelectAll/SelectAll";
 
 export default memo(function CamusDemo(props) {
   const { isMobile } = useSelector((state) => ({
@@ -279,6 +279,6 @@ const ExplorerPanel = styled.div`
   transition: 0.5s;
   h4 {
     margin: 0;
-    font-weight:500;
+    font-weight: 500;
   }
 `;

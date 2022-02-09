@@ -3,12 +3,12 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 // import Home from 'pages/Home';
 // import Demo from "pages/Demo";
-import DragChart from "pages/Demo/drag-charts";
+import DragChart from "@/pages/Note/drag-charts";
 import Login from "components/login";
-import MyUseRef from "pages/Demo/useRefHook";
+import MyUseRef from "@/pages/Note/useRefHook";
 const Home = React.lazy(() => import("@/pages/Home"));
-const Notes = React.lazy(() => import("pages/Demo"));
-const About = React.lazy(() => import("pages/About"));
+const Notes = React.lazy(() => import("@/pages/Note"));
+const About = React.lazy(() => import("@/pages/Demo"));
 
 const routes = [
   {
@@ -38,7 +38,7 @@ const routes = [
     component: Login,
   },
   {
-    path: "/about",
+    path: "/demo",
     exact: true,
     component: About,
   },

@@ -39,7 +39,6 @@ const routes = [
   },
   {
     path: "/demo",
-    exact: true,
     component: About,
   },
 

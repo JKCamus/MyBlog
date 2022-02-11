@@ -17,8 +17,9 @@ const resolve = (dir) => path.resolve(__dirname, dir); //dirname 目录路径
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "./",
+  // root: "./", // js导入的资源路径，src
   plugins: [
-    // reactRefresh(), //存疑
     react(),
     vitePluginImp({
       libList: [
@@ -49,6 +50,12 @@ export default defineConfig({
       store: resolve("src/store"),
       utils: resolve("src/utils"),
     },
+  },
+  build: {
+    minify: false, // 是否进行压缩,boolean | 'terser' | 'esbuild',默认使用terser
+    manifest: true, // 是否产出maifest.json
+    sourcemap: true, // 是否产出soucemap.json
+    outDir: "build", // 产出目录
   },
   server: {
     port: 3001,

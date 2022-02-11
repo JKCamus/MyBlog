@@ -1,19 +1,25 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
+    "noEmit": true,
+    "target": "es6",
+    "module": "ESNext",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "preserveConstEnums": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@types"],
+    "keyofStringsOnly": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
@@ -25,6 +31,6 @@
       "store/*": ["src/store/*"]
     }
   },
-  "typeRoots": ["node"],
-  "include": ["./src", "global.d.ts"]
+  "exclude": ["node_modules"],
+  "include": ["src", "global.d.ts"]
 }

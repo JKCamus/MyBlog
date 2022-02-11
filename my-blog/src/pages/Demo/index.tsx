@@ -4,9 +4,9 @@ import React, { memo } from "react";
 import routes from "./demoRoutes";
 import { Card } from "antd";
 
-const About = (props) => {
+const About = () => {
   return (
-    <>
+    <Container>
       <CardWrapper>
         {routes.map((route) => (
           <NavLink key={route.path} to={route.path}>
@@ -21,7 +21,7 @@ const About = (props) => {
           <Route exact key={route.path} path={route.path} component={route.component} />
         ))}
       </Switch>
-    </>
+    </Container>
   );
 };
 
@@ -30,8 +30,12 @@ const CardWrapper = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(304px, 1fr));
   grid-column-gap: 25px;
   row-gap: 24px;
-  /* grid-auto-rows: 200px; */
   margin-bottom: 10px;
+  /* grid-auto-rows: 200px; */
+`;
+
+const Container = styled.div`
+  margin: 10px;
 `;
 
 export default memo(About);

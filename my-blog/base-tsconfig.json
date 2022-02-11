@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "paths": {
       "@/*": ["src/*"],
       "utils/*": ["src/utils/*"],
@@ -11,8 +10,9 @@
       "store/*": ["src/store/*"]
     },
     "target": "ES6",
-    "module": "commonjs",
-    "allowSyntheticDefaultImports": true
-  },
-  "strict": false
+    "module": "ESNext",
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@types"],
+    "strict": false
+  }
 }

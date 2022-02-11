@@ -22,10 +22,11 @@ module.exports = {
     },
     ecmaVersion: 12,
   },
-  plugins: ["react", "@typescript-eslint"],
+  // plugins: ["react", "@typescript-eslint"],
   rules: {
     "react/prop-types": 0,
     "react/display-name": 0,
     "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/explicit-module-boundary-types": "off",
   },
 };

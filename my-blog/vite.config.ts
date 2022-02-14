@@ -2,7 +2,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import vitePluginImp from "vite-plugin-imp";
 import reactRefresh from "@vitejs/plugin-react-refresh";
-
+const pkg = require("./package.json");
+import OptimizationPersist from "vite-plugin-optimize-persist";
+import PkgConfig from "vite-plugin-package-config";
 import path from "path";
 import fs from "fs";
 import lessToJS from "less-vars-to-js";
@@ -20,7 +22,8 @@ export default defineConfig({
   base: "./",
   // root: "./", // js导入的资源路径，src
   plugins: [
-    react(),
+    // react(),
+    reactRefresh(),
     vitePluginImp({
       libList: [
         {
@@ -29,6 +32,8 @@ export default defineConfig({
         },
       ],
     }),
+    PkgConfig(),
+    OptimizationPersist(),
   ],
   css: {
     preprocessorOptions: {
@@ -40,6 +45,11 @@ export default defineConfig({
       },
     },
   },
+  // esbuild: {
+  //   jsxFactory: "h",
+  //   jsxFragment: "Fragment",
+  //   jsxInject: `import React from 'react'`,
+  // },
   resolve: {
     alias: {
       "@": resolve("src"), // src 路径
@@ -56,7 +66,33 @@ export default defineConfig({
     manifest: true, // 是否产出maifest.json
     sourcemap: true, // 是否产出soucemap.json
     outDir: "build", // 产出目录
+    emptyOutDir: true, //构建清空目标文件夹
+    chunkSizeWarningLimit: 1000,
+    assetsDir: "assets",
+    //小于此阈值的导入或引用资源将内联为 base64 编码，以避免额外的 http 请求。设置为 0 可以完全禁用此项
+    assetsInlineLimit: 4096,
+    rollupOptions: {
+      output: {
+        // 自定义一些可以共享的 chunk, 默认 node_modules 下的 package 只拆出一个 vendor
+        manualChunks: {
+          basic: ["react", "react-dom", "react-router-dom"],
+          vendor: ["antd", "axios", "lodash", "ahooks"],
+        },
+        chunkFileNames: path.join("static", "chunk/[name]-[hash].js"),
+        entryFileNames: path.join("static", "js/[name]-[hash].js"),
+      },
+    },
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true, // 去除构建环境的debugger以及console
+      },
+    },
   },
+  optimizeDeps: {
+    include: ["antd", "ahooks", "lodash"],
+  },
+
   server: {
     port: 3001,
     open: true,

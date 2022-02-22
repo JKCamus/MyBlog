@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-11-25 09:59:15
  * @LastEditors: camus
- * @LastEditTime: 2021-01-06 22:01:37
+ * @LastEditTime: 2022-02-22 09:42:17
  */
 const errorTypes = require("../constants/error-types");
 /**
@@ -51,6 +51,11 @@ const errorHandler = (error, ctx) => {
       status = 401;
       message = "无权限";
       break;
+    case errorTypes.WILLFUL_ERROR:
+      status = 500;
+      message = "测试概率报错";
+      break;
+
     default:
       status = 404;
       message = "NOT FOUND";

@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-03 20:15:39
  * @LastEditors: camus
- * @LastEditTime: 2021-01-13 22:12:19
+ * @LastEditTime: 2022-02-22 11:29:09
  */
 const path = require("path");
 const Multer = require("koa-multer");
@@ -16,6 +16,7 @@ const {
   PICTURE_PATH,
   PHOTO_PATH,
   DEMO_FILE_PATH,
+  BIG_FILE_PATH,
 } = require("../constants/file.path");
 
 const fileFilter = (req, file, cb) => {
@@ -121,6 +122,12 @@ const demoFieldsHandle = demoImageUpload.fields([
 
 // const demoImageHandle = demoImageUpload.array("files", 2);
 
+const bigFileUpload = Multer({
+  dest: BIG_FILE_PATH,
+});
+
+const bigFileUploadHandle = bigFileUpload.single("chunk");
+
 module.exports = {
   avatarHandler,
   pictureResize,
@@ -130,4 +137,5 @@ module.exports = {
   handlePhotoHandler,
   // demoImageHandle,
   demoFieldsHandle,
+  bigFileUploadHandle,
 };

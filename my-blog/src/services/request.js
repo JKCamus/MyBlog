@@ -3,11 +3,11 @@ import { message } from "antd";
 // 接口相关，未上传git
 import { BASE_URL, TIMEOUT } from "./config";
 
-import {} from 'utils/token';
+import {} from "utils/token";
 
 const instance = axios.create({
   baseURL: BASE_URL,
-  timeout: TIMEOUT,
+  // timeout: TIMEOUT,
 });
 /**
  * @description: 请求拦截
@@ -27,7 +27,7 @@ instance.interceptors.request.use(
     return config;
   },
   (err) => {
-    console.log('res=>', err)
+    console.log("res=>", err);
   }
 );
 /**

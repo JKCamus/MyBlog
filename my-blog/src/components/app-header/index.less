@@ -1,4 +1,4 @@
-@import "~assets/css/reset.less";
+@import "@/assets/css/reset.less";
 
 .header {
   background: @template-nav-bg-color;
@@ -31,7 +31,7 @@
   &-menu {
     float: right;
 
-    >.menu-item {
+    > .menu-item {
       line-height: 62px;
       font-size: 12px;
       font-family: Arial, Helvetica, sans-serif !important;
@@ -43,7 +43,7 @@
       height: 64px;
       border-bottom-color: transparent;
       position: relative;
-      transition: color .3s @ease-in-out, border .3s @ease-in-out;
+      transition: color 0.3s @ease-in-out, border 0.3s @ease-in-out;
 
       &.active,
       &:hover {
@@ -51,14 +51,11 @@
         color: @primary-color;
         border-bottom: 2px solid @primary-color;
       }
-
     }
-    a{
+    a {
       font-weight: normal;
     }
-
   }
-
 }
 
 .dropDownMenu {
@@ -68,14 +65,11 @@
 
   &.active,
   &:hover {
-    background-color: @primary-color  !important;
+    background-color: @primary-color !important;
   }
 }
 
 @media screen and (max-width: 767px) {
-
-
-
   .header {
     &-logo {
       z-index: 101;
@@ -93,7 +87,7 @@
       width: ~"calc(100% + 48px)";
       opacity: 0;
       overflow: hidden;
-      transition: opacity .3s @ease-in-out;
+      transition: opacity 0.3s @ease-in-out;
 
       .menu-item {
         display: block;
@@ -129,7 +123,7 @@
         height: 2px;
         background: #fff;
         margin-top: 4px;
-        transition: transform .3s @ease-in-out, opacity .3s @ease-in-out;
+        transition: transform 0.3s @ease-in-out, opacity 0.3s @ease-in-out;
       }
 
       :first-child {
@@ -162,5 +156,4 @@
       }
     }
   }
-
 }

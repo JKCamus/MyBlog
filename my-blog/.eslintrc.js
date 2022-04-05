@@ -1,7 +1,7 @@
 module.exports = {
   globals: {
     __dirname: true,
-    process:true,
+    process: true,
   },
   env: {
     browser: true,
@@ -13,6 +13,8 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
   ],
+  // extends: ["alloy", "alloy/react", "alloy/typescript"],
+
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
@@ -20,10 +22,11 @@ module.exports = {
     },
     ecmaVersion: 12,
   },
-  plugins: ["react", "@typescript-eslint"],
+  // plugins: ["react", "@typescript-eslint"],
   rules: {
     "react/prop-types": 0,
     "react/display-name": 0,
     "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/explicit-module-boundary-types": "off",
   },
 };

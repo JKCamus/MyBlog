@@ -113,7 +113,8 @@ const Header = (props) => {
               fontFamily: "Arial, Helvetica, sans-serif",
             }}
           >
-            CamusBlog
+            {/* CamusBlog */}
+            DemoTest
           </NavLink>
         </TweenOne>
         {isMobile && (
@@ -160,8 +161,8 @@ const Header = (props) => {
           <NavLink to={"/charts"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
             Charts
           </NavLink>
-          <NavLink to={"/About"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
-            About
+          <NavLink to={"/demo"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
+            Demo
           </NavLink>
         </TweenOne>
       </div>

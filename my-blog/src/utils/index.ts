@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
  * @Author: camus
  * @Date: 2021-06-08 22:37:50
  * @LastEditors: camus
- * @LastEditTime: 2021-07-19 21:01:25
+ * @LastEditTime: 2022-02-11 10:50:19
  */
 /**
  * @description: mounted hook，mounted的时候回调，更新不回调
@@ -17,21 +17,22 @@ export const useMount = (callback: () => void) => {
     callback();
   }, []);
 };
-/**
- * @description: useDebounce 防抖hook
- * @param {any} value
- * @param {number} delay
- */
-export const useDebounce = (value: any, delay: number) => {
-  const [debounceValue, setDebounceValue] = useState(value);
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebounceValue(value), delay);
-    return () => {
-      return () => clearTimeout(timeout);
-    };
-  }, [value, delay]);
-  return debounceValue;
-};
+// /**
+//  * @description: useDebounce 防抖hook
+//  * @param {any} value
+//  * @param {number} delay
+//  */
+// export const useDebounce = (value: any, delay: number) => {
+//   const [debounceValue, setDebounceValue] = useState(value);
+
+//   useEffect(() => {
+//     const timeout = setTimeout(() => setDebounceValue(value), delay);
+//     return () => {
+//       return () => clearTimeout(timeout);
+//     };
+//   }, [value, delay]);
+//   return debounceValue;
+// };
 
 //获取文本宽度
 // export const getTextWidth = (

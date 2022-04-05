@@ -1,0 +1,8 @@
+build/**/*
+dist/**/*
+*.css
+*.less
+*.svg
+*.png
+*.md
+babel.config.js

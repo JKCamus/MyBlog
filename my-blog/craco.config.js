@@ -16,7 +16,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 // 打包信息配置
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
-const {  whenProd } = require("@craco/craco");
+const { whenProd } = require("@craco/craco");
 
 const threadLoader = require("thread-loader");
 
@@ -27,7 +27,6 @@ const jsWorkerPool = {
 threadLoader.warmup(jsWorkerPool, ["babel-loader"]);
 // 最新版本热更新
 // const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-
 module.exports = {
   webpack: smp.wrap({
     alias: {
@@ -55,6 +54,19 @@ module.exports = {
           //     // "babel-loader?cacheDirectory",
           //   ],
           // },
+          // {
+          //   test: /\.css$/i,
+          //   loader: "css-loader",
+          //   options: {
+          //     import: false,
+          //   },
+          // },
+
+          {
+            test: /\.less$/i,
+            loader: "less-loader",
+          },
+
           {
             test: /\.jsx?$/,
             exclude: /node_modules/,
@@ -69,16 +81,10 @@ module.exports = {
         ],
       },
       resolve: {
-        modules: [
-          // 指定以下目录寻找第三方模块，避免webpack往父级目录递归搜索
-          resolve("src"),
-          resolve("node_modules"),
-        ],
-        // 配置匹配文件后缀名eg:对于引入jsx文件，可以不填写后缀名也可以找到
-        // extensions: [".wasm", ".mjs", ".js", ".json", ".jsx", ".ts", ".vue"],
+        extensions: [".jsx", ".tsx", ".less"],
         alias: {
-          "@": resolve("src"), // 缓存src目录为@符号，避免重复寻址
-          pages: resolve("./src/pages"),
+          "@": path.resolve(__dirname, "src"), // 缓存src目录为@符号，避免重复寻址
+          // pages: resolve("./src/pages"),
         },
       },
       //抽离公用模块
@@ -105,7 +111,7 @@ module.exports = {
     },
     plugins: [
       // webpack进度条
-      new WebpackBar({ color: "green", profile: true }),
+      // new WebpackBar({ color: "green", profile: true }),
       // 打包时，启动插件
       ...whenProd(
         () => [

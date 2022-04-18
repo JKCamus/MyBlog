@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
  * @Author: camus
  * @Date: 2021-06-08 22:37:50
  * @LastEditors: camus
- * @LastEditTime: 2022-02-11 10:50:19
+ * @LastEditTime: 2022-04-18 23:08:52
  */
 /**
  * @description: mounted hook，mounted的时候回调，更新不回调
@@ -18,10 +18,7 @@ export const useMount = (callback: () => void) => {
   }, []);
 };
 // /**
-//  * @description: useDebounce 防抖hook
-//  * @param {any} value
-//  * @param {number} delay
-//  */
+
 // export const useDebounce = (value: any, delay: number) => {
 //   const [debounceValue, setDebounceValue] = useState(value);
 

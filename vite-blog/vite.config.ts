@@ -7,7 +7,7 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 import path from 'path';
 import fs from 'fs';
 import lessToJS from 'less-vars-to-js';
-import config from './config/variables.less'
+// import config from './config/variables.less'
 
 // less-vars-to-js 是将 less 样式转化为 json 键值对的形式，当然你也可以直接在 modifyVars 属性后写 json 键值对。
 
@@ -20,8 +20,8 @@ const resolve = (dir) => path.resolve(__dirname, dir); //dirname 目录路径
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base:'./',
   plugins: [
-    
     reactRefresh(),//存疑
     react(),
     vitePluginImp({
@@ -53,6 +53,9 @@ export default defineConfig({
       "store": resolve("src/store"),
       "utils": resolve("src/utils"),
     }
+  },
+  build:{ 
+    sourcemap:true
   },
   server: {
     port: 3001,

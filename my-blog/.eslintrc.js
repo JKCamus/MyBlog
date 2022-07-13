@@ -26,6 +26,7 @@ module.exports = {
   rules: {
     "react/prop-types": 0,
     "react/display-name": 0,
+    "no-empty-function": 0,
     "@typescript-eslint/no-var-requires": 0,
     "@typescript-eslint/explicit-module-boundary-types": "off",
   },

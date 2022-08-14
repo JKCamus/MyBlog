@@ -52,6 +52,7 @@ const UploadDemo: React.FC = (props) => {
   const [uploadDisabled, setUploadDisabled] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [resumeDisabled, setResumeDisabled] = useState(false);
+  const [uploaded, setUploaded] = useState([])
 
   useEffect(() => {
     const disabled = !container.file || [Status.pause, Status.uploading].includes(fakeStatus);
@@ -132,12 +133,28 @@ const UploadDemo: React.FC = (props) => {
   };
 
   const calculateHashSampleTest = (file) => {
+    let timeStart = 0
     return new Promise((resolve) => {
       const workerHash = new Worker("/hashSample.js");
       setContainer({ ...container, worker: workerHash });
-      workerHash.postMessage(file);
+      console.log('fire',file)
+    // workerHash.postMessage(file);
+
+      const fileReader = new FileReader()
+      fileReader.onload = function(e){
+      console.log('start===>', (new Date()).getTime())
+
+        workerHash.postMessage(e.target.result,[e.target.result])
+    // timeStart = (new Date()).getTime()
+    }
+
+    const blobSlice = File.prototype.slice
+    fileReader.readAsArrayBuffer(blobSlice.call(file,0,file.size))
+    timeStart = (new Date()).getTime()
       workerHash.onmessage = (e) => {
         const { percentage, hash } = e.data;
+        console.log('total time: ',hash,(new Date()).getTime()-timeStart)
+
         setHashPercentage(parseInt(percentage.toFixed(2), 10));
         if (hash) {
           resolve(hash);
@@ -165,6 +182,7 @@ const UploadDemo: React.FC = (props) => {
       setFakeStatus(Status.wait);
       return;
     }
+    setUploaded(uploadedList)
     // hash 可以不要在这边写，在uploadChunk里面写
     const chunkData = chunkList.map(({ file }, index) => ({
       key: hash + "-" + index,
@@ -190,7 +208,8 @@ const UploadDemo: React.FC = (props) => {
       ...chunk,
       percentage: uploadedList.includes(chunk.hash) ? 100 : 0,
     }));
-
+    console.log("chunkData", chunkData);
+    console.log("uploadedList", uploadedList);
     if (chunkData.length === uploadedList.length) {
       setFileChunkList(updateChunk);
       await mergeRequest(fileOption);
@@ -243,6 +262,7 @@ const UploadDemo: React.FC = (props) => {
             .then(() => {
               requestData.status = Status.done;
               chunkData[index].status = Status.done;
+
               max += 1;
               counter += 1;
               if (counter === len) {

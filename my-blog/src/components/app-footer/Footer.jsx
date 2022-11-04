@@ -12,7 +12,7 @@ class Footer extends React.PureComponent {
             key="footer"
             className={"copyright"}
           >
-            <span>
+            {/* <span>
               ©{new Date().getFullYear()}
               {"  "}
               <a style={{ color: "rgb(50, 166, 194)" }} >Camus</a>
@@ -21,7 +21,7 @@ class Footer extends React.PureComponent {
               <a href="https://www.windypath.com/"  target="_blank" rel="noreferrer"   style={{ color: "#999" }}>
                 风萧古道
               </a>
-            </span>
+            </span> */}
           </TweenOne>
         </OverPack>
       </div>

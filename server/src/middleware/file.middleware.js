@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-03 20:15:39
  * @LastEditors: JKcamus 924850758@qq.com
- * @LastEditTime: 2023-06-23 23:03:51
+ * @LastEditTime: 2023-06-24 13:10:28
  */
 const path = require("path");
 const Multer = require("koa-multer");
@@ -95,14 +95,14 @@ const photoResize = async (ctx, next) => {
       // 获取所有的图片信息
       // 对图像进行处理（sharp,jimp）
       const destPath = path.join(file.destination, file.filename);
-      // console.log("destPath", destPath);
-      Jimp.read(file.path).then(async(image) => {
-        image.resize(1280, Jimp.AUTO).write(`${destPath}-large`);
-        image.resize(640, Jimp.AUTO).write(`${destPath}-middle`);
-        image.resize(10, Jimp.AUTO).write(`${destPath}-small`);
-        // Save the SVG placeholder as a new file
-      });
+      const image = await Jimp.read(file.path);
 
+      // Resize and write files in parallel
+      await Promise.all([
+        image.clone().resize(1280, Jimp.AUTO).writeAsync(`${destPath}-large`),
+        image.clone().resize(640, Jimp.AUTO).writeAsync(`${destPath}-middle`),
+        image.clone().resize(10, Jimp.AUTO).writeAsync(`${destPath}-small`),
+      ]);
     }
     await next();
   } catch (error) {

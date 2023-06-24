@@ -90,7 +90,7 @@
     "start": "craco start",
     "dev": "vite",
     "build": "vite build",
-    "build craco": "tsc && vite build",
+    "vite:build": "tsc && vite build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

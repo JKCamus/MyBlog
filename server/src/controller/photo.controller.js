@@ -3,8 +3,8 @@
  * @version:
  * @Author: camus
  * @Date: 2020-12-07 23:22:17
- * @LastEditors: camus
- * @LastEditTime: 2021-04-29 19:48:11
+ * @LastEditors: JKcamus 924850758@qq.com
+ * @LastEditTime: 2023-06-24 12:54:12
  */
 const fs = require("fs");
 const fileService = require("../service/file.service");
@@ -51,7 +51,31 @@ class PhotoController {
       console.log("PhotoController.getAllPhotos", error);
     }
   }
-  async clearPhotos(ctx, next) {
+
+  static delPhotos = async (result) => {
+    console.log("res=>", readDir);
+    let readDir = fs.readdirSync(PHOTO_PATH);
+    const filenameSet = new Set(result.map((item) => item.filename));
+    for (let del of readDir) {
+      if (filenameSet.has(del)) {
+        // console.log("del", path.resolve(PHOTO_PATH, `${del}-large`));
+        fs.unlink(path.resolve(PHOTO_PATH, `${del}-large`), (err) => {
+          if (err) throw err;
+        });
+        fs.unlink(path.resolve(PHOTO_PATH, `${del}-small`), (err) => {
+          if (err) throw err;
+        });
+        fs.unlink(path.resolve(PHOTO_PATH, `${del}-middle`), (err) => {
+          if (err) throw err;
+        });
+        fs.unlink(path.resolve(PHOTO_PATH, del), (err) => {
+          if (err) throw err;
+        });
+      }
+    }
+  };
+
+  async clearPhotosByStatus(ctx, next) {
     try {
       const result = await fileService.getClearPhotoList();
       let readDir = fs.readdirSync(PHOTO_PATH);
@@ -79,5 +103,37 @@ class PhotoController {
       console.log("PhotoController.clearPhotos", error);
     }
   }
+
+  // debug service
+  async clearAllPhotos(ctx, next) {
+    try {
+      const result = await fileService.getAllPhotosFileName();
+
+      let readDir = fs.readdirSync(PHOTO_PATH);
+      const filenameSet = new Set(result.map((item) => item.filename));
+      for (let del of readDir) {
+        if (filenameSet.has(del)) {
+          // console.log("del", path.resolve(PHOTO_PATH, `${del}-large`));
+          fs.unlink(path.resolve(PHOTO_PATH, `${del}-large`), (err) => {
+            if (err) throw err;
+          });
+          fs.unlink(path.resolve(PHOTO_PATH, `${del}-small`), (err) => {
+            if (err) throw err;
+          });
+          fs.unlink(path.resolve(PHOTO_PATH, `${del}-middle`), (err) => {
+            if (err) throw err;
+          });
+          fs.unlink(path.resolve(PHOTO_PATH, del), (err) => {
+            if (err) throw err;
+          });
+        }
+      }
+      await fileService.clearAllPhotoList();
+      ctx.body = "所有清除成功";
+    } catch (error) {
+      console.log("PhotoController.clearAllPhotos", error);
+    }
+  }
 }
+
 module.exports = new PhotoController();

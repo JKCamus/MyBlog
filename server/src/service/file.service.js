@@ -3,8 +3,8 @@
  * @version:
  * @Author: camus
  * @Date: 2020-12-03 20:32:12
- * @LastEditors: camus
- * @LastEditTime: 2021-02-08 09:37:05
+ * @LastEditors: JKcamus 924850758@qq.com
+ * @LastEditTime: 2023-06-24 09:49:22
  */
 const connection = require("../app/database");
 const { APP_HOST, APP_PORT } = require("../app/config");
@@ -184,5 +184,27 @@ class fileService {
       console.log("fileService.getClearPhotoList", error);
     }
   }
+// debug service
+async getAllPhotosFileName() {
+  try {
+    const statement = `SELECT filename FROM photo;`;
+    const [result] = await connection.execute(statement);
+    return result;
+  } catch (error) {
+    console.log("fileService.getAllPhotosFileName", error);
+  }
+}
+async clearAllPhotoList() {
+  try {
+    const statement = `DELETE FROM photo;`;
+    const [result] = await connection.execute(statement);
+    return result;
+  } catch (error) {
+    console.log("fileService.getClearPhotoList", error);
+  }
+}
+
+
+
 }
 module.exports = new fileService();

@@ -60,7 +60,9 @@
     "react-dom": "^17.0.1",
     "react-error-boundary": "^3.1.4",
     "react-grid-layout": "^1.2.0",
+    "react-image": "^4.1.0",
     "react-images": "^1.1.7",
+    "react-lazyload": "^3.2.0",
     "react-photo-gallery": "^8.0.0",
     "react-quill": "^1.3.5",
     "react-redux": "^7.2.2",
@@ -87,7 +89,8 @@
   "scripts": {
     "start": "craco start",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "build craco": "tsc && vite build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
@@ -185,6 +188,7 @@
         "react-error-boundary",
         "react-grid-layout",
         "react-images",
+        "react-lazyload",
         "react-photo-gallery",
         "react-redux",
         "react-router-dom",

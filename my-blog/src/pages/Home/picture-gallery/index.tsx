@@ -1,69 +1,105 @@
-/*
- * @Description:photoGallery
-  1.当前photo放于redux中
-  2.需要优化img加载，样式
- * @version:
- * @Author: camus
- * @Date: 2020-12-23 21:49:09
- * @LastEditors: camus
- * @LastEditTime: 2021-04-29 19:57:23
- */
 import React, { memo, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
+import LazyLoad from "react-lazyload";
+
 import QueueAnim from "rc-queue-anim";
-import Gallery from "react-photo-gallery";
+import Gallery, { RenderImageProps } from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
+
 import styled from "styled-components";
+
+import {useImage} from 'react-image'
+
 
 import { getPhotosListAction } from "../store/actionCreators";
 import { photos as images } from "./data";
 
-const PictureGallery = (props) => {
+interface Photo {
+  src: string;
+  width: number;
+  height: number;
+  key: string;
+}
+
+const ImageComponent: React.FC<RenderImageProps<Photo>> = ({ index, onClick, photo, direction, top, left }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setLoaded(true);
+    img.src = photo.src;
+  }, [photo.src]);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    onClick(event, { photo, index });
+  };
+
+  const imgStyle = { ...photo, transition: "0.5s filter ease-in-out, 0.5s transform ease" };
+  if (direction === "column") {
+    imgStyle.position = "absolute";
+    imgStyle.left = left;
+    imgStyle.top = top;
+  }
+
+  return (
+    <img
+      key={photo.key}
+      style={loaded ? imgStyle : { ...imgStyle, filter: "blur(20px)" }}
+      src={loaded ? photo.src : photo.src.replace("-middle", "-small")}
+      onClick={handleClick}
+    />
+  );
+};
+
+const PictureGallery: React.FC = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { photoList: photos, isMobile, shouldPhotoRender } = useSelector((state) => ({
+  const { photoList:photos, isMobile, shouldPhotoRender } = useSelector((state: any) => ({
     photoList: state.getIn(["home", "photoList"]),
     isMobile: state.getIn(["global", "isMobile"]),
     shouldPhotoRender: state.getIn(["home", "shouldPhotoRender"]),
-    shallowEqual,
-  }));
+  }), shallowEqual);
+
 
   const styleInit = {
-    header: (base, state) => ({
-      //头部样式
+    header: (base: any, state: any) => ({
       position: "absolute",
       top: 20,
       right: 80,
       zIndex: 9999,
     }),
-    view: (base, state) => ({
+    view: (base: any, state: any) => ({
       textAlign: "center",
-      height: state.isFullscreen ? "100%" : 900, //当点击全屏的时候图片样式
+      height: state.isFullscreen ? "100%" : 900,
     }),
   };
 
   useEffect(() => {
     shouldPhotoRender && dispatch(getPhotosListAction(1, 20));
-  }, [shouldPhotoRender]);
+  }, [shouldPhotoRender, dispatch]);
 
-  const columns = (containerWidth) => {
+  const columns = (containerWidth: number) => {
     let columns = 1;
     if (containerWidth >= 500) columns = 2;
     if (containerWidth >= 900) columns = 3;
     if (containerWidth >= 1500) columns = 3;
     return columns;
   };
-  const openLightBox = useCallback((event, { photo, index }) => {
+
+  const openLightBox = useCallback((event: React.MouseEvent<Element>, { photo, index }: {
+photo: Photo, index: number }) => {
     setCurrentImage(index);
     setViewerIsOpen(true);
-  }, []);
+  }, [setCurrentImage, setViewerIsOpen]);
+
   const closeLightBox = () => {
     setCurrentImage(0);
     setViewerIsOpen(false);
   };
+
   return (
     <GalleryWrapper>
       <QueueAnim type="bottom" className={"galleryHeader"}>
@@ -72,6 +108,7 @@ const PictureGallery = (props) => {
       </QueueAnim>
       <Gallery
         photos={photos.length ? photos : images}
+        renderImage={(props) => <ImageComponent {...props} />}
         onClick={openLightBox}
         direction="column"
         margin={6}
@@ -83,12 +120,10 @@ const PictureGallery = (props) => {
             <Carousel
               currentIndex={currentImage}
               styles={isMobile ? "" : styleInit}
-              views={photos.map((item) => {
-                return {
-                  ...item,
-                  src: isMobile ? item.src : item.src.split("?")[0],
-                };
-              })}
+              views={photos.map((item) => ({
+                ...item,
+                src: isMobile ? item.src : item.src,
+              }))}
             />
           </Modal>
         ) : null}
@@ -98,7 +133,6 @@ const PictureGallery = (props) => {
 };
 
 const GalleryWrapper = styled.div`
-  /* @import url("https://fonts.googleapis.com/css?family=Arvo"); */
   margin: auto;
   max-width: 1600px;
   .galleryHeader {

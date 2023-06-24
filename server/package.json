@@ -22,7 +22,8 @@
     "koa-session": "^6.1.0",
     "koa2-cors": "^2.0.6",
     "multiparty": "^4.2.3",
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "sqip": "^0.3.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

@@ -19,6 +19,8 @@ const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { whenProd } = require("@craco/craco");
 
 const threadLoader = require("thread-loader");
+const logPlugin = require('./log');
+
 
 const jsWorkerPool = {
   workers: 2,
@@ -225,7 +227,7 @@ module.exports = {
     hotOnly: true, //错误修改后不刷新整个页面
     proxy: {
       "/api": {
-        target: "http://47.102.211.145:8086", // 开发路由代理
+        target: "http://43.139.66.115:8000", // 开发路由代理
         // ws: false, // websocket
         changeOrigin: true, //是否跨域
         secure: false, // 如果是https接口，需要配置这个参数

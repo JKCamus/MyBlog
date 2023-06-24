@@ -3,12 +3,13 @@
  * @version:
  * @Author: camus
  * @Date: 2020-12-03 20:15:39
- * @LastEditors: camus
- * @LastEditTime: 2022-02-22 11:29:09
+ * @LastEditors: JKcamus 924850758@qq.com
+ * @LastEditTime: 2023-06-23 23:03:51
  */
 const path = require("path");
 const Multer = require("koa-multer");
 const errorTypes = require("../constants/error-types");
+const sqip = require('sqip');
 
 const Jimp = require("jimp");
 const {
@@ -95,11 +96,13 @@ const photoResize = async (ctx, next) => {
       // 对图像进行处理（sharp,jimp）
       const destPath = path.join(file.destination, file.filename);
       // console.log("destPath", destPath);
-      Jimp.read(file.path).then((image) => {
+      Jimp.read(file.path).then(async(image) => {
         image.resize(1280, Jimp.AUTO).write(`${destPath}-large`);
         image.resize(640, Jimp.AUTO).write(`${destPath}-middle`);
-        image.resize(320, Jimp.AUTO).write(`${destPath}-small`);
+        image.resize(10, Jimp.AUTO).write(`${destPath}-small`);
+        // Save the SVG placeholder as a new file
       });
+
     }
     await next();
   } catch (error) {

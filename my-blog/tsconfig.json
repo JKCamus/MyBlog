@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -12,19 +16,17 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "utils/*": ["src/utils/*"],
-      "pages/*": ["src/pages/*"],
-      "components/*": ["src/components/*"],
-      "services/*": ["src/services/*"],
-      "store/*": ["src/store/*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
-  "typeRoots": ["node"],
-  "include": ["./src", "global.d.ts"]
+  "typeRoots": [
+    "node"
+  ],
+  "include": [
+    "./src",
+    "global.d.ts"
+  ]
 }

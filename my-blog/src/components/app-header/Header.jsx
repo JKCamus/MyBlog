@@ -21,6 +21,9 @@ const Header = (props) => {
 
   const [phoneOpen, setPhoneOpen] = useState(false);
   const moment = phoneOpen === undefined ? 300 : null;
+  const userInfo = getUerInfo();
+
+  console.log('userInfo',userInfo )
 
   const handleLogin = () => {
     const { setShowLogin } = props;
@@ -40,8 +43,8 @@ const Header = (props) => {
   //     console.log("", error);
   //   }
   // };
+
   const renderMenu = (params) => {
-    const userInfo = getUerInfo();
     const menu = (
       // pc
       <Menu theme="dark" className="menuD">
@@ -113,8 +116,7 @@ const Header = (props) => {
               fontFamily: "Arial, Helvetica, sans-serif",
             }}
           >
-            {/* CamusBlog */}
-            DemoTest
+            CamusBlog
           </NavLink>
         </TweenOne>
         {isMobile && (

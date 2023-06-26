@@ -103,7 +103,6 @@ const Header = (props) => {
     );
   };
 
-  console.log('isMobile',isMobile )
 
   return (
     <TweenOne
@@ -157,7 +156,7 @@ const Header = (props) => {
           reverse={!!phoneOpen}
         >
           {!checkLogin() ? (
-            <span className={"menu-item"} onClick={handleLogin}>
+            <span id='login' className={"menu-item"} onClick={handleLogin}>
               Login
             </span>
           ) : (

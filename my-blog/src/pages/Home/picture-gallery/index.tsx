@@ -7,7 +7,6 @@ import Carousel, { Modal, ModalGateway } from "react-images";
 
 import styled from "styled-components";
 
-
 import { getPhotosListAction } from "../store/actionCreators";
 import { photos as images } from "./data";
 
@@ -53,7 +52,7 @@ const ImageComponent: React.FC<RenderImageProps<Photo>> = ({
   );
 };
 
-const CarouselImage: React.FC<{ src: string, otherProps: any }> = ({ src, ...otherProps }) => {
+const CarouselImage: React.FC<{ src: string; otherProps: any }> = ({ src, ...otherProps }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -65,7 +64,6 @@ const CarouselImage: React.FC<{ src: string, otherProps: any }> = ({ src, ...oth
   // 请替换 "Loading..." 为你的实际加载指示器
   return loaded ? <img src={src} {...otherProps} /> : <p>Loading...</p>;
 };
-
 
 const PictureGallery: React.FC = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -94,10 +92,10 @@ const PictureGallery: React.FC = () => {
     }),
     view: (base: any, state: any) => ({
       textAlign: "center",
-      height: state.isFullscreen ? "100%" : '90vh',
-      display:'flex !important',
-      justifyContent:'center !important',
-      alignItem:'center !important'
+      height: state.isFullscreen ? "100%" : "90vh",
+      display: "flex !important",
+      justifyContent: "center !important",
+      alignItem: "center !important",
     }),
   };
 
@@ -153,7 +151,7 @@ const PictureGallery: React.FC = () => {
       <QueueAnim type="bottom" className="galleryHeader">
         <h1 key="h1">All In Life </h1>
         {/* <p key="p">I love you not for who you are, but for who I am with you.</p> */}
-        <p key='p'>The future belongs to those who believe in the beauty of their dreams.</p>
+        <p key="p">The future belongs to those who believe in the beauty of their dreams.</p>
       </QueueAnim>
       <Gallery
         photos={photos.length ? photos : images}
@@ -165,7 +163,12 @@ const PictureGallery: React.FC = () => {
       />
       <ModalGateway>
         {viewerIsOpen ? (
-          <Modal onClose={closeLightBox} allowFullscreen={false}>
+          <Modal
+          styles={{blanket:(base)=>({
+            ...base,
+            backgroundColor:'rgba(0,0,0,.93)'
+          })}}
+          onClose={closeLightBox} allowFullscreen={false}>
             <Carousel
               currentIndex={currentImage}
               styles={isMobile ? "" : styleInit}
@@ -181,8 +184,6 @@ const PictureGallery: React.FC = () => {
     </GalleryWrapper>
   );
 };
-
-
 
 const GalleryWrapper = styled.div`
   margin: auto;

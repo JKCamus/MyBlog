@@ -3,8 +3,8 @@
  * @version:
  * @Author: camus
  * @Date: 2020-12-11 15:36:24
- * @LastEditors: camus
- * @LastEditTime: 2021-02-26 11:10:31
+ * @LastEditors: JKcamus 924850758@qq.com
+ * @LastEditTime: 2023-06-26 23:03:29
  */
 // React
 import React, { Component } from "react";
@@ -34,13 +34,12 @@ class Article extends React.PureComponent {
 
     if (this.props.details.visible || this.login) {
       return (
-        <Container
-          className="article"
-          onClick={() => this.props.changeView(index)}
-        >
+        <Container className="article" onClick={() => this.props.changeView(index)}>
           {/* {indicator} */}
           <Title>{this.props.details.article}</Title>
-          <img src={this.props.details.img} alt="article" width="60%" />
+          <ImgContainer>
+            <img src={this.props.details.img} alt="article" width="50%" />
+          </ImgContainer>
           <Preview>{this.props.details.preview}</Preview>
         </Container>
       );
@@ -92,8 +91,8 @@ const Container = styled.div`
 const Title = styled.h3`
   color: #212121;
   font-size: 2em;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   padding: 5%;
 `;
 
@@ -104,6 +103,11 @@ const Preview = styled.p`
   margin: auto;
   padding: 10%;
   width: 80%;
+`;
+
+const ImgContainer = styled.div`
+  width: '100%';
+  background-color: #f5f5f5; // 可以设定为你希望的颜色或者一个加载指示器
 `;
 
 export default Article;

@@ -50,10 +50,10 @@ export const Root = styled.div`
     right: 13px;
     top: 13px;
     position: absolute;
-    font-size: 16px;
+    font-size: 20px;
     &:hover {
       background-color: #43a3ef;
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 1px;
     }
   }

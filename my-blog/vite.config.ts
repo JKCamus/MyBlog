@@ -62,7 +62,7 @@ export default defineConfig({
     },
   },
   build: {
-    minify: false, // 是否进行压缩,boolean | 'terser' | 'esbuild',默认使用terser
+    minify: 'terser', // 是否进行压缩,boolean | 'terser' | 'esbuild',默认使用terser
     manifest: true, // 是否产出maifest.json
     sourcemap: true, // 是否产出soucemap.json
     outDir: "build", // 产出目录
@@ -96,6 +96,7 @@ export default defineConfig({
   server: {
     port: 3001,
     open: true,
+    host: '0.0.0.0',
     proxy: {
       "/api": {
         target: "http://47.99.134.126:28019/api/v1",

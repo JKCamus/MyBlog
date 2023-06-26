@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import TweenOne from "rc-tween-one";
@@ -14,18 +14,30 @@ import checkRouterPermission from "utils/checkRouterPermission";
 const Header = (props) => {
   const history = useHistory();
   const { Item, SubMenu } = Menu;
+  const { showLogin, setShowLogin } = props;
   const { isMobile } = useSelector((state) => ({
     isMobile: state.getIn(["global", "isMobile"]),
     shallowEqual,
   }));
 
+  console.log("props", props);
   const [phoneOpen, setPhoneOpen] = useState(false);
   const moment = phoneOpen === undefined ? 300 : null;
+  const userInfo = getUerInfo();
 
   const handleLogin = () => {
-    const { setShowLogin } = props;
+    setPhoneOpen(!phoneOpen);
     setShowLogin(true);
   };
+
+  useEffect(() => {
+    const disabledScroll = isMobile && showLogin;
+    if (disabledScroll) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [showLogin, isMobile]);
 
   const handleLoginOut = (params) => {
     removeToken();
@@ -40,8 +52,8 @@ const Header = (props) => {
   //     console.log("", error);
   //   }
   // };
+
   const renderMenu = (params) => {
-    const userInfo = getUerInfo();
     const menu = (
       // pc
       <Menu theme="dark" className="menuD">
@@ -91,6 +103,8 @@ const Header = (props) => {
     );
   };
 
+  console.log('isMobile',isMobile )
+
   return (
     <TweenOne
       component="header"
@@ -113,8 +127,7 @@ const Header = (props) => {
               fontFamily: "Arial, Helvetica, sans-serif",
             }}
           >
-            {/* CamusBlog */}
-            DemoTest
+            CamusBlog
           </NavLink>
         </TweenOne>
         {isMobile && (
@@ -134,13 +147,8 @@ const Header = (props) => {
           animation={
             isMobile
               ? {
-                  height: 0,
+                  height: phoneOpen?'auto':0,
                   duration: 300,
-                  onComplete: (e) => {
-                    if (phoneOpen) {
-                      e.target.style.height = "auto";
-                    }
-                  },
                   ease: "easeInOutQuad",
                 }
               : null

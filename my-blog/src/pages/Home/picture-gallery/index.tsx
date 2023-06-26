@@ -1,15 +1,11 @@
 import React, { memo, useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
-import LazyLoad from "react-lazyload";
-
 import QueueAnim from "rc-queue-anim";
 import Gallery, { RenderImageProps } from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 
 import styled from "styled-components";
-
-import {useImage} from 'react-image'
 
 
 import { getPhotosListAction } from "../store/actionCreators";
@@ -22,7 +18,14 @@ interface Photo {
   key: string;
 }
 
-const ImageComponent: React.FC<RenderImageProps<Photo>> = ({ index, onClick, photo, direction, top, left }) => {
+const ImageComponent: React.FC<RenderImageProps<Photo>> = ({
+  index,
+  onClick,
+  photo,
+  direction,
+  top,
+  left,
+}) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -32,37 +35,55 @@ const ImageComponent: React.FC<RenderImageProps<Photo>> = ({ index, onClick, pho
   }, [photo.src]);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    onClick(event, { photo, index });
+    onClick(event, { index });
   };
 
-  const imgStyle = { ...photo, transition: "0.5s filter ease-in-out, 0.5s transform ease" };
-  if (direction === "column") {
-    imgStyle.position = "absolute";
-    imgStyle.left = left;
-    imgStyle.top = top;
-  }
-
   return (
-    <img
+    <StyledImg
+      {...photo}
       key={photo.key}
-      style={loaded ? imgStyle : { ...imgStyle, filter: "blur(20px)" }}
-      src={loaded ? photo.src : photo.src.replace("-middle", "-small")}
+      photo={photo}
+      loaded={loaded}
+      direction={direction}
+      left={left}
+      top={top}
+      src={loaded ? photo.src : photo.src.replace("=middle", "=small")}
       onClick={handleClick}
     />
   );
 };
+
+const CarouselImage: React.FC<{ src: string, otherProps: any }> = ({ src, ...otherProps }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setLoaded(true);
+    img.src = src;
+  }, [src]);
+
+  // 请替换 "Loading..." 为你的实际加载指示器
+  return loaded ? <img src={src} {...otherProps} /> : <p>Loading...</p>;
+};
+
 
 const PictureGallery: React.FC = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { photoList:photos, isMobile, shouldPhotoRender } = useSelector((state: any) => ({
-    photoList: state.getIn(["home", "photoList"]),
-    isMobile: state.getIn(["global", "isMobile"]),
-    shouldPhotoRender: state.getIn(["home", "shouldPhotoRender"]),
-  }), shallowEqual);
-
+  const {
+    photoList: photos,
+    isMobile,
+    shouldPhotoRender,
+  } = useSelector(
+    (state: any) => ({
+      photoList: state.getIn(["home", "photoList"]),
+      isMobile: state.getIn(["global", "isMobile"]),
+      shouldPhotoRender: state.getIn(["home", "shouldPhotoRender"]),
+    }),
+    shallowEqual
+  );
 
   const styleInit = {
     header: (base: any, state: any) => ({
@@ -81,6 +102,19 @@ const PictureGallery: React.FC = () => {
     shouldPhotoRender && dispatch(getPhotosListAction(1, 20));
   }, [shouldPhotoRender, dispatch]);
 
+  // useEffect(() => {
+  //   handleRightClick;
+  //   window.addEventListener("contextmenu", handleRightClick);
+
+  //   return () => {
+  //     window.removeEventListener("contextmenu", handleRightClick);
+  //   };
+  // }, []);
+
+  const handleRightClick = (event) => {
+    event.preventDefault();
+  };
+
   const columns = (containerWidth: number) => {
     let columns = 1;
     if (containerWidth >= 500) columns = 2;
@@ -89,11 +123,22 @@ const PictureGallery: React.FC = () => {
     return columns;
   };
 
-  const openLightBox = useCallback((event: React.MouseEvent<Element>, { photo, index }: {
-photo: Photo, index: number }) => {
-    setCurrentImage(index);
-    setViewerIsOpen(true);
-  }, [setCurrentImage, setViewerIsOpen]);
+  const openLightBox = useCallback(
+    (
+      event: React.MouseEvent<Element>,
+      {
+        photo,
+        index,
+      }: {
+        photo: Photo;
+        index: number;
+      }
+    ) => {
+      setCurrentImage(index);
+      setViewerIsOpen(true);
+    },
+    [setCurrentImage, setViewerIsOpen]
+  );
 
   const closeLightBox = () => {
     setCurrentImage(0);
@@ -102,7 +147,7 @@ photo: Photo, index: number }) => {
 
   return (
     <GalleryWrapper>
-      <QueueAnim type="bottom" className={"galleryHeader"}>
+      <QueueAnim type="bottom" className="galleryHeader">
         <h1 key="h1">All In Life </h1>
         <p key="p">I love you not for who you are, but for who I am with you.</p>
       </QueueAnim>
@@ -122,7 +167,9 @@ photo: Photo, index: number }) => {
               styles={isMobile ? "" : styleInit}
               views={photos.map((item) => ({
                 ...item,
-                src: isMobile ? item.src : item.src,
+                src: isMobile ? item.src : item.src.split("?")[0],
+                with:'1280px'
+                // component: <CarouselImage src={isMobile ? item.src : item.src.split("?")[0]} />,
               }))}
             />
           </Modal>
@@ -132,6 +179,8 @@ photo: Photo, index: number }) => {
   );
 };
 
+
+
 const GalleryWrapper = styled.div`
   margin: auto;
   max-width: 1600px;
@@ -140,6 +189,21 @@ const GalleryWrapper = styled.div`
     text-align: center;
     margin: 1rem 0;
   }
+`;
+
+interface ImageProps {
+  photo: Photo;
+  loaded: boolean;
+  direction?: string;
+  top?: number;
+  left?: number;
+}
+const StyledImg = styled.img<ImageProps>`
+  transition: 0.5s filter ease-in-out, 0.5s transform ease;
+  position: ${({ direction }) => (direction === "column" ? "absolute" : "static")};
+  left: ${({ left }) => left}px;
+  top: ${({ top }) => top}px;
+  filter: ${({ loaded }) => (loaded ? "none" : "blur(20px)")};
 `;
 
 export default memo(PictureGallery);

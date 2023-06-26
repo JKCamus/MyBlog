@@ -365,6 +365,7 @@ const UploadDemo: React.FC = (props) => {
           onDrop={onDrop}
           customRequest={handleUpload}
           fileList={fileList}
+          disabled
         >
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
@@ -377,7 +378,7 @@ const UploadDemo: React.FC = (props) => {
         </Dragger>
         <div className="btn-group">
           <Button onClick={handlePause}>暂 停</Button>
-          <Button disabled={resumeDisabled} type="primary" onClick={handleResume}>
+          <Button  disabled={resumeDisabled} type="primary" onClick={handleResume}>
             恢复/重试
           </Button>
         </div>

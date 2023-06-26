@@ -1,34 +1,13 @@
 import { NavLink, Route, Switch } from "react-router-dom";
 import styled from "styled-components";
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import routes from "./demoRoutes";
-import { Button, Card } from "antd";
+import {  Card } from "antd";
 
 
 const About = () => {
-  const [count, setCount] = useState(1);
-
-
-  const Task = ({mess}) => {
-    const [count, setCount] = useState(1);
-
-    return <div>{count}</div>;
-  };
-
   return (
     <Container>
-      <Button
-        onClick={() => {
-          setCount(count + 1);
-          setTimeout(() => {
-            console.log("技术", count);
-          }, 1000);
-        }}
-        type="primary"
-      >
-        type
-      </Button>
-      <Task mess='12'></Task>
       <CardWrapper>
         {routes.map((route) => (
           <NavLink key={route.path} to={route.path}>

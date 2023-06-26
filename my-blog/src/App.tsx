@@ -5,8 +5,8 @@
  * @version:
  * @Author: camus
  * @Date: 2020-11-29 19:34:23
- * @LastEditors: camus
- * @LastEditTime: 2021-03-04 10:15:01
+ * @LastEditors: JKcamus 924850758@qq.com
+ * @LastEditTime: 2023-06-26 10:01:05
  */
 import React, { useEffect, useState, Suspense } from "react";
 
@@ -38,7 +38,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <HashRouter>
-        <Header setShowLogin={setShowLogin}></Header>
+        <Header setShowLogin={setShowLogin} showLogin={showLogin}></Header>
         {showLogin && <Login setShowLogin={setShowLogin}></Login>}
         <Suspense fallback={<Skeleton active paragraph={{ rows: 30 }} />}>
           {routes.map(({ path, component, ...routes }) => (

@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-03 20:15:39
  * @LastEditors: JKcamus 924850758@qq.com
- * @LastEditTime: 2023-06-24 13:10:28
+ * @LastEditTime: 2023-06-24 15:18:31
  */
 const path = require("path");
 const Multer = require("koa-multer");
@@ -101,7 +101,7 @@ const photoResize = async (ctx, next) => {
       await Promise.all([
         image.clone().resize(1280, Jimp.AUTO).writeAsync(`${destPath}-large`),
         image.clone().resize(640, Jimp.AUTO).writeAsync(`${destPath}-middle`),
-        image.clone().resize(10, Jimp.AUTO).writeAsync(`${destPath}-small`),
+        image.clone().resize(5, Jimp.AUTO).writeAsync(`${destPath}-small`),
       ]);
     }
     await next();

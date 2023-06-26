@@ -169,9 +169,9 @@ const Header = (props) => {
           <NavLink to={"/charts"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
             Charts
           </NavLink>
-          <NavLink to={"/demo"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
+          {/* <NavLink to={"/demo"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
             Demo
-          </NavLink>
+          </NavLink> */}
         </TweenOne>
       </div>
     </TweenOne>

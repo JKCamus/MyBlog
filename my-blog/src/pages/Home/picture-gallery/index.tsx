@@ -152,7 +152,8 @@ const PictureGallery: React.FC = () => {
     <GalleryWrapper>
       <QueueAnim type="bottom" className="galleryHeader">
         <h1 key="h1">All In Life </h1>
-        <p key="p">I love you not for who you are, but for who I am with you.</p>
+        {/* <p key="p">I love you not for who you are, but for who I am with you.</p> */}
+        <p key='p'>The future belongs to those who believe in the beauty of their dreams.</p>
       </QueueAnim>
       <Gallery
         photos={photos.length ? photos : images}

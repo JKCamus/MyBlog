@@ -94,7 +94,10 @@ const PictureGallery: React.FC = () => {
     }),
     view: (base: any, state: any) => ({
       textAlign: "center",
-      height: state.isFullscreen ? "100%" : 900,
+      height: state.isFullscreen ? "100%" : '90vh',
+      display:'flex !important',
+      justifyContent:'center !important',
+      alignItem:'center !important'
     }),
   };
 
@@ -168,7 +171,6 @@ const PictureGallery: React.FC = () => {
               views={photos.map((item) => ({
                 ...item,
                 src: isMobile ? item.src : item.src.split("?")[0],
-                with:'1280px'
                 // component: <CarouselImage src={isMobile ? item.src : item.src.split("?")[0]} />,
               }))}
             />

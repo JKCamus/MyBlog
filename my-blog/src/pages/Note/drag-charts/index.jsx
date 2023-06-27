@@ -6,8 +6,8 @@
  * @version:
  * @Author: camus
  * @Date: 2020-12-13 12:23:45
- * @LastEditors: camus
- * @LastEditTime: 2021-02-25 10:35:01
+ * @LastEditors: JKcamus 924850758@qq.com
+ * @LastEditTime: 2023-06-27 09:11:26
  */
 import React, { useState, useEffect } from "react";
 import { Layout, Button } from "antd";
@@ -56,7 +56,10 @@ const DragLayout = (props) => {
         <div key={l.i} data-grid={l}>
           <CloseOutlined
             className="remove"
-            onClick={() => onRemoveItem(i, l.i)}
+            onTouchEnd={() => onRemoveItem(i, l.i)}
+            onClick={() => {
+              onRemoveItem(i, l.i)
+            }}
           />
           <Charts
             setChartInstance={setChartInstance}

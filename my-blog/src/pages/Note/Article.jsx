@@ -4,7 +4,7 @@
  * @Author: camus
  * @Date: 2020-12-11 15:36:24
  * @LastEditors: JKcamus 924850758@qq.com
- * @LastEditTime: 2023-06-26 23:03:29
+ * @LastEditTime: 2023-06-27 09:39:44
  */
 // React
 import React, { Component } from "react";
@@ -37,9 +37,7 @@ class Article extends React.PureComponent {
         <Container className="article" onClick={() => this.props.changeView(index)}>
           {/* {indicator} */}
           <Title>{this.props.details.article}</Title>
-          <ImgContainer>
             <img src={this.props.details.img} alt="article" width="50%" />
-          </ImgContainer>
           <Preview>{this.props.details.preview}</Preview>
         </Container>
       );
@@ -105,9 +103,6 @@ const Preview = styled.p`
   width: 80%;
 `;
 
-const ImgContainer = styled.div`
-  width: '100%';
-  background-color: #f5f5f5; // 可以设定为你希望的颜色或者一个加载指示器
-`;
+
 
 export default Article;

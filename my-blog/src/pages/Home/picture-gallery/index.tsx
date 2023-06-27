@@ -103,14 +103,14 @@ const PictureGallery: React.FC = () => {
     shouldPhotoRender && dispatch(getPhotosListAction(1, 20));
   }, [shouldPhotoRender, dispatch]);
 
-  // useEffect(() => {
-  //   handleRightClick;
-  //   window.addEventListener("contextmenu", handleRightClick);
+  useEffect(() => {
+    handleRightClick;
+    window.addEventListener("contextmenu", handleRightClick);
 
-  //   return () => {
-  //     window.removeEventListener("contextmenu", handleRightClick);
-  //   };
-  // }, []);
+    return () => {
+      window.removeEventListener("contextmenu", handleRightClick);
+    };
+  }, []);
 
   const handleRightClick = (event) => {
     event.preventDefault();

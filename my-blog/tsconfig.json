@@ -23,8 +23,9 @@
     "noFallthroughCasesInSwitch": true
   },
   "typeRoots": [
-    "node"
+    "node",
   ],
+  "extends": "./base-tsconfig.json",
   "include": [
     "./src",
     "global.d.ts"

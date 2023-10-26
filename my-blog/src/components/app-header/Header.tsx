@@ -20,7 +20,6 @@ const Header = (props) => {
     shallowEqual,
   }));
 
-  console.log("props", props);
   const [phoneOpen, setPhoneOpen] = useState(false);
   const moment = phoneOpen === undefined ? 300 : null;
   const userInfo = getUerInfo();
@@ -168,9 +167,9 @@ const Header = (props) => {
           <NavLink to={"/charts"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
             Charts
           </NavLink>
-          {/* <NavLink to={"/demo"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
+          <NavLink to={"/demo"} className={"menu-item"} onClick={() => setPhoneOpen(!phoneOpen)}>
             Demo
-          </NavLink> */}
+          </NavLink>
         </TweenOne>
       </div>
     </TweenOne>

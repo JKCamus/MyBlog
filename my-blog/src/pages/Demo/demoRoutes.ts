@@ -5,7 +5,7 @@
  * @Author: camus
  * @Date: 2022-02-08 19:08:12
  * @LastEditors: JKcamus 924850758@qq.com
- * @LastEditTime: 2023-06-25 16:30:18
+ * @LastEditTime: 2023-10-26 15:25:55
  */
 import { widthErrorBoundary } from "@/components/ErrorBoundary";
 import React from "react";
@@ -21,7 +21,6 @@ interface RoutesType {
 const Demo = import.meta.globEager("./*/index.tsx");
 
 const components = Object.keys(Demo).map((demo) => {
-  console.log('Demo', Demo)
   return {
     name: Demo[demo].default.displayName || Demo[demo].default.name,
     component: widthErrorBoundary(Demo[demo].default),

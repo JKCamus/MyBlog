@@ -1,11 +1,3 @@
-/*
- * @Description:
- * @version:
- * @Author: camus
- * @Date: 2021-09-11 09:48:14
- * @LastEditors: camus
- * @LastEditTime: 2021-09-13 17:39:10
- */
 import React, { useState } from 'react';
 import SelectPets from './SelectPets';
 

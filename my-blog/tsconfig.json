@@ -28,6 +28,6 @@
   "extends": "./base-tsconfig.json",
   "include": [
     "./src",
-    "global.d.ts"
+    "src/types/**/*"
   ]
 }

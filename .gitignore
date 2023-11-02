@@ -1,0 +1,11 @@
+node_modules
+package-lock.json
+packages/soft/build
+packages/electron/main-dist
+packages/electron/render/build
+packages/electron/dist
+packages/mini/unpackage
+packages/mini/.hbuilderx
+
+
+

@@ -6,6 +6,6 @@ packages/electron/render/build
 packages/electron/dist
 packages/mini/unpackage
 packages/mini/.hbuilderx
-
+.DS_Store
 
 

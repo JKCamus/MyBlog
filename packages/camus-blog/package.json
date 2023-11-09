@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-    "open": "yarn dev && open http://localhost:3000",
+    "export":"next export",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

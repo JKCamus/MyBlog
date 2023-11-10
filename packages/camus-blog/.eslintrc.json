@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "plugin:storybook/recommended",
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:storybook/recommended"
+  ],
+  "env": {
+    "es2020": true,
+    "es6": true,
+    "node": true
+  },
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "warn"
+  },
+  "globals": {
+    "React": "readonly"
+  }
+}

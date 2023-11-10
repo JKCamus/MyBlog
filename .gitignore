@@ -1,0 +1,13 @@
+node_modules
+package-lock.json
+packages/soft/build
+packages/electron/main-dist
+packages/electron/render/build
+packages/electron/dist
+packages/mini/unpackage
+packages/mini/.hbuilderx
+
+my-blog/src/assets/img/Photo_6553761_DJI_161_pano_12007956_0_2023719574_photo_original.JPG
+.DS_Store
+
+.yarn

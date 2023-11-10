@@ -1,0 +1,5 @@
+prefer-workspace-packages: true
+packages: 
+  - 'packages/*'
+  # all packages in subdirs of components/
+

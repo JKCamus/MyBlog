@@ -3,7 +3,6 @@ import 'pliny/search/algolia.css'
 
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
-import SectionContainer from '@/components/SectionContainer'
 import siteMetadata from '@/data/siteMetadata'
 import StyledComponentsRegistry from '@/lib/registry'
 import { Metadata } from 'next'
@@ -58,6 +57,7 @@ export const metadata: Metadata = {
   },
 }
 
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -78,15 +78,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <StyledComponentsRegistry>
           <ThemeProviders>
             <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
-            <SectionContainer>
-              <div className="flex h-screen flex-col justify-between font-sans">
-                <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
-                  <Header />
-                  <main className="mb-auto">{children}</main>
-                </SearchProvider>
-                <Footer />
-              </div>
-            </SectionContainer>
+            <div className="flex h-screen flex-col justify-between font-sans">
+              <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
+                <Header />
+                <main className="mb-auto">{children}</main>
+              </SearchProvider>
+              <Footer />
+            </div>
           </ThemeProviders>
         </StyledComponentsRegistry>
       </body>

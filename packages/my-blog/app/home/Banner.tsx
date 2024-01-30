@@ -1,13 +1,20 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 export default function Banner() {
   return (
     <div
-      className="absolute left-0 flex h-screen w-full items-center justify-center bg-cover bg-fixed bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/static/images/DSC07241.jpg')" }}
+      className="relative w-screen min-h-screen bg-cover bg-fixed bg-center bg-no-repeat"
+      style={{
+        backgroundImage: "url('/static/images/DSC07241.jpg')",
+      }}
     >
       <div
         className="inline-block w-11/12 max-w-6xl rounded bg-white bg-opacity-90 p-12 text-xs text-gray-500 shadow-md"
-        style={{ top: '25%' }}
+        style={{
+          top: '25%',
+          left: '50%', // 水平居中的关键在这里
+          transform: 'translate(-50%, 0%)', // 同时水平和垂直居中
+          position: 'absolute', // 绝对定位相对于父元素
+        }}
       >
         <Blockquote>
           <p className="text-4xl font-medium  leading-relaxed before:relative before:-left-4  before:-top-0 before:text-6xl before:content-['“']">

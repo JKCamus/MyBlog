@@ -1,7 +1,7 @@
 import { Image } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { useReactive } from 'ahooks'
+import { useLatest, useReactive } from 'ahooks'
 import styled from 'styled-components'
 import data1 from './data1.json'
 import data2 from './data2.json'
@@ -48,12 +48,13 @@ export function debounce(fn: Function, delay = 200) {
   }
 }
 
-const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, column, children }) => {
+const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request,bottom, column, children }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [page, setPage] = useState(1)
   const [columnHeight, setColumnHeight] = useState(new Array(column).fill(0) as number[])
   const [cardList, setCardList] = useState<ICardItem[]>([])
   const [cardPos, setCardPos] = useState<ICardPos[]>([])
+  const pageRef = useLatest(page);
 
   const cardState = useReactive({
     isFinish: false,
@@ -79,7 +80,7 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, column, 
     if (containerRef.current) {
       const containerWidth = containerRef.current.clientWidth
       cardState.cardWidth = (containerWidth - gap * (column - 1)) / column
-      getCardList(cardState.page, pageSize)
+      getCardList(page, pageSize)
       // resizeObserver.observe(containerRef)
     }
   }
@@ -88,7 +89,7 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, column, 
     if (cardState.isFinish) return
     cardState.loading = true
     const list = await request(page, pageSize)
-    cardState.page++
+    setPage(page+1)
     if (!list.length) {
       cardState.isFinish = true
       return
@@ -136,17 +137,18 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, column, 
     setColumnHeight(newColumnHeight)
   }
 
-  // const handleScroll = rafThrottle(() => {
-  //   const { scrollTop, clientHeight, scrollHeight } = containerRef
-  //   const bottom = scrollHeight - clientHeight - scrollTop
-  //   if (bottom <= bottom) {
-  //     !cardState.loading && getCardList(cardState.page, cardState.pageSize)
-  //   }
-  // })
-
+  const handleScroll = rafThrottle(() => {
+    if (!containerRef.current) return
+    const { scrollTop, clientHeight, scrollHeight } = containerRef.current
+    const currentBottom = scrollHeight - clientHeight - scrollTop
+    console.log('pageRef.current',pageRef.current )
+    if (currentBottom <= bottom) {
+      !cardState.loading && getCardList(pageRef.current, pageSize)
+    }
+  })
   return (
     <GalleryContainer>
-      <div className="fs-waterfall-container" ref={containerRef}>
+      <div className="fs-waterfall-container" ref={containerRef} onScroll={handleScroll}>
         <div className="fs-waterfall-list">
           {cardList.map((item, index) => (
             <div
@@ -190,8 +192,6 @@ const Picture: React.FC = () => {
       }, 1000)
     })
   }
-  const randomColor = colorArr[Math.floor(Math.random() * colorArr.length)]
-
   return (
     <PictureContainer>
       <Image.PreviewGroup>
@@ -202,7 +202,7 @@ const Picture: React.FC = () => {
           // </div>
         ))} */}
 
-        <Waterfall bottom={20} gap={10} column={4} pageSize={20} request={getData}>
+        <Waterfall bottom={20} gap={10} column={5} pageSize={20} request={getData}>
           {(item, index) => (
             <CardBox style={{ background: colorArr[index % (colorArr.length - 1)] }} />
           )}

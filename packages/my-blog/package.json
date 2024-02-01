@@ -16,6 +16,7 @@
     "@swc/plugin-styled-components": "^1.5.105",
     "@tailwindcss/forms": "^0.5.4",
     "@tailwindcss/typography": "^0.5.9",
+    "ahooks": "^3.7.9",
     "antd": "^5.13.3",
     "autoprefixer": "^10.4.13",
     "babel-plugin-styled-components": "^2.1.4",

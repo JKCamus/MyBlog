@@ -1,7 +1,7 @@
 import { Image } from 'antd'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import { useMount, useReactive } from 'ahooks'
+import { useReactive } from 'ahooks'
 import styled from 'styled-components'
 import data1 from './data1.json'
 import data2 from './data2.json'
@@ -53,6 +53,8 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, column, 
   const [page, setPage] = useState(1)
   const [columnHeight, setColumnHeight] = useState(new Array(column).fill(0) as number[])
   const [cardList, setCardList] = useState<ICardItem[]>([])
+  const [cardPos, setCardPos] = useState<ICardPos[]>([])
+
   const cardState = useReactive({
     isFinish: false,
     loading: false,
@@ -63,36 +65,21 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, column, 
     columnHeight: new Array(column).fill(0) as number[],
   })
 
-  useMount(() => {
+  useEffect(() => {
     init()
-    console.log('----', cardState.cardList)
-
-  })
+    // const data=[{"width":342,"height":415,"x":0,"y":0},{"width":342,"height":477,"x":352,"y":0},{"width":342,"height":456,"x":704,"y":0},{"width":342,"height":456,"x":1056,"y":0},{"width":342,"height":456,"x":0,"y":425},{"width":342,"height":764,"x":704,"y":466},{"width":342,"height":456,"x":1056,"y":466},{"width":342,"height":455,"x":352,"y":487},{"width":342,"height":456,"x":0,"y":891},{"width":342,"height":456,"x":1056,"y":932},{"width":342,"height":456,"x":352,"y":952},{"width":342,"height":256,"x":704,"y":1240},{"width":342,"height":455,"x":0,"y":1357},{"width":342,"height":740,"x":1056,"y":1398},{"width":342,"height":455,"x":352,"y":1418},{"width":342,"height":443,"x":704,"y":1506},{"width":342,"height":386,"x":0,"y":1822},{"width":342,"height":457,"x":352,"y":1883},{"width":342,"height":453,"x":704,"y":1959},{"width":342,"height":456,"x":1056,"y":2148}]
+    // setCardPos(data)
+  }, [])
 
   // const resizeObserver = new ResizeObserver(() => {
   //   handleResize()
   // })
-
-  const minColumn = useMemo(() => {
-    let minHeight = Infinity
-    let minIndex = -1
-
-    cardState.columnHeight.forEach((height, index) => {
-      if (height < minHeight) {
-        minHeight = height
-        minIndex = index
-      }
-    })
-
-    return { minIndex, minHeight }
-  }, [cardState.columnHeight])
 
   const init = () => {
     if (containerRef.current) {
       const containerWidth = containerRef.current.clientWidth
       cardState.cardWidth = (containerWidth - gap * (column - 1)) / column
       getCardList(cardState.page, pageSize)
-
       // resizeObserver.observe(containerRef)
     }
   }
@@ -106,34 +93,47 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, column, 
       cardState.isFinish = true
       return
     }
-    setCardList([...cardList,...list])
-    computedCardPos(list)
+    const currentList = [...cardList, ...list]
+    setCardList([...cardList, ...list])
+    computedCardPos(list, currentList)
     cardState.loading = false
   }
 
+  const computedCardPos = (list: ICardItem[], currentList) => {
+    const newCardPos = [...cardPos] // 创建一个新数组来保存更新
+    const newColumnHeight = [...columnHeight]
 
-  const computedCardPos = (list: ICardItem[]) => {
     list.forEach((item, index) => {
       const cardHeight = Math.floor((item.height * cardState.cardWidth) / item.width)
-      if (index < column && cardState.cardList.length <= pageSize) {
-        cardState.cardPos.push({
+      let minHeight = Infinity
+      let minIndex = -1
+      newColumnHeight.forEach((height, idx) => {
+        if (height < minHeight) {
+          minHeight = height
+          minIndex = idx
+        }
+      })
+
+      if (index < column && currentList.length <= pageSize) {
+        newCardPos.push({
           width: cardState.cardWidth,
           height: cardHeight,
           x: index % column !== 0 ? index * (cardState.cardWidth + gap) : 0,
           y: 0,
         })
-        cardState.columnHeight[index] = cardHeight + gap
+        newColumnHeight[index] = cardHeight + gap
       } else {
-        const { minIndex, minHeight } = minColumn
-        cardState.cardPos.push({
+        newCardPos.push({
           width: cardState.cardWidth,
           height: cardHeight,
           x: minIndex % column !== 0 ? minIndex * (cardState.cardWidth + gap) : 0,
           y: minHeight,
         })
-        cardState.columnHeight[minIndex] += cardHeight + gap
+        newColumnHeight[minIndex] += cardHeight + gap
       }
     })
+    setCardPos(newCardPos) // 一次性更新状态
+    setColumnHeight(newColumnHeight)
   }
 
   // const handleScroll = rafThrottle(() => {
@@ -153,9 +153,9 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, column, 
               key={item.id}
               className="fs-waterfall-item"
               style={{
-                width: `${cardState.cardPos[index]?.width}px`,
-                height: `${cardState.cardPos[index]?.height}px`,
-                transform: `translate3d(${cardState.cardPos[index]?.x}px, ${cardState.cardPos[index]?.y}px, 0)`,
+                width: `${cardPos[index]?.width}px`,
+                height: `${cardPos[index]?.height}px`,
+                transform: `translate3d(${cardPos[index]?.x}px, ${cardPos[index]?.y}px, 0)`,
               }}
             >
               {children(item, index)}

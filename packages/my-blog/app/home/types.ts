@@ -4,6 +4,8 @@ export interface IWaterFallProps {
   bottom: number;
   pageSize: number;
   request: (page: number, pageSize: number) => Promise<ICardItem[]>;
+  children:(item: ICardItem) => React.ReactNode;
+
 }
 
 export interface ICardItem {

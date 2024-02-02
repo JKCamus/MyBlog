@@ -2,30 +2,11 @@ import { Image } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { useDebounceFn, useLatest, useReactive, useSize } from 'ahooks'
-import styled from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
 import { imgInfo } from './data'
 import data1 from './data1.json'
 import data2 from './data2.json'
 import { ICardItem, ICardPos, IWaterFallProps } from './types'
-
-interface ImgUrl {
-  src: string
-  width?: string
-  height?: string
-}
-interface CardItem {
-  id: string
-  src: string // Assuming the image source is in src.
-  width: number
-  height: number
-}
-
-interface CardPosition {
-  width: number
-  height: number
-  x: number
-  y: number
-}
 
 export function rafThrottle(fn: Function) {
   let lock = false
@@ -72,7 +53,7 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, 
 
   useEffect(() => {
     handleResize()
-  }, [column,containerSize?.width])
+  }, [containerSize?.width])
 
   const changeColumn = (width: number) => {
     if (width > 960) {
@@ -86,15 +67,18 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, 
     }
   }
 
-  const {run:handleResize} = useDebounceFn(() => {
-    if (!containerRef.current) return
-    const containerWidth = containerRef.current.clientWidth
-    cardState.cardWidth = (containerWidth - gap * (column - 1)) / column
-    const currentColumnHeight = new Array(column).fill(0)
-    computedCardPos(cardList, cardList.length, [], currentColumnHeight)
-  },{
-    wait:300
-  })
+  const { run: handleResize } = useDebounceFn(
+    () => {
+      if (!containerRef.current) return
+      const containerWidth = containerRef.current.clientWidth
+      cardState.cardWidth = (containerWidth - gap * (column - 1)) / column
+      const currentColumnHeight = new Array(column).fill(0)
+      computedCardPos(cardList, cardList.length, [], currentColumnHeight)
+    },
+    {
+      wait: 300,
+    }
+  )
 
   const init = () => {
     if (containerRef.current) {
@@ -171,30 +155,26 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, 
   })
 
   return (
-    <GalleryContainer>
-      <div className="fs-waterfall-container" ref={containerRef} onScroll={handleScroll}>
-        <div className="fs-waterfall-list">
-          {cardList.map((item, index) => (
-            <div
-              key={item.id}
-              className="fs-waterfall-item"
-              style={{
-                width: `${cardPos[index]?.width}px`,
-                height: `${cardPos[index]?.height}px`,
-                transform: `translate3d(${cardPos[index]?.x}px, ${cardPos[index]?.y}px, 0)`,
-              }}
-            >
-              {children(item, index)}
-            </div>
-          ))}
-        </div>
+    <GalleryContainer ref={containerRef} onScroll={handleScroll}>
+      <div className="pic-waterfall-list">
+        {cardList.map((item, index) => (
+          <div
+            key={item.id}
+            className="pic-waterfall-item"
+            style={{
+              width: `${cardPos[index]?.width}px`,
+              height: `${cardPos[index]?.height}px`,
+              transform: `translate3d(${cardPos[index]?.x}px, ${cardPos[index]?.y}px, 0)`,
+            }}
+          >
+            {children(item)}
+          </div>
+        ))}
       </div>
     </GalleryContainer>
   )
 }
 const Picture: React.FC = () => {
-  // console.log('picContainerSize', picContainerSize)
-
   const list1: ICardItem[] = data1.data.items.map((i) => ({
     id: i.id,
     url: i.note_card.user.avatar,
@@ -216,9 +196,6 @@ const Picture: React.FC = () => {
 
   const list = [...list3, ...list1, ...list2]
 
-  console.log('list', list)
-
-
   const getData = (page: number, pageSize: number) => {
     return new Promise<ICardItem[]>((resolve) => {
       setTimeout(() => {
@@ -226,50 +203,71 @@ const Picture: React.FC = () => {
       }, 1000)
     })
   }
+
   return (
-    <PictureContainer>
-      <Image.PreviewGroup>
-        {/* {imgInfo.map((item, index) => (
-          <Image key={index} width={item.width / 10} src={item.src} />
-          // <div className="pic-waterfall-list">
-          //   <div className="pic-waterfall-item"></div>
-          // </div>
-        ))} */}
-        <Waterfall bottom={20} gap={10} pageSize={20} request={getData}>
-          {(item, index) => (
-            // <CardBox style={{ background: colorArr[index % (colorArr.length - 1)] }} />
-            <Image key={item.id} src={item.url} width={'100%'} />
-          )}
-        </Waterfall>
-      </Image.PreviewGroup>
-    </PictureContainer>
+    <div>
+      <GlobalStyle></GlobalStyle>
+      <PictureTitle>
+        <h1>All In Life </h1>
+        <p>The future belongs to those who believe in the beauty of their dreams.</p>
+      </PictureTitle>
+      <PictureContainer>
+        <Image.PreviewGroup
+          preview={{
+            rootClassName: 'previewCls',
+          }}
+        >
+          <Waterfall bottom={20} gap={10} pageSize={20} request={getData}>
+            {(img) => (
+              <Image
+                key={img.id}
+                src={img.url}
+                width={'100%'}
+                preview={{
+                  mask: null,
+                }}
+              />
+            )}
+          </Waterfall>
+        </Image.PreviewGroup>
+      </PictureContainer>
+    </div>
   )
 }
 
 export default Picture
 
-const CardBox = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
+const GlobalStyle = createGlobalStyle`
+  .previewCls{
+    .ant-image-preview-img{
+    max-height: 90vh !important;
+    }
+  }
 `
+
+const PictureTitle = styled.div`
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 1rem 0;
+  font-family: Arial, Helvetica, sans-serif;
+  & > h1 {
+    font-weight: bold;
+    font-size: 3rem;
+  }
+`
+
 const PictureContainer = styled.div`
-  /* width: 1400px; */
+  margin: auto;
+  width: 92%;
   height: 800px;
-  border: 1px solid red;
 `
 
 const GalleryContainer = styled.div`
+  width: 100%;
   height: 100%;
-  .fs-waterfall {
-    &-container {
-      width: 100%;
-      height: 100%;
-      overflow-y: scroll;
-      overflow-x: hidden;
-    }
-
+  overflow-y: scroll;
+  overflow-x: hidden;
+  .pic-waterfall {
     &-list {
       width: 100%;
       position: relative;

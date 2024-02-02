@@ -1,7 +1,7 @@
 import { Image } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { useLatest, useReactive } from 'ahooks'
+import { useLatest, useReactive, useSize } from 'ahooks'
 import styled from 'styled-components'
 import data1 from './data1.json'
 import data2 from './data2.json'
@@ -48,13 +48,22 @@ export function debounce(fn: Function, delay = 200) {
   }
 }
 
-const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request,bottom, column, children }) => {
+const Waterfall: React.FC<IWaterFallProps> = ({
+  gap,
+  pageSize,
+  request,
+  bottom,
+  column,
+  children,
+}) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [page, setPage] = useState(1)
   const [columnHeight, setColumnHeight] = useState(new Array(column).fill(0) as number[])
   const [cardList, setCardList] = useState<ICardItem[]>([])
   const [cardPos, setCardPos] = useState<ICardPos[]>([])
-  const pageRef = useLatest(page);
+
+  const pageRef = useLatest(page)
+  const containerSize = useSize(containerRef)
 
   const cardState = useReactive({
     isFinish: false,
@@ -72,16 +81,23 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request,bottom, c
     // setCardPos(data)
   }, [])
 
-  // const resizeObserver = new ResizeObserver(() => {
-  //   handleResize()
-  // })
+  useEffect(() => {
+    handleResize()
+  }, [containerSize?.width])
+
+  const handleResize = debounce(() => {
+    if (!containerRef.current) return
+    const containerWidth = containerRef.current.clientWidth
+    cardState.cardWidth = (containerWidth - gap * (column - 1)) / column
+    const currentColumnHeight = new Array(column).fill(0)
+    computedCardPos(cardList, cardList.length, [], currentColumnHeight)
+  })
 
   const init = () => {
     if (containerRef.current) {
       const containerWidth = containerRef.current.clientWidth
       cardState.cardWidth = (containerWidth - gap * (column - 1)) / column
       getCardList(page, pageSize)
-      // resizeObserver.observe(containerRef)
     }
   }
 
@@ -89,59 +105,63 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request,bottom, c
     if (cardState.isFinish) return
     cardState.loading = true
     const list = await request(page, pageSize)
-    setPage(page+1)
+    setPage(page + 1)
     if (!list.length) {
       cardState.isFinish = true
       return
     }
     const currentList = [...cardList, ...list]
-    setCardList([...cardList, ...list])
-    computedCardPos(list, currentList)
+    const currentCardPos = [...cardPos]
+    const currentColumnHeight = [...columnHeight]
+    setCardList(currentList)
+    computedCardPos(list, currentList.length, currentCardPos, currentColumnHeight)
     cardState.loading = false
   }
 
-  const computedCardPos = (list: ICardItem[], currentList) => {
-    const newCardPos = [...cardPos] // 创建一个新数组来保存更新
-    const newColumnHeight = [...columnHeight]
-
+  const computedCardPos = (
+    list: ICardItem[],
+    currentLength,
+    currentCardPos,
+    currentColumnHeight
+  ) => {
     list.forEach((item, index) => {
       const cardHeight = Math.floor((item.height * cardState.cardWidth) / item.width)
       let minHeight = Infinity
       let minIndex = -1
-      newColumnHeight.forEach((height, idx) => {
+      currentColumnHeight.forEach((height, idx) => {
         if (height < minHeight) {
           minHeight = height
           minIndex = idx
         }
       })
 
-      if (index < column && currentList.length <= pageSize) {
-        newCardPos.push({
+      if (index < column && currentLength <= pageSize) {
+        currentCardPos.push({
           width: cardState.cardWidth,
           height: cardHeight,
           x: index % column !== 0 ? index * (cardState.cardWidth + gap) : 0,
           y: 0,
         })
-        newColumnHeight[index] = cardHeight + gap
+        currentColumnHeight[index] = cardHeight + gap
       } else {
-        newCardPos.push({
+        currentCardPos.push({
           width: cardState.cardWidth,
           height: cardHeight,
           x: minIndex % column !== 0 ? minIndex * (cardState.cardWidth + gap) : 0,
           y: minHeight,
         })
-        newColumnHeight[minIndex] += cardHeight + gap
+        currentColumnHeight[minIndex] += cardHeight + gap
       }
     })
-    setCardPos(newCardPos) // 一次性更新状态
-    setColumnHeight(newColumnHeight)
+    setCardPos(currentCardPos) // 一次性更新状态
+    setColumnHeight(currentColumnHeight)
   }
 
   const handleScroll = rafThrottle(() => {
     if (!containerRef.current) return
     const { scrollTop, clientHeight, scrollHeight } = containerRef.current
     const currentBottom = scrollHeight - clientHeight - scrollTop
-    console.log('pageRef.current',pageRef.current )
+
     if (currentBottom <= bottom) {
       !cardState.loading && getCardList(pageRef.current, pageSize)
     }
@@ -221,8 +241,8 @@ const CardBox = styled.div`
   border-radius: 10px;
 `
 const PictureContainer = styled.div`
-  width: 1400px;
-  height: 600px;
+  /* width: 1400px; */
+  height: 800px;
   border: 1px solid red;
 `
 

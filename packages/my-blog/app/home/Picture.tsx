@@ -48,16 +48,10 @@ export function debounce(fn: Function, delay = 200) {
   }
 }
 
-const Waterfall: React.FC<IWaterFallProps> = ({
-  gap,
-  pageSize,
-  request,
-  bottom,
-  column,
-  children,
-}) => {
+const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, children }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [page, setPage] = useState(1)
+  const [column, setColumn] = useState(4)
   const [columnHeight, setColumnHeight] = useState(new Array(column).fill(0) as number[])
   const [cardList, setCardList] = useState<ICardItem[]>([])
   const [cardPos, setCardPos] = useState<ICardPos[]>([])
@@ -77,13 +71,29 @@ const Waterfall: React.FC<IWaterFallProps> = ({
 
   useEffect(() => {
     init()
-    // const data=[{"width":342,"height":415,"x":0,"y":0},{"width":342,"height":477,"x":352,"y":0},{"width":342,"height":456,"x":704,"y":0},{"width":342,"height":456,"x":1056,"y":0},{"width":342,"height":456,"x":0,"y":425},{"width":342,"height":764,"x":704,"y":466},{"width":342,"height":456,"x":1056,"y":466},{"width":342,"height":455,"x":352,"y":487},{"width":342,"height":456,"x":0,"y":891},{"width":342,"height":456,"x":1056,"y":932},{"width":342,"height":456,"x":352,"y":952},{"width":342,"height":256,"x":704,"y":1240},{"width":342,"height":455,"x":0,"y":1357},{"width":342,"height":740,"x":1056,"y":1398},{"width":342,"height":455,"x":352,"y":1418},{"width":342,"height":443,"x":704,"y":1506},{"width":342,"height":386,"x":0,"y":1822},{"width":342,"height":457,"x":352,"y":1883},{"width":342,"height":453,"x":704,"y":1959},{"width":342,"height":456,"x":1056,"y":2148}]
-    // setCardPos(data)
   }, [])
 
   useEffect(() => {
-    handleResize()
+    if (containerSize?.width) {
+      changeColumn(containerSize?.width)
+    }
   }, [containerSize?.width])
+
+  useEffect(() => {
+    handleResize()
+  }, [column])
+
+  const changeColumn = (width: number) => {
+    if (width > 960) {
+      setColumn(5)
+    } else if (width >= 690 && width < 960) {
+      setColumn(4)
+    } else if (width >= 500 && width < 690) {
+      setColumn(3)
+    } else {
+      setColumn(2)
+    }
+  }
 
   const handleResize = debounce(() => {
     if (!containerRef.current) return
@@ -189,6 +199,10 @@ const Waterfall: React.FC<IWaterFallProps> = ({
   )
 }
 const Picture: React.FC = () => {
+  const picContainerRef = useRef(null)
+  const picContainerSize = useSize(picContainerRef)
+  // console.log('picContainerSize', picContainerSize)
+
   const list1: ICardItem[] = data1.data.items.map((i) => ({
     id: i.id,
     url: i.note_card.cover.url_pre,
@@ -213,7 +227,7 @@ const Picture: React.FC = () => {
     })
   }
   return (
-    <PictureContainer>
+    <PictureContainer ref={picContainerRef}>
       <Image.PreviewGroup>
         {/* {imgInfo.map((item, index) => (
           <Image key={index} width={item.width / 10} src={item.src} />

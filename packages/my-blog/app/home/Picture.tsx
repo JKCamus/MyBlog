@@ -1,8 +1,9 @@
 import { Image } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { useLatest, useReactive, useSize } from 'ahooks'
+import { useDebounceFn, useLatest, useReactive, useSize } from 'ahooks'
 import styled from 'styled-components'
+import { imgInfo } from './data'
 import data1 from './data1.json'
 import data2 from './data2.json'
 import { ICardItem, ICardPos, IWaterFallProps } from './types'
@@ -35,16 +36,6 @@ export function rafThrottle(fn: Function) {
       fn.apply(this, args)
       lock = false
     })
-  }
-}
-
-export function debounce(fn: Function, delay = 200) {
-  let timer: any = null
-  return function (this: any, ...args: any[]) {
-    timer && clearTimeout(timer)
-    timer = setTimeout(() => {
-      fn.apply(this, args)
-    }, delay)
   }
 }
 
@@ -81,26 +72,28 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, 
 
   useEffect(() => {
     handleResize()
-  }, [column])
+  }, [column,containerSize?.width])
 
   const changeColumn = (width: number) => {
     if (width > 960) {
-      setColumn(5)
-    } else if (width >= 690 && width < 960) {
       setColumn(4)
-    } else if (width >= 500 && width < 690) {
+    } else if (width >= 690 && width < 960) {
       setColumn(3)
-    } else {
+    } else if (width >= 500 && width < 690) {
       setColumn(2)
+    } else {
+      setColumn(1)
     }
   }
 
-  const handleResize = debounce(() => {
+  const {run:handleResize} = useDebounceFn(() => {
     if (!containerRef.current) return
     const containerWidth = containerRef.current.clientWidth
     cardState.cardWidth = (containerWidth - gap * (column - 1)) / column
     const currentColumnHeight = new Array(column).fill(0)
     computedCardPos(cardList, cardList.length, [], currentColumnHeight)
+  },{
+    wait:300
   })
 
   const init = () => {
@@ -163,7 +156,7 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, 
         currentColumnHeight[minIndex] += cardHeight + gap
       }
     })
-    setCardPos(currentCardPos) // 一次性更新状态
+    setCardPos(currentCardPos)
     setColumnHeight(currentColumnHeight)
   }
 
@@ -176,6 +169,7 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, 
       !cardState.loading && getCardList(pageRef.current, pageSize)
     }
   })
+
   return (
     <GalleryContainer>
       <div className="fs-waterfall-container" ref={containerRef} onScroll={handleScroll}>
@@ -199,25 +193,31 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, 
   )
 }
 const Picture: React.FC = () => {
-  const picContainerRef = useRef(null)
-  const picContainerSize = useSize(picContainerRef)
   // console.log('picContainerSize', picContainerSize)
 
   const list1: ICardItem[] = data1.data.items.map((i) => ({
     id: i.id,
-    url: i.note_card.cover.url_pre,
+    url: i.note_card.user.avatar,
     width: i.note_card.cover.width,
     height: i.note_card.cover.height,
   }))
   const list2: ICardItem[] = data2.data.items.map((i) => ({
     id: i.id,
-    url: i.note_card.cover.url_pre,
+    url: i.note_card.user.avatar,
     width: i.note_card.cover.width,
     height: i.note_card.cover.height,
   }))
-  const list = [...list1, ...list2]
 
-  const colorArr = ['#409eff', '#67c23a', '#e6a23c', '#f56c6c', '#909399']
+  const list3: ICardItem[] = imgInfo.map((item, index) => ({
+    ...item,
+    id: index,
+    url: item.src,
+  }))
+
+  const list = [...list3, ...list1, ...list2]
+
+  console.log('list', list)
+
 
   const getData = (page: number, pageSize: number) => {
     return new Promise<ICardItem[]>((resolve) => {
@@ -227,7 +227,7 @@ const Picture: React.FC = () => {
     })
   }
   return (
-    <PictureContainer ref={picContainerRef}>
+    <PictureContainer>
       <Image.PreviewGroup>
         {/* {imgInfo.map((item, index) => (
           <Image key={index} width={item.width / 10} src={item.src} />
@@ -235,10 +235,10 @@ const Picture: React.FC = () => {
           //   <div className="pic-waterfall-item"></div>
           // </div>
         ))} */}
-
-        <Waterfall bottom={20} gap={10} column={5} pageSize={20} request={getData}>
+        <Waterfall bottom={20} gap={10} pageSize={20} request={getData}>
           {(item, index) => (
-            <CardBox style={{ background: colorArr[index % (colorArr.length - 1)] }} />
+            // <CardBox style={{ background: colorArr[index % (colorArr.length - 1)] }} />
+            <Image key={item.id} src={item.url} width={'100%'} />
           )}
         </Waterfall>
       </Image.PreviewGroup>

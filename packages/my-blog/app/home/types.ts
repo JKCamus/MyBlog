@@ -1,7 +1,6 @@
 
 export interface IWaterFallProps {
   gap: number;
-  column: number;
   bottom: number;
   pageSize: number;
   request: (page: number, pageSize: number) => Promise<ICardItem[]>;

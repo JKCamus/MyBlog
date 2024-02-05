@@ -1,15 +1,12 @@
 'use client'
-import Banner from './home/Banner';
-import Picture from './home/Picture';
+import Banner from '../components/home/Banner';
+import PictureWaterFall from '../components/home/PictureWaterFall';
 export default async function Page() {
-  // const sortedPosts = sortPosts(allBlogs)
-  // const posts = allCoreContent(sortedPosts)
-  // return <Main posts={posts} />
 
   return (
     <>
       <Banner ></Banner>
-      <Picture></Picture>
+      <PictureWaterFall></PictureWaterFall>
     </>
   )
 }

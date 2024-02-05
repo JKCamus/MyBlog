@@ -1,24 +1,9 @@
-import { Image } from 'antd'
-import React, { useEffect, useRef, useState } from 'react'
+import { useDebounceFn, useLatest, useReactive, useSize } from "ahooks"
+import { useEffect, useRef, useState } from "react"
+import styled from "styled-components"
+import rafThrottle from "utils/rafThrottle"
+import { ICardItem, ICardPos, IWaterFallProps } from "./types"
 
-import { useDebounceFn, useLatest, useReactive, useSize } from 'ahooks'
-import styled, { createGlobalStyle } from 'styled-components'
-import { imgInfo } from './data'
-import data1 from './data1.json'
-import data2 from './data2.json'
-import { ICardItem, ICardPos, IWaterFallProps } from './types'
-
-export function rafThrottle(fn: Function) {
-  let lock = false
-  return function (this: any, ...args: any[]) {
-    if (lock) return
-    lock = true
-    window.requestAnimationFrame(() => {
-      fn.apply(this, args)
-      lock = false
-    })
-  }
-}
 
 const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, children }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -174,93 +159,9 @@ const Waterfall: React.FC<IWaterFallProps> = ({ gap, pageSize, request, bottom, 
     </GalleryContainer>
   )
 }
-const Picture: React.FC = () => {
-  const list1: ICardItem[] = data1.data.items.map((i) => ({
-    id: i.id,
-    url: i.note_card.user.avatar,
-    width: i.note_card.cover.width,
-    height: i.note_card.cover.height,
-  }))
-  const list2: ICardItem[] = data2.data.items.map((i) => ({
-    id: i.id,
-    url: i.note_card.user.avatar,
-    width: i.note_card.cover.width,
-    height: i.note_card.cover.height,
-  }))
 
-  const list3: ICardItem[] = imgInfo.map((item, index) => ({
-    ...item,
-    id: index,
-    url: item.src,
-  }))
 
-  const list = [...list3, ...list1, ...list2]
-
-  const getData = (page: number, pageSize: number) => {
-    return new Promise<ICardItem[]>((resolve) => {
-      setTimeout(() => {
-        resolve(list.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize))
-      }, 1000)
-    })
-  }
-
-  return (
-    <div>
-      <GlobalStyle></GlobalStyle>
-      <PictureTitle>
-        <h1>All In Life </h1>
-        <p>The future belongs to those who believe in the beauty of their dreams.</p>
-      </PictureTitle>
-      <PictureContainer>
-        <Image.PreviewGroup
-          preview={{
-            rootClassName: 'previewCls',
-          }}
-        >
-          <Waterfall bottom={20} gap={10} pageSize={20} request={getData}>
-            {(img) => (
-              <Image
-                key={img.id}
-                src={img.url}
-                width={'100%'}
-                preview={{
-                  mask: null,
-                }}
-              />
-            )}
-          </Waterfall>
-        </Image.PreviewGroup>
-      </PictureContainer>
-    </div>
-  )
-}
-
-export default Picture
-
-const GlobalStyle = createGlobalStyle`
-  .previewCls{
-    .ant-image-preview-img{
-    max-height: 90vh !important;
-    }
-  }
-`
-
-const PictureTitle = styled.div`
-  font-size: 1.5rem;
-  text-align: center;
-  margin: 1rem 0;
-  font-family: Arial, Helvetica, sans-serif;
-  & > h1 {
-    font-weight: bold;
-    font-size: 3rem;
-  }
-`
-
-const PictureContainer = styled.div`
-  margin: auto;
-  width: 92%;
-  height: 800px;
-`
+export default Waterfall
 
 const GalleryContainer = styled.div`
   width: 100%;

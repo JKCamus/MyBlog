@@ -1,9 +1,9 @@
-import React, { memo, useState, useCallback, useEffect } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import React, { memo, useCallback, useEffect, useState } from "react";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import QueueAnim from "rc-queue-anim";
-import Gallery, { RenderImageProps } from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
+import Gallery, { RenderImageProps } from "react-photo-gallery";
 
 import styled from "styled-components";
 
@@ -103,14 +103,14 @@ const PictureGallery: React.FC = () => {
     shouldPhotoRender && dispatch(getPhotosListAction(1, 20));
   }, [shouldPhotoRender, dispatch]);
 
-  useEffect(() => {
-    handleRightClick;
-    window.addEventListener("contextmenu", handleRightClick);
+  // useEffect(() => {
+  //   handleRightClick;
+  //   window.addEventListener("contextmenu", handleRightClick);
 
-    return () => {
-      window.removeEventListener("contextmenu", handleRightClick);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("contextmenu", handleRightClick);
+  //   };
+  // }, []);
 
   const handleRightClick = (event) => {
     event.preventDefault();

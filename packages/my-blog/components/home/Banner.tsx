@@ -9,7 +9,7 @@ export default function Banner() {
     >
       <div
         className="absolute left-1/2 top-1/4 inline-block w-11/12 max-w-6xl -translate-x-1/2 rounded bg-white bg-opacity-90
-        p-8  text-gray-500 shadow-md sm:p-12  sm:top-1/3
+        p-8  text-gray-500 shadow-md sm:top-1/3  sm:p-12
         "
       >
         <Blockquote>

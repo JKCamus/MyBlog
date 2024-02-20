@@ -1,11 +1,14 @@
 'use client'
+import siteMetadata from '@/data/siteMetadata'
 import { createGlobalStyle } from 'styled-components'
 import Banner from '../components/home/Banner'
 import PictureWaterFall from '../components/home/PictureWaterFall'
 export default async function Page() {
+  console.log('siteMetadata', siteMetadata.welcome)
   return (
     <>
       <GlobalStyle></GlobalStyle>
+      {/* <Hero welcome={siteMetadata.welcome} /> */}
       <Banner></Banner>
       <PictureWaterFall></PictureWaterFall>
     </>

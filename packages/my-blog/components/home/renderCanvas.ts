@@ -29,7 +29,10 @@ class Line {
   friction = 0.01
   nodes: Node[] = []
 
-  constructor(e: { spring: number }, private pos: { x: number; y: number }) {
+  constructor(
+    e: { spring: number },
+    private pos: { x: number; y: number }
+  ) {
     this.spring = e.spring + 0.1 * Math.random() - 0.05
     this.friction = E.friction + 0.01 * Math.random() - 0.005
     this.nodes = []
@@ -103,8 +106,9 @@ const E = {
 }
 
 export const renderCanvas = function () {
+  let canDraw = true
   const canvas = document.getElementById('canvas') as HTMLCanvasElement
-
+  const container = canvas.parentNode as HTMLCanvasElement
   const ctx: CanvasRenderingContext2D = canvas!.getContext('2d')!
   let lines: Line[] = []
   const pos = { x: 0, y: 0 }
@@ -126,22 +130,12 @@ export const renderCanvas = function () {
   function animate() {
     if (running) {
       ctx.globalCompositeOperation = 'source-over'
-      //ctx.fillStyle = '#065f46';
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       ctx.globalCompositeOperation = 'lighter'
       ctx.strokeStyle = 'hsla(' + Math.round(wave.update()) + ',90%,50%,0.25)'
       ctx.lineWidth = 1
-      // ctx.frame % 60 == 0 &&
-      //   console.log(
-      //     f.update(),
-      //     Math.round(f.update()),
-      //     f.phase,
-      //     f.offset,
-      //     f.frequency,
-      //     f.amplitude
-      //   );
-      for (var i = 0; i < E.trails; i++) {
-        var line = lines[i]
+      for (let i = 0; i < E.trails; i++) {
+        let line = lines[i]
         line.update()
         line.draw(ctx)
       }
@@ -151,12 +145,15 @@ export const renderCanvas = function () {
   }
 
   function bindMouseMove(event) {
+
     function drawLine() {
       lines = []
-      for (var i = 0; i < E.trails; i++)
+      for (let i = 0; i < E.trails; i++)
         lines.push(new Line({ spring: 0.45 + (i / E.trails) * 0.025 }, pos))
     }
     function move(e) {
+    if (!canDraw) return
+
       e.touches
         ? ((pos.x = e.touches[0].pageX), (pos.y = e.touches[0].pageY))
         : ((pos.x = e.clientX), (pos.y = e.clientY)),
@@ -165,18 +162,18 @@ export const renderCanvas = function () {
     function start(e) {
       1 == e.touches.length && ((pos.x = e.touches[0].pageX), (pos.y = e.touches[0].pageY))
     }
-    document.removeEventListener('mousemove', bindMouseMove)
-    document.removeEventListener('touchstart', bindMouseMove)
-    document.addEventListener('mousemove', move)
-    document.addEventListener('touchmove', move)
-    document.addEventListener('touchstart', start)
+    container.removeEventListener('mousemove', bindMouseMove)
+    container.removeEventListener('touchstart', bindMouseMove)
+    container.addEventListener('mousemove', move)
+    container.addEventListener('touchmove', move)
+    container.addEventListener('touchstart', start)
     move(event)
     drawLine()
     animate()
   }
 
-  document.addEventListener('mousemove', bindMouseMove)
-  document.addEventListener('touchstart', bindMouseMove)
+  container.addEventListener('mousemove', bindMouseMove)
+  container.addEventListener('touchstart', bindMouseMove)
   document.body.addEventListener('orientationchange', resizeCanvas)
   window.addEventListener('resize', resizeCanvas)
   window.addEventListener('focus', () => {

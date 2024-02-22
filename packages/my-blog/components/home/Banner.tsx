@@ -12,7 +12,7 @@ export default function Banner() {
   return (
     <div>
       <canvas
-        className="bg-skin-base pointer-events-none absolute inset-0 z-10"
+        className="bg-skin-base pointer-events-none absolute inset-0 z-10 "
         id="canvas"
       ></canvas>
       <div

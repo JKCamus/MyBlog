@@ -1,0 +1,353 @@
+---
+title: worker 扫盲01
+date: '2024-05-09'
+tags: ['markdown', 'code', 'features']
+draft: false
+summary: Example of a markdown file with code blocks and syntax highlighting
+---
+# 前言
+由于js可操纵dom ，如果在修改dom的属性的同时渲染界面，就可能会导致渲染进程前后获取到的元素数据不一致；因为js线程和UI线程同时运行，大概率会产生冲突，故浏览器为了避免渲染由于冲突而出现不可预期的结果，而设置了GUI渲染线程与JS引擎互斥；当JS引擎执行时，GUI线程被挂起【GUI更新会被保存在一个队列，等待JS引擎空闲时】—— 可推导，js执行事件过长，会导致GUI线程处于等待，即页面的渲染被阻塞，出现页面卡顿不连贯问题。
+针对上述场景，html5支持了一个新特性：web worker。
+开发者可以利用该 api 一定程度上去优化 js 阻塞导致了页面渲染卡顿的问题
+**MDN的官方解释：**
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652666115137-7fbf8180-777b-4293-878a-19eadc430a51.png#clientId=ue1d456e3-0ebc-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=294&id=u25cd9a68&margin=%5Bobject%20Object%5D&name=image.png&originHeight=294&originWidth=1570&originalType=binary&ratio=1&rotation=0&showTitle=false&size=97382&status=done&style=none&taskId=uafc5b0df-65ff-48e5-9d20-2c3b4961f36&title=&width=1570)
+
+# 分类 ——》关于worker 主要的分类
+简单对比以下三种worker，其他不常用的不展开论述【chrome workers[用于 拓展程序，仅适用firefox]/Audio workers[音频 worker]】
+
+| 类别 | DedicatedWorker | ServiceWorker | SharedWorker |
+| --- | --- | --- | --- |
+| 概述 | 创建页面专属worker 线程【仅为创建它的JSVM进程服务】 | 一般作为web应用程序、浏览器和网络（如果可用）之前的代理服务器 | 所有同域页面脚本相同可共享同一个 shareWorker执行任务
+【独立的进程，为创建它的JSVM进程所属页面的域名服务】 |
+| 作用 | 处理一些会阻塞主线程的任务 |
+1. 拦截网络请求
+1. 更新资源
+1. 推送通知
+1. 访问后台同步API
+ | 类似专用worker的衍生吧【但是是共享的】 |
+| 执行上下文 | DedicatedWorkerGlobalScope | ServiceWorkerGlobalScope | SharedWorkerGlobalScope |
+| 访问限制 | dom 限制，数据传输序列化，不能使用[window](https://developer.mozilla.org/zh-CN/docs/Web/API/Window)对象的某些方法和属性【如：storage相关的api】，跨域，同源限制【特别：在ServiceWorker无法访问 xhr】 |  |  |
+| 怎么用 | demo 见 [simple-web-worker](https://github.com/mdn/simple-web-worker) | 见Service worker 离线缓存【内部文章】或[MDN ServiceWorker](https://developer.mozilla.org/zh-CN/docs/Web/API/ServiceWorker) | demo 见[simple-shared-worker](https://github.com/mdn/simple-shared-worker) |
+| 怎么调试 | 直接在当前页面chrome 调试工具soures找到worker.js
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652692233532-260a437e-fdb9-435a-875b-5fc7aa0b204f.png#clientId=ua578cc98-0cd6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=82&id=u6056fe5f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=550&originWidth=892&originalType=binary&ratio=1&rotation=0&showTitle=false&size=123925&status=done&style=none&taskId=u89377d66-409f-44fc-91d2-b75df09fee0&title=&width=133) | 使用谷歌开发者工具  Application -> Service Workers 面板查看和调试
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652692370684-5b32ec17-77de-45a7-97e6-d82a88d7aa64.png#clientId=ua578cc98-0cd6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=73&id=u329b466a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=665&originWidth=1162&originalType=binary&ratio=1&rotation=0&showTitle=false&size=140694&status=done&style=none&taskId=ub0cbee5d-760c-40e6-b31c-4653266f355&title=&width=128) | chrome://inspect/#workers
+找到对应脚本点击inspect，即可在打开的控制台进行调试详情见下文
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652692595424-b90d943b-02d5-453f-b727-4c0120982253.png#clientId=ua578cc98-0cd6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=81&id=u86b363f0&margin=%5Bobject%20Object%5D&name=image.png&originHeight=304&originWidth=571&originalType=binary&ratio=1&rotation=0&showTitle=false&size=50176&status=done&style=none&taskId=u277eaac3-9aa1-4b4e-a1fe-b11c48f3c15&title=&width=153) |
+| 业务应用场景 | 大量计算，图片压缩，轮询，复杂数据解析，处理node [在electron环境时] 的任务【如文件读写】更多例子: [Web Worker融会贯通](https://yrq110.me/post/front-end/introduction-to-web-worker/) | 页面离线访问，pwa等
+ | 同源多页通讯，所有tab页共享共享worker中任务的单例 |
+| 进程 or 线程 | 子线程
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652672397744-a6ca2aae-4d8a-438d-af55-2b0411feb61b.png#clientId=u8998f769-7052-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=50&id=u8f086262&margin=%5Bobject%20Object%5D&name=image.png&originHeight=182&originWidth=1474&originalType=binary&ratio=1&rotation=0&showTitle=false&size=109111&status=done&style=none&taskId=u60db5184-8c8b-430a-90e9-e85f2bc4825&title=&width=406) |  | 独立进程
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652672630918-0d34395e-eca3-4b26-97f7-4aa6bda19580.png#clientId=u8998f769-7052-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=31&id=u24d7ca3b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=90&originWidth=1338&originalType=binary&ratio=1&rotation=0&showTitle=false&size=57812&status=done&style=none&taskId=uec9ae010-b646-4d03-acb6-9be78311f90&title=&width=466) |
+| 关于兼容性 | ![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652685624887-dfb9e7ad-8201-46b5-b5f3-f8336d45977e.png#clientId=u8998f769-7052-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=56&id=u05a1ed9f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1082&originWidth=2646&originalType=binary&ratio=1&rotation=0&showTitle=false&size=250702&status=done&style=none&taskId=ucea8daff-1aa5-442c-b348-ffa48c90b31&title=&width=138) | ![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652685610937-66f75172-d92f-44a9-9a20-6ae132470193.png#clientId=u8998f769-7052-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=69&id=u19c23550&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1404&originWidth=2662&originalType=binary&ratio=1&rotation=0&showTitle=false&size=357413&status=done&style=none&taskId=ue0a72db3-fa87-48b2-b5d3-dd1c4f87d73&title=&width=131) | ![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652685775609-3a0886c2-639e-476e-9598-5b120cc45356.png#clientId=u8998f769-7052-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=67&id=u1af89026&margin=%5Bobject%20Object%5D&name=image.png&originHeight=762&originWidth=2612&originalType=binary&ratio=1&rotation=0&showTitle=false&size=220080&status=done&style=none&taskId=ucc5c5616-4057-482a-b1f4-b856643eac0&title=&width=228) |
+
+
+## 关于webworker【这里指DedicatedWorker】和sharedWorker的区别
+#### 关于创建差异
+
+   - DedicatedWorker：Worker()总是创建新的worker实例
+   - SharedWorker：SharedWorker()构造函数仅在没有具有相同身份的worker实例存在时才会创建一个新的。如果一个共享worker和已存在的共享worker身份匹配，那么它就会和已存在的共享worker形成一个新的连接。【共享worker身份由解析脚本URL，worker名，和文档源确定；】举个栗子：
+```javascript
+// 情况一： 以下三个脚本会被解析伟相同URL，仅创建一个 sharedWorker
+new SharedWorker('./sharedWorker.js');
+new SharedWorker('sharedWorker.js');
+new SharedWorker('https://www.demo.com/sharedWorker.js');
+
+// 情况二：共享worker可以在标签，窗口，iframe或其他运行在同一个源的worker之间共享
+
+// 情况三：共享worker的身份是URL限定的。
+//（即只要url长得不一样，即使加载的是同一个脚本也会创建为不同的共享worker如下：）
+// 可利用该特性去完成 sharedWorker 脚本的更新【带'./sharedWorker.js?v=版本号'】
+new SharedWorker('./sharedWorker.js');
+new SharedWorker('./sharedWorker.js?');
+
+// 每个构造函数都检查匹配的共享worker，如果存在就连接它。
+
+// 情况五：可通过设置name 为拥有相同源和URL的脚本强制创建多个 sharedWorker
+new SharedWorker('./sharedWorker.js', {name: 'a'});
+new SharedWorker('./sharedWorker.js', {name: 'b'});
+new SharedWorker('./sharedWorker.js', {name: 'c'});
+```
+
+#### 关于线程与进程差异?? 【出处：[从浏览器多进程到JS单线程，JS运行机制最全面的一次梳理](https://segmentfault.com/a/1190000012925872)】
+> - WebWorker只属于某个页面，不会和其他页面的Render进程（浏览器内核进程）共享
+>    - 所以Chrome在Render进程中（每一个Tab页就是一个render进程）创建一个新的线程来运行Worker中的JavaScript程序。
+> - SharedWorker是浏览器所有页面共享的，不能采用与Worker同样的方式实现，因为它不隶属于某个Render进程，可以为多个Render进程共享使用
+>    - 所以Chrome浏览器为SharedWorker单独创建一个进程来运行JavaScript程序，在浏览器中每个相同的JavaScript只存在一个SharedWorker进程，不管它被创建多少次。
+> - 本质上就是进程和线程的区别。SharedWorker由独立的进程管理，WebWorker只是属于render进程下的一个线程
+
+
+[The Chromium Projects](https://www.chromium.org/)官方解释如下：
+> 在自己的独立进程中运行，称为工作进程，并通过浏览器进程连接到多个渲染器进程。 Shared Worker 也在自己的工作线程中运行
+
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652865931030-443b57d6-d9b4-4fb2-920d-507b030d1ea6.png#clientId=uf8a16f9b-faa0-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=173&id=u00659037&margin=%5Bobject%20Object%5D&name=image.png&originHeight=173&originWidth=1705&originalType=binary&ratio=1&rotation=0&showTitle=false&size=77169&status=done&style=none&taskId=u2c98327d-2fba-46b5-bda8-fb0120f4291&title=&width=1705)
+
+**由于本人遇到的问题主要是利用了shareWorker去处理，所以下文会针对sharedWorker 稍微进行一下展开论述**
+# 浅尝SharedWorker
+## 使用 ——》How
+关于配置:
+```typescript
+let conns = 0;
+// 当UI线程执行worker.port.start()时触发建立连接
+self.addEventListener('connect', (e) => {
+  const port = e.ports[0];
+  conns += 1;
+
+  port.onmessage = (e) => {
+    console.log('<worker 内部> 收到了消息 e.data', e.data); // 注意console对象指向第一个创建Worker线程的UI线程的console对象。即如果A先创建Worker线程，那么后续B、C等UI线程执行worker.port.postMessage时回显信心依然会发送给A页面。
+  };
+
+  port.onmessageerror = (e: any) => {
+    console.log('<worker 内部> port onmessageerror', e, true);
+  };
+
+  port.close = () => {
+    console.log('<worker 内部> close 准备关闭', '', true);
+  };
+
+  // 建立双向连接，可相互通信
+  port.start();
+  console.log(`<子版本${process.env.subVersion}-worker 内部>hey，在worker 内部conns: ${conns}`);
+});
+
+export default null as any; // 标识当前为TS模块，避免报xxx.ts is not a module的异常
+
+```
+针对项目中使用webpack4的同学，可以考虑直接使用[worker-loader](https://github.com/webpack-contrib/worker-loader)进行相应的配置去使用
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652846375351-f71b15b2-4887-4a17-b565-0d7617808afb.png#clientId=uf8a16f9b-faa0-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=287&id=u659cb8c3&margin=%5Bobject%20Object%5D&name=image.png&originHeight=287&originWidth=671&originalType=binary&ratio=1&rotation=0&showTitle=false&size=48615&status=done&style=none&taskId=ueb1f0627-08a3-4913-be00-e3bcbebd5dd&title=&width=671)
+```typescript
+import IMSharedWorker from './sharedWorker.worker';
+
+export class HeartBeatUIWorker {
+  private worker = new IMSharedWorker();
+  // webpack5 用法
+  // private worker = new SharedWorker(new URL('./sharedWorker.js', import.meta.url));
+
+  public constructor() {
+    this.initWorker();
+  }
+
+  /** 初始化worker的相关监听 */
+  private initWorker() {
+    console.log('SharedWorker', this.worker);
+    const port = this.worker?.port;
+    this.worker.onerror = (e: any) => {
+      console.log('<UI-worker> onerror：', e);
+    };
+
+    port.onmessageerror = (e: any) => {
+      console.log('<UI-worker> port onmessageerror', e);
+    };
+
+    port.close = () => {
+      console.log('<UI-worker> close 准备关闭');
+    };
+
+    port.onmessage = (e: any) => {
+      console.log('<UI-worker> onmessage: ', e.data);
+      const { type, data } = e.data;
+      this._handleMsg(type, data);
+    };
+
+    const start = () => {
+      port.start(); // 连接worker线程
+      this.initHeartBeat();
+    };
+
+    start();
+  }
+
+  /** 处理来自 worker 的消息 */
+  private _handleMsg = (eventType: FROM_WORKER_MSG, data: any) => {
+    // 监听到心跳即将触发事件，则通知相关方
+    // 监听到用户已经掉线的逻辑on-disconnect，通知相关方
+    ...省略
+  };
+}
+
+```
+针对项目中使用webpac5的同学，可以直接使用 `new SharedWorker(new URL('./sharedworker.js', import.meta.url));`
+使用：
+```typescript
+export class HeartBeatUIWorker {
+  // webpack5 用法
+  private worker = new SharedWorker(new URL('./sharedWorker.js', import.meta.url));
+
+  public constructor() {
+    this.initWorker();
+  }
+
+  /** 初始化worker的相关监听 */
+  private initWorker() {
+    console.log('SharedWorker', this.worker);
+    const port = this.worker?.port;
+    this.worker.onerror = (e: any) => {
+      console.log('<UI-worker> onerror：', e);
+    };
+
+    port.onmessageerror = (e: any) => {
+      console.log('<UI-worker> port onmessageerror', e);
+    };
+
+    port.close = () => {
+      console.log('<UI-worker> close 准备关闭');
+    };
+
+    port.onmessage = (e: any) => {
+      console.log('<UI-worker> onmessage: ', e.data);
+      const { type, data } = e.data;
+      this._handleMsg(type, data);
+    };
+
+    const start = () => {
+      port.start(); // 连接worker线程
+      this.initHeartBeat();
+    };
+
+    start();
+  }
+
+  /** 处理来自 worker 的消息 */
+  private _handleMsg = (eventType: FROM_WORKER_MSG, data: any) => {
+    // 监听到心跳即将触发事件，则通知相关方
+    // 监听到用户已经掉线的逻辑on-disconnect，通知相关方
+    ...省略
+  };
+}
+
+```
+ps 注意点：
+
+   1. **事件监听的对象是port【页面connect 成功后执行】**
+   1. **port 的 作用域，自己的作用域【port.postMessage需要所有connect 上来的都调用一遍，可以写demo 试试看】**
+## 调试 ——》关于如何调试Sharedworker以及看日志
+> 调试环境，两种情况
+
+#### 情况一:  在Chrome 浏览器调试 Sharedworker
+在浏览器直接chrome://inspect/#workers
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652414194920-68a07167-4d53-4770-94bb-a16ec58523ce.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=286&id=udd73595f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=324&originWidth=661&originalType=binary&ratio=1&rotation=0&showTitle=false&size=44018&status=done&style=none&taskId=ud52b6ef5-5b47-4379-b0a5-eea4ad55593&title=&width=583)
+点击 上图中 inspect 可直接进入调试界面，即可进入图二worker 脚本的调试界面
+【该脚本的相关日志打印如下】
+#### ![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652414331413-c329d474-cd99-43c4-b5d5-b2706c835147.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=246&id=ua2774d76&margin=%5Bobject%20Object%5D&name=image.png&originHeight=688&originWidth=1834&originalType=binary&ratio=1&rotation=0&showTitle=false&size=269827&status=done&style=none&taskId=u89bb4fd2-b5c9-4b6a-88d0-6d8b8e9ccae&title=&width=657)
+#### 情况二：在electron 调试 Sharedworker
+在electron的调试，和web的区别是，主要是打开Sharedworker 调试控制台的方式存在差异
+主要是依赖在electron 容器中调用 `contents.inspectSharedWorker()`去替换在`在浏览器直接chrome://inspect/#workers`的动作，补充其他打开指定或所有的Sharedworker 的方法如下：
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652414653863-e367659a-1f1e-4e76-a4c0-7f96d46dd102.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=325&id=u66386f1f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=325&originWidth=575&originalType=binary&ratio=1&rotation=0&showTitle=false&size=46943&status=done&style=none&taskId=ua42ab7e0-cf9b-4068-a81f-670792ebc64&title=&width=575)
+详细api 参考：[在electron 打开sharedworker 调试工具的方式](https://www.electronjs.org/docs/latest/api/web-contents#contentsinspectsharedworker)
+## 生命周期 ——》关于 SharedWorker 的生命周期（出处：[JavaScript Web Workers（三）共享Worker](https://zhuanlan.zhihu.com/p/93473241)）
+
+- 主要有页面还保持和共享worker连接，共享worker就会持续
+- 每次调用SharedWorker构造函数时，在共享worker内部触发connect事件，包括创建worker
+- 不能人为编程终止共享worker。【没有terminate方法，调用close()不会触发worker的终止】待验证
+- SharedWorker对象的“连接”与相应的MessagePort 或MessageChannel的状态无关。一旦建立和共享worker的连接，连接的管理就由浏览器负责。建立的连接将持续在页面的生命周期中持续，只有页面销毁，共享worker上没有更多连接的时候，浏览器终止该worker。
+
+> 每次调用SharedWorker构造函数时，在共享worker内部触发connect事件，包括创建worker。
+> connect事件出现时，SharedWorker 构造函数隐式创建一个MessageChannel ，并给传入一个对SharedWorker 实例来说是唯一的MessagePort所有权。这个MessagePort在connect事件对象内部可用ports数组访问。因为conncet事件仅代表单个连接，ports数组的长度刚好为1。
+> 重要的一点，共享worker在建立和删除连接时行为不同。每个新的SharedWorker连接都触发一个事件，但SharedWorker实例断开连接时（例如页面关闭）没有对应的事件。
+> 在前面的例子中，当页面连接并断开同一个共享worker时，connectedPorts Set将会被“死去的”端口污染，而无法鉴别它们。一种解决办法是，在页面将要被销毁前的beforeunload 事件发生时，显式的发送一条teardown消息，这可以让共享worker做清理工作。
+
+### 关于销毁 SharedWorker：
+页面关闭【重启】，如何关闭和销毁worker【在什么时机停止心跳】，监听onbeforeunload
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652406014009-f8afa342-d5de-4882-a178-6e9156f8ebae.png#clientId=u6dab033c-9c8f-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=93&id=u3f161e31&margin=%5Bobject%20Object%5D&name=image.png&originHeight=93&originWidth=735&originalType=binary&ratio=1&rotation=0&showTitle=false&size=26913&status=done&style=none&taskId=u7ca2f648-8a5d-4f47-9544-5def764d510&title=&width=735)
+## 案例 ——》SharedWorker应用场景案例：
+根本背景：sw提供的im sdk 的在线检查逻辑不准确，目前的兼容方案是通过让服务端给对应客户端定时发送消息，如果客户端没能准时收到消息，则可确定当前客户端已掉线
+> 其他方案：
+> 1. 移除服务端的依赖，客户端自己给自己发消息来确定是否在线【然后IM sdk 不支持】
+> 1. 在服务端定时直接 给所有在线用户发送消息，但经过和后端同学商量后，认为该逻辑比较浪费资源，被否了
+
+背景：在协作项目，im的实例会有一个轮询检查im 在线状态的逻辑【http接口】
+现状：当前是link 页面和index页面内部自己维护这单独的im 实例，即每个页面都会不断调用http 接口去检查im在线状态，然而当下虽是只有两个页面在轮询，无法保证的是，假如以后又新增到有n个页面依赖im时，将会出现n
+个页面都在轮询调用服务端检查接口，这将给服务端带来不必要的压力
+现状：
+![](https://cdn.nlark.com/yuque/0/2022/jpeg/22947040/1652712862435-7281d4f2-a66e-41e7-b31a-c12aa69ebb02.jpeg)
+要求：支持在多个页面（进程）共享一个im 心跳单例
+方案：
+
+1. 将心跳检查逻辑写在容器
+1. 利用web 也支持的api 去实现心跳检查逻辑
+
+综合对比， 在和部门的同事进行了一番谈论后决定采用sharedWorker的方式去解决该问题，理由是，尽可能脱离electron的依赖，采用web支持的api，以利于以后项目做拓展
+修改后：
+![](https://cdn.nlark.com/yuque/0/2022/jpeg/22947040/1652712856264-7abc3a89-d2c1-42aa-9a12-37c3d70c6a6f.jpeg)
+## 坑 ——》关于sharedWorker的小坑
+#### 1. 消息发送的问题【connect 环境】
+现象：第二个及之后打开的im 进程无法正常接收共享worker返回的相关事件
+> 在sharedWor每个connect的port 不一致，发消息需要每个connect 内部自己单独发一趟
+
+#### 2. 关于一些window支持的api 无法正常使用的问题
+worker 环境不支持localstorage，sessionStorage
+#### 3. 关于本地开发时请求代理的问题
+看一下无法在worker 内部正确心跳检测请求地址的问题[http 请求遇到问题，worker 环境无法直接向ui进场那样通过代理去访问请求，所以开发模式会出错，主要主动配置http请求的域名]
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412461385-e0ef7d6c-8a5c-4b91-b9e3-8736d8994348.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=288&id=ub8cccbec&margin=%5Bobject%20Object%5D&name=image.png&originHeight=288&originWidth=1388&originalType=binary&ratio=1&rotation=0&showTitle=false&size=144233&status=done&style=none&taskId=u3310546a-0b42-4378-a348-5984cbf7df3&title=&width=1388)
+#### 4. 关于类型报错的问题
+
+   - ![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412441794-74d41a13-1299-4109-b803-5038bef748ac.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=154&id=ue21ef77c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=154&originWidth=754&originalType=binary&ratio=1&rotation=0&showTitle=false&size=48390&status=done&style=none&taskId=u139c2d31-4764-4d85-b5e9-0bf9bd6e566&title=&width=754)
+
+ 	解决办法：默认export出一个对象，避免提示报错
+
+   - ![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412403379-3f993ba5-3666-426f-aadb-68b2e61de21b.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=205&id=ua188ae45&margin=%5Bobject%20Object%5D&name=image.png&originHeight=205&originWidth=764&originalType=binary&ratio=1&rotation=0&showTitle=false&size=45728&status=done&style=none&taskId=ucfd4e869-e4c6-4a04-b422-a48a4fbcfcf&title=&width=764)
+#### 5. 关于跨域的坑
+
+   - [Web Workers 资源跨域问题](https://zhuanlan.zhihu.com/p/47878150)
+   - webpack5跨域看看这个解决方案 [Loading web workers using Webpack 5](https://mmazzarolo.com/blog/2021-09-03-loading-web-workers-using-webpack-5/)
+   - 直接使用import.meta.url在本地是直接返回file://相关的地址，但是在cdn 上的地址会是cdn 的地址
+   - 尝试这个方法：[webpack 5 web worker support for CORS? #14648](https://github.com/webpack/webpack/discussions/14648)
+   - ![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652406121358-5f03f741-fc7d-4ace-9ecb-2682a9658596.png#clientId=u6dab033c-9c8f-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=40&id=ubcfdb36d&margin=%5Bobject%20Object%5D&name=image.png&originHeight=40&originWidth=995&originalType=binary&ratio=1&rotation=0&showTitle=false&size=18394&status=done&style=none&taskId=u6203bfcd-d3cc-4ea8-a835-c04d0b42fce&title=&width=995)![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652406108741-345f7394-588c-4d91-a941-7bc9afc39d93.png#clientId=u6dab033c-9c8f-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=231&id=u70d383ec&margin=%5Bobject%20Object%5D&name=image.png&originHeight=231&originWidth=817&originalType=binary&ratio=1&rotation=0&showTitle=false&size=104774&status=done&style=none&taskId=u291a93ed-10bc-4476-b988-32d03be4526&title=&width=817)
+   - ![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652866540048-f71310dc-45bd-4a72-ada4-74ecd6844c8a.png#clientId=uf8a16f9b-faa0-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=327&id=u70925a98&margin=%5Bobject%20Object%5D&name=image.png&originHeight=327&originWidth=1500&originalType=binary&ratio=1&rotation=0&showTitle=false&size=318840&status=done&style=none&taskId=uc7e94cbf-c476-487c-8891-24f7e57946c&title=&width=1500)
+   - URL.createObjectURL() 的坑，worker-loader 提供的跨域解决方案会出现创建的sharedWorker 的地址blob地址完全不一样的问题
+# ![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652782204439-0a62dc97-8ba6-47ce-bf63-bd69a2e2c6d0.png#clientId=u3291c7d4-202e-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=177&id=u642720d4&margin=%5Bobject%20Object%5D&name=image.png&originHeight=229&originWidth=781&originalType=binary&ratio=1&rotation=0&showTitle=false&size=50486&status=done&style=none&taskId=u170d965f-2d92-4ec4-9d02-227cd1955fa&title=&width=604)
+# 参考资料：
+
+- [MDN->使用worker之共享worker](https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers#%E5%85%B1%E4%BA%ABworker)
+- [Inline worker in webpack 5](https://github.com/webpack/webpack/discussions/14066)
+- [shared-workers-and-the-sharedworker-interface【很长的一篇文章，但包含很多特别观点】](https://html.spec.whatwg.org/#shared-workers-and-the-sharedworker-interface)
+- [sharedWorker 共享Worker](https://blog.csdn.net/weixin_43294560/article/details/123603934)
+- [JavaScript Web Workers（三）共享Worker](https://zhuanlan.zhihu.com/p/93473241) 【有优缺点的对比】
+- [前端魔法堂：可能是你见过最详细的WebWorker实用指南](https://cloud.tencent.com/developer/article/1762717)
+- [[前端黑魔法-Web Worker] webpack+typescript环境下配置](https://zhuanlan.zhihu.com/p/83138304)
+- [worker-loader](https://github.com/webpack-contrib/worker-loader)
+-  [Loading web workers using Webpack 5](https://mmazzarolo.com/blog/2021-09-03-loading-web-workers-using-webpack-5/)
+- [你不知道的 Web Workers （上）[7.8K 字 | 多图预警]](https://segmentfault.com/a/1190000023011282)
+- [梳理浏览器内核中线程之间的关系](https://segmentfault.com/a/1190000012925872)
+- [Web Worker融会贯通](https://yrq110.me/post/front-end/introduction-to-web-worker/)
+- [深入web workers （上）](https://www.cnblogs.com/zhwc-5w4/p/13915815.html)
+- [web worker 扫盲篇](https://cloud.tencent.com/developer/article/1033118)
+- [咱们worker有力量-在浏览器中玩转多线程和离线应用](https://juejin.cn/post/6844903521137983501#heading-3)
+
+# 一个小拓展：开发过程遇到的关于import.meta.url的神奇现象
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652866267018-c7c46201-840b-4ab3-b4d0-9fc7d43e943b.png#clientId=uf8a16f9b-faa0-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=762&id=u06786e78&margin=%5Bobject%20Object%5D&name=image.png&originHeight=762&originWidth=2108&originalType=binary&ratio=1&rotation=0&showTitle=false&size=670654&status=done&style=none&taskId=ue32eaee8-c1b4-41c2-a434-c347807ebd6&title=&width=2108)
+情况一：使用以下方式去使用import.meta，会导致在worker 内部报es 模块无法正常import 的问题
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412503137-1b3cc7b7-5607-4519-a6d3-347c408febdd.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=46&id=ue6cf360f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=46&originWidth=590&originalType=binary&ratio=1&rotation=0&showTitle=false&size=15823&status=done&style=none&taskId=u61b423c7-f268-4863-b5e3-95ba4ae15c7&title=&width=590)
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412511654-ac4cf487-0de4-4724-a23e-7812b512e932.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=47&id=u3d7b4a59&margin=%5Bobject%20Object%5D&name=image.png&originHeight=47&originWidth=2000&originalType=binary&ratio=1&rotation=0&showTitle=false&size=35496&status=done&style=none&taskId=u26c51d34-b01e-4590-b8ed-4737628ca94&title=&width=2000)
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412518985-fdfae8c3-1164-4b24-8919-77281fef2a59.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=88&id=uefe3604f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=88&originWidth=395&originalType=binary&ratio=1&rotation=0&showTitle=false&size=13589&status=done&style=none&taskId=u196ab2e0-df76-4c98-993d-d3ff1f73f5c&title=&width=395)
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412526303-a6414915-d2f6-4940-a000-72e476d90061.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=96&id=u4e5b38a3&margin=%5Bobject%20Object%5D&name=image.png&originHeight=96&originWidth=976&originalType=binary&ratio=1&rotation=0&showTitle=false&size=28055&status=done&style=none&taskId=u347782dd-d355-450b-9c60-ca9fec4d7cb&title=&width=976)
+[https://dmitripavlutin.com/javascript-import-meta/](https://dmitripavlutin.com/javascript-import-meta/)
+
+情况二：使用以下的方式去使用import.meta，会导致无法正常加载脚本
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412546150-a706b91c-6e30-4914-a13a-1c525c6b1706.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=44&id=u2904485f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=44&originWidth=608&originalType=binary&ratio=1&rotation=0&showTitle=false&size=15334&status=done&style=none&taskId=u3fea6b4c-3eba-4f87-afd2-b6597a343d7&title=&width=608)
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412551877-c4478d14-6708-4650-8372-291af15811ee.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=208&id=u25a71f75&margin=%5Bobject%20Object%5D&name=image.png&originHeight=208&originWidth=1065&originalType=binary&ratio=1&rotation=0&showTitle=false&size=107625&status=done&style=none&taskId=u89e40608-1ed3-4ddb-a587-ed0771a3983&title=&width=1065)
+情况三：直接在将脚本写在一起，开发模式不会报错，但是在将资源发到cdn，以及本地为electron 时，会出现跨域报错
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412665101-c50aeec6-09fc-46e6-ab34-bec13542ab21.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=19&id=u0bd30241&margin=%5Bobject%20Object%5D&name=image.png&originHeight=19&originWidth=694&originalType=binary&ratio=1&rotation=0&showTitle=false&size=13070&status=done&style=none&taskId=u4478be90-8a9b-4670-99fe-017cb9e23a4&title=&width=694)
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412672611-def5d2de-2d52-4088-b66d-719da9a4c6b8.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=107&id=u478fd3aa&margin=%5Bobject%20Object%5D&name=image.png&originHeight=107&originWidth=495&originalType=binary&ratio=1&rotation=0&showTitle=false&size=14757&status=done&style=none&taskId=uc2a6c359-ae46-4883-be89-9d88cefe193&title=&width=495)
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652412681173-db0c8106-30ec-45e9-a5cb-2500ec74c597.png#clientId=u5286c3b8-55c6-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=400&id=ub3a42e52&margin=%5Bobject%20Object%5D&name=image.png&originHeight=400&originWidth=1834&originalType=binary&ratio=1&rotation=0&showTitle=false&size=271147&status=done&style=none&taskId=ub90eb983-f8f3-48eb-8106-367373847cf&title=&width=1834)
+
+import.meta 栗子：
+```typescript
+情况一：
+const metaurl = import.meta.url;
+const URL1 = new URL('./sharedWorker.worker.ts', metaurl);
+console.log(metaurl, URL1);
+
+情况二：
+const URL2 = new URL('./sharedWorker.worker.ts', import.meta.url);
+console.log(metaurl, URL2);
+
+情况三：
+
+```
+执行结果：
+![image.png](https://cdn.nlark.com/yuque/0/2022/png/22947040/1652753823085-1908caa1-bacc-4635-b762-13cb156950cb.png#clientId=u739c2019-6305-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=481&id=SfoR5&margin=%5Bobject%20Object%5D&name=image.png&originHeight=481&originWidth=1047&originalType=binary&ratio=1&rotation=0&showTitle=false&size=114061&status=done&style=none&taskId=u32e93894-6df0-4160-8580-08e861c237c&title=&width=1047)
+mdn 解析
+> import.meta是一个给JavaScript模块暴露特定上下文的元数据属性的对象。它包含了这个模块的信息，比如说这个模块的URL
+> import.meta对象由一个关键字"import",一个点符号和一个meta属性名组成。通常情况下"import."是作为一个属性访问的上下文，但是在这里"import"不是一个真正的对象
+> 配合new URL 使用，具体见：[MDN import.meta](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/import.meta)
+

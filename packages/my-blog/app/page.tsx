@@ -2,7 +2,7 @@
 import { createGlobalStyle } from 'styled-components'
 import Banner from '../components/home/Banner'
 import PictureWaterFall from '../components/home/PictureWaterFall'
-export default async function Page() {
+export default function Page() {
   return (
     <>
       <GlobalStyle></GlobalStyle>

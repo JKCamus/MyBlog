@@ -12,7 +12,7 @@ export default function CMS() {
     formData.append('file', file)
 
     try {
-      const response = await fetch('/api/upload', {
+      const response = await fetch('/api/blog/upload', {
         method: 'POST',
         body: formData,
       })

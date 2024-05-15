@@ -20,12 +20,41 @@ model User {
   notes    Note[]
 }
 
+enum NoteLayout {
+  PostLayout //默认
+  PostBanner //带 banner
+  PostSimple //简约模式
+}
+
+model Tags {
+  id      String      @id @default(cuid())
+  tagName String
+  notes   TagOnNote[]
+}
+
 model Note {
-  id        String   @id @default(cuid())
-  title     String   @db.VarChar(255)
-  content   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
+  id           Int         @id @default(autoincrement())
+  title        String      @unique
+  date         DateTime    @default(now()) @map("createdAt")
+  lastmod      DateTime?   @map("updatedAt")
+  draft        Boolean     @default(false)
+  summary      String?
+  images       String[]
+  authors      String[]
+  author       User        @relation(fields: [authorId], references: [id])
+  authorId     String
+  layout       NoteLayout  @default(PostLayout)
+  canonicalUrl String?
+  tags         TagOnNote[]
+}
+
+model TagOnNote {
+  noteId     Int
+  note       Note     @relation(fields: [noteId], references: [id])
+  tagId      String
+  tag        Tags     @relation(fields: [tagId], references: [id])
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([noteId, tagId])
 }

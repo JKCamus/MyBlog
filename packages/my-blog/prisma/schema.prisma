@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,12 +14,6 @@ model User {
   notes    Note[]
 }
 
-enum NoteLayout {
-  PostLayout //默认
-  PostBanner //带 banner
-  PostSimple //简约模式
-}
-
 model Tags {
   id      String      @id @default(cuid())
   tagName String
@@ -33,28 +21,35 @@ model Tags {
 }
 
 model Note {
-  id           Int         @id @default(autoincrement())
-  title        String      @unique
+  title        String
   date         DateTime    @default(now()) @map("createdAt")
   lastmod      DateTime?   @map("updatedAt")
-  draft        Boolean     @default(false)
-  summary      String?
-  images       String[]
-  authors      String[]
-  author       User        @relation(fields: [authorId], references: [id])
   authorId     String
-  layout       NoteLayout  @default(PostLayout)
+  authors      String[]
   canonicalUrl String?
+  draft        Boolean     @default(false)
+  images       String[]
+  layout       NoteLayout  @default(PostLayout)
+  summary      String?
+  id           Int         @id @default(autoincrement())
+  author       User        @relation(fields: [authorId], references: [id])
   tags         TagOnNote[]
+  filepath     String
 }
 
 model TagOnNote {
   noteId     Int
-  note       Note     @relation(fields: [noteId], references: [id])
   tagId      String
-  tag        Tags     @relation(fields: [tagId], references: [id])
   assignedAt DateTime @default(now())
   assignedBy String
+  note       Note     @relation(fields: [noteId], references: [id])
+  tag        Tags     @relation(fields: [tagId], references: [id])
 
   @@id([noteId, tagId])
+}
+
+enum NoteLayout {
+  PostLayout
+  PostBanner
+  PostSimple
 }

@@ -41,7 +41,6 @@ model TagOnNote {
   noteId     Int
   tagId      String
   assignedAt DateTime @default(now())
-  assignedBy String
   note       Note     @relation(fields: [noteId], references: [id])
   tag        Tags     @relation(fields: [tagId], references: [id])
 

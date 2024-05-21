@@ -1,5 +1,8 @@
-import { addNote } from '@/lib/prismaClientUtils'
-import { mkdir, stat, writeFile } from 'fs/promises'
+import { addNote, deleteNote, getAllNotes, getTagsByIds, updateNote } from '@/lib/prismaClientUtils'
+import validate from '@/lib/validate'
+import { Tags } from '@prisma/client'
+import dayjs from 'dayjs'
+import { mkdir, stat, writeFile, readFile } from 'fs/promises'
 import { NextApiRequest } from 'next'
 import { revalidatePath } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
@@ -9,7 +12,7 @@ interface NextApiRequestWithFormData extends NextApiRequest {
   formData: () => Promise<FormData>
 }
 
-const schema = z.object({
+const noteAddSchema = z.object({
   title: z.string().min(1, { message: 'Title 不能为空' }),
   summary: z.string().optional(), // summary 不是必填项
   authorId: z.string().min(1, { message: 'AuthorId 不能为空' }),
@@ -18,94 +21,189 @@ const schema = z.object({
   file: z.any(), // 文件类型校验单独进行
 })
 
-export async function POST(request: NextApiRequestWithFormData, res) {
-  // 获取 formData
-  const formData = await request.formData()
-  const file = formData.get('file')
+const noteDeleteSchema = z.object({
+  noteId: z.number().min(1, { message: 'Note ID 不能为空' }),
+})
 
-  const fields = {
-    title: formData.get('title') as string,
-    summary: (formData.get('summary') as string) || undefined,
-    authorId: formData.get('authorId') as string,
-    layout: (formData.get('layout') as string) || undefined,
-    tags: formData.get('tags') ? (formData.get('tags') as string).split(',') : [],
-    file: file,
-  }
+const noteUpdateSchema = z.object({
+  noteId: z.number().min(1, { message: 'Note ID 不能为空' }),
+  title: z.string().optional(),
+  summary: z.string().optional(),
+  layout: z.string().optional(),
+  tags: z.array(z.string().min(1, { message: 'Tag ID 不能为空' })).optional(),
+  draft: z.boolean().optional(),
+})
+
+export async function GET() {
   try {
-    const validatedData = schema.parse(fields)
-  } catch (e) {
-    if (e instanceof z.ZodError) {
-      console.log('error', e)
-      return NextResponse.json({ error: e.errors }, { status: 400 })
-    } else {
-      return NextResponse.json({ status: 500 })
+    const notes = await getAllNotes()
+    return NextResponse.json({ notes }, { status: 200 })
+  } catch (error) {
+    console.error('Error retrieving notes:', error)
+    return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 })
+  }
+}
+
+export async function POST(request) {
+  try {
+    const formData = await request.formData()
+    const file = formData.get('file')
+    const fields = {
+      title: formData.get('title') as string,
+      summary: (formData.get('summary') as string) || undefined,
+      authorId: formData.get('authorId') as string,
+      layout: (formData.get('layout') as string) || undefined,
+      tags: formData.get('tags') ? (formData.get('tags') as string).split(',') : [],
+      file,
     }
-  }
 
-  // 空值判断
-  // 在 TypeScript 中处理 FormData 时，您可能会遇到 "类型‘FormDataEntryValue’上不存在属性‘arrayBuffer’。" 的错误。这是因为 FormData.get() 返回的 FormDataEntryValue 类型可以是 File 或 string 类型，而 arrayBuffer() 方法只存在于 File 类型上。
-
-  if (!file || !(file instanceof File)) {
-    return NextResponse.json({ error: 'File is required.' }, { status: 400 })
-  }
-
-  const allowedExtensions = ['md', 'mdx']
-  const fileExtension = file.name.split('.').pop()?.toLowerCase()
-  if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
-    return NextResponse.json(
-      { error: 'Invalid file type. Only .md and .mdx files are allowed.' },
-      { status: 400 }
-    )
-  }
-
-  const buffer = Buffer.from(await file.arrayBuffer())
-
-  const relativeUploadDir = `/blog`
-  const uploadDir = join(process.cwd(), 'data', relativeUploadDir)
-
-  // 判断目标文件夹是否存在，没有则创建
-  try {
-    await stat(uploadDir) // stat() 函数可以返回文件的大小、权限和修改时间。
-  } catch (e) {
-    const error = e as NodeJS.ErrnoException
-    if (error?.code === 'ENOENT') {
-      //检查错误代码是否为 ENOENT，这表示文件或目录不存在。
-      await mkdir(uploadDir, { recursive: true }) //没有文件夹，创建文件夹
-    } else {
-      console.error(e)
-      return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 })
+    const { success, data, error } = validate(noteAddSchema, fields)
+    if (!success) {
+      return NextResponse.json({ error }, { status: 400 })
     }
-  }
 
-  try {
-    // 写入文件
+    if (!file || !(file instanceof File)) {
+      return NextResponse.json({ error: 'File is required.' }, { status: 400 })
+    }
+
+    const allowedExtensions = ['md', 'mdx']
+    const fileExtension = file.name.split('.').pop()?.toLowerCase()
+    if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+      return NextResponse.json(
+        { error: 'Invalid file type. Only .md and .mdx files are allowed.' },
+        { status: 400 }
+      )
+    }
+
+    const relativeUploadDir = `/blog`
+    const uploadDir = join(process.cwd(), 'data', relativeUploadDir)
+
+    try {
+      await stat(uploadDir)
+    } catch (e) {
+      const error = e as NodeJS.ErrnoException
+      if (error?.code === 'ENOENT') {
+        await mkdir(uploadDir, { recursive: true })
+      } else {
+        console.error(e)
+        return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 })
+      }
+    }
+
     const uniqueSuffix = `${Math.random().toString(36).slice(-6)}`
     const filename = file.name.replace(/\.[^/.]+$/, '')
-
-    // 用于获取 MIME 类型信息,获取扩展名
     const uniqueFilename = `${filename}-${uniqueSuffix}.mdx`
-    await writeFile(`${uploadDir}/${uniqueFilename}`, buffer)
 
-    // 调用接口，写入数据库
-    const newNote = await addNote({
-      title: fields.title,
-      summary: fields.summary,
-      authorId: fields.authorId,
-      layout: fields.layout,
-      tags: fields.tags, // 假设 tags 数组包含的是 tagId
+    const note = await addNote({
+      title: data.title,
+      summary: data.summary,
+      authorId: data.authorId,
+      layout: data.layout,
+      tags: data.tags,
       filepath: `${relativeUploadDir}/${uniqueFilename}`,
     })
 
-    // 清除缓存
-    revalidatePath('/', 'layout')
+    const tagNames = await getTagsByIds(data.tags)
+
+    const yamlFrontMatter = `---
+title: ${note.title}
+date: '${dayjs(note.date).format('YYYY-MM-DD')}'
+${note.lastmod ? `lastmod: ${note.lastmod}` : ''}
+${tagNames.length > 0 ? `tags: [${tagNames.map((tag) => `'${tag.tagName}'`).join(', ')}]` : ''}
+draft: false
+${note.summary ? `summary: ${note.summary}` : ''}
+layout: ${note.layout}
+---`
+
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const fileContent = buffer.toString('utf-8')
+    const newContent = yamlFrontMatter + fileContent
+
+    await writeFile(`${uploadDir}/${uniqueFilename}`, newContent)
 
     return NextResponse.json(
-      {
-        message: 'File uploaded and note added successfully',
-      },
+      { message: 'File uploaded and note added successfully' },
       { status: 200 }
     )
   } catch (e) {
+    if (e instanceof z.ZodError) {
+      return NextResponse.json({ error: e.errors }, { status: 400 })
+    }
+    console.error(e)
+    return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 })
+  }
+}
+
+export async function DELETE(request) {
+  try {
+    const body = await request.json()
+    const { success, data, error } = validate(noteDeleteSchema, body)
+
+    if (!success) {
+      return NextResponse.json({ error }, { status: 400 })
+    }
+
+    try {
+      await deleteNote(data.noteId)
+      return NextResponse.json({ message: '删除Note成功' }, { status: 200 })
+    } catch (error) {
+      if (error.code === 'P2025') {
+        return NextResponse.json({ error: '无当前笔记' }, { status: 404 })
+      }
+      throw error
+    }
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      return NextResponse.json({ error: e.errors }, { status: 400 })
+    }
+    console.error(e)
+    return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 })
+  }
+}
+
+export async function PUT(request) {
+  try {
+    const body = await request.json()
+    const { success, data, error } = validate(noteUpdateSchema, body)
+    if (!success) {
+      return NextResponse.json({ error }, { status: 400 })
+    }
+
+    const note = await updateNote(data.noteId, {
+      title: data.title,
+      summary: data.summary,
+      layout: data.layout,
+      draft: data.draft,
+      lastmod: new Date(),
+      tags: data?.tags || [],
+    })
+    let tags: Tags[] = []
+    if (data.tags) {
+      tags = await getTagsByIds(data.tags)
+    }
+
+    const yamlFrontMatter = `---
+title: ${note.title}
+date: '${dayjs(note.date).format('YYYY-MM-DD')}'
+lastmod: '${dayjs(note.lastmod).format('YYYY-MM-DD')}'
+${tags.length > 0 ? `tags: [${tags.map((tag) => `'${tag.tagName}'`).join(', ')}]` : ''}
+draft: ${note.draft}
+${note.summary ? `summary: ${note.summary}` : ''}
+layout: ${note.layout}
+---`
+
+    const filePath = join(process.cwd(), 'data', note.filepath)
+    const fileContent = await readFile(filePath, 'utf-8')
+
+    const newContent = fileContent.replace(/---[\s\S]*?---/, yamlFrontMatter)
+
+    await writeFile(filePath, newContent)
+
+    return NextResponse.json({ message: 'Note updated successfully' }, { status: 200 })
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      return NextResponse.json({ error: e.errors }, { status: 400 })
+    }
     console.error(e)
     return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 })
   }

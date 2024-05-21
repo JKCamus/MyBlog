@@ -1,3 +1,2 @@
-## 彩色滚动
-滚动后，位置不准确
-## 接入 notion
+## 常备命令
+npx prisma migrate dev

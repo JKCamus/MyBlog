@@ -2,7 +2,7 @@ import { Note, NoteLayout, PrismaClient, Tags, User } from '@prisma/client'
 
 const globalForPrisma = global
 
-export const prisma = globalForPrisma.prisma || new PrismaClient()
+const prisma = globalForPrisma.prisma || new PrismaClient()
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 import { join } from 'path'
@@ -17,7 +17,6 @@ interface AddNoteInput {
   tags?: string[] // tagId 数组
   filepath: string
 }
-
 
 interface Tag {
   id: string
@@ -263,7 +262,6 @@ export async function getAllTags(): Promise<Tags[]> {
     throw error
   }
 }
-
 
 export async function getTagsByIds(tagIds: string[]): Promise<Tag[]> {
   const tags = await prisma.tags.findMany({

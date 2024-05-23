@@ -1,70 +1,70 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { Table, TableProps, Button, Modal, Form, Input, Space } from 'antd';
-import { createTag, fetchAllTags, modifyTag, removeTag } from './actions';
+'use client'
+import { useState, useEffect } from 'react'
+import { Table, TableProps, Button, Modal, Form, Input, Space, Tag } from 'antd'
+import { createTag, fetchAllTags, modifyTag, removeTag } from './actions'
 
 interface TagsDataType {
-  key: string;
-  tagName: string;
-  tagId: string;
+  key: string
+  tagName: string
+  tagId: string
 }
 
 const TagsPage: React.FC = () => {
-  const [tagsData, setTagsData] = useState<TagsDataType[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentTag, setCurrentTag] = useState<TagsDataType | null>(null);
-  const [form] = Form.useForm();
+  const [tagsData, setTagsData] = useState<TagsDataType[]>([])
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [currentTag, setCurrentTag] = useState<TagsDataType | null>(null)
+  const [form] = Form.useForm()
 
   useEffect(() => {
-    fetchTags();
-  }, []);
+    fetchTags()
+  }, [])
 
   const fetchTags = async () => {
-    const tags = await fetchAllTags();
+    const tags = await fetchAllTags()
     const tagsData = tags.map((item) => ({
       key: item.id,
       tagName: item.tagName,
       tagId: item.id,
-    }));
-    setTagsData(tagsData);
-  };
+    }))
+    setTagsData(tagsData)
+  }
 
   const handleAdd = () => {
-    form.resetFields();
-    setCurrentTag(null);
-    setIsModalVisible(true);
-  };
+    form.resetFields()
+    setCurrentTag(null)
+    setIsModalVisible(true)
+  }
 
   const handleEdit = (record: TagsDataType) => {
-    form.setFieldsValue({ tagName: record.tagName });
-    setCurrentTag(record);
-    setIsModalVisible(true);
-  };
+    form.setFieldsValue({ tagName: record.tagName })
+    setCurrentTag(record)
+    setIsModalVisible(true)
+  }
 
   const handleDelete = async (tagId: string) => {
-    await removeTag({ tagId });
-    fetchTags();
-  };
+    await removeTag({ tagId })
+    fetchTags()
+  }
 
   const handleOk = async () => {
     try {
-      const values = await form.validateFields();
+      const values = await form.validateFields()
       if (currentTag) {
-        await modifyTag({ tagId: currentTag.key, tagName: values.tagName });
+        await modifyTag({ tagId: currentTag.key, tagName: values.tagName })
       } else {
-        await createTag({ tagName: values.tagName });
+        await createTag({ tagName: values.tagName })
       }
-      setIsModalVisible(false);
-      form.resetFields();
-      fetchTags();
+      setIsModalVisible(false)
+      form.resetFields()
+      fetchTags()
     } catch (error) {
-      console.log('Validate Failed:', error);
+      console.log('Validate Failed:', error)
     }
-  };
+  }
 
   const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+    setIsModalVisible(false)
+  }
 
   const columns: TableProps<TagsDataType>['columns'] = [
     {
@@ -74,8 +74,8 @@ const TagsPage: React.FC = () => {
     },
     {
       title: 'TagName',
-      dataIndex: 'tagName',
       key: 'tagName',
+      render: (value: TagsDataType) => <Tag color="volcano">{value.tagName}</Tag>,
     },
     {
       title: 'Action',
@@ -87,11 +87,11 @@ const TagsPage: React.FC = () => {
         </Space>
       ),
     },
-  ];
+  ]
 
   return (
     <div>
-      <Button type="primary" onClick={handleAdd}>
+      <Button className="mb-5" type="primary" onClick={handleAdd}>
         Add Tag
       </Button>
       <Table columns={columns} dataSource={tagsData} />
@@ -111,7 +111,7 @@ const TagsPage: React.FC = () => {
         </Form>
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default TagsPage;
+export default TagsPage

@@ -18,6 +18,11 @@ interface AddNoteInput {
   filepath: string
 }
 
+
+interface Tag {
+  id: string
+  tagName: string
+}
 // user
 // 添加user
 export async function addUser(username, password) {
@@ -259,10 +264,6 @@ export async function getAllTags(): Promise<Tags[]> {
   }
 }
 
-interface Tag {
-  id: string
-  tagName: string
-}
 
 export async function getTagsByIds(tagIds: string[]): Promise<Tag[]> {
   const tags = await prisma.tags.findMany({

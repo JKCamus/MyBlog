@@ -11,6 +11,7 @@ import { Space_Grotesk } from 'next/font/google'
 import { Analytics, AnalyticsConfig } from 'pliny/analytics'
 import { SearchConfig, SearchProvider } from 'pliny/search'
 import { ThemeProviders } from './theme-providers'
+import { AntdRegistry } from '@ant-design/nextjs-registry'
 
 const space_grotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -76,20 +77,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <meta name="referrer" content="no-referrer" />
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       <body className="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
-        <StyledComponentsRegistry>
-          <ThemeProviders>
-            <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
-            <SectionContainer>
-              <div className="flex h-screen flex-col justify-between font-sans">
-                <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
-                  <Header />
-                  <main className="mb-auto">{children}</main>
-                </SearchProvider>
-                <Footer />
-              </div>
-            </SectionContainer>
-          </ThemeProviders>
-        </StyledComponentsRegistry>
+        <AntdRegistry>
+          <StyledComponentsRegistry>
+            <ThemeProviders>
+              <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
+              <SectionContainer>
+                <div className="flex h-screen flex-col justify-between font-sans">
+                  <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
+                    <Header />
+                    <main className="mb-auto">{children}</main>
+                  </SearchProvider>
+                  <Footer />
+                </div>
+              </SectionContainer>
+            </ThemeProviders>
+          </StyledComponentsRegistry>
+        </AntdRegistry>
       </body>
     </html>
   )

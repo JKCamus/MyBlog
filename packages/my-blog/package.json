@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.4",
+    "@ant-design/nextjs-registry": "^1.0.0",
     "@next/bundle-analyzer": "13.5.6",
     "@notionhq/client": "^2.2.15",
     "@prisma/client": "5.13.0",

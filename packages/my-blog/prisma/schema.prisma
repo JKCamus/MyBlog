@@ -9,18 +9,18 @@ datasource db {
 
 model User {
   id       String @id @default(uuid())
-  username String
+  userName String
   password String
-  notes    Note[]
+  blogs    Blog[]
 }
 
 model Tags {
   id      String      @id @default(cuid())
   tagName String
-  notes   TagOnNote[]
+  blogs   TagOnBlog[]
 }
 
-model Note {
+model Blog {
   title        String
   date         DateTime    @default(now()) @map("createdAt")
   lastmod      DateTime?   @map("updatedAt")
@@ -29,25 +29,25 @@ model Note {
   canonicalUrl String?
   draft        Boolean     @default(false)
   images       String[]
-  layout       NoteLayout  @default(PostLayout)
+  layout       BlogLayout  @default(PostLayout)
   summary      String?
   id           Int         @id @default(autoincrement())
   author       User        @relation(fields: [authorId], references: [id])
-  tags         TagOnNote[]
+  tags         TagOnBlog[]
   filepath     String
 }
 
-model TagOnNote {
-  noteId     Int
+model TagOnBlog {
+  blogId     Int
   tagId      String
   assignedAt DateTime @default(now())
-  note       Note     @relation(fields: [noteId], references: [id])
+  blog       Blog     @relation(fields: [blogId], references: [id])
   tag        Tags     @relation(fields: [tagId], references: [id])
 
-  @@id([noteId, tagId])
+  @@id([blogId, tagId])
 }
 
-enum NoteLayout {
+enum BlogLayout {
   PostLayout
   PostBanner
   PostSimple

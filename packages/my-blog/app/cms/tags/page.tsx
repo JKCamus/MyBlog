@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Table, TableProps, Button, Modal, Form, Input, Space, Tag } from 'antd'
-import { createTag, fetchAllTags, modifyTag, removeTag } from './actions'
+import { createTag, getAllTags, modifyTag, removeTag } from '../actions'
 
 interface TagsDataType {
   key: string
@@ -20,7 +20,7 @@ const TagsPage: React.FC = () => {
   }, [])
 
   const fetchTags = async () => {
-    const tags = await fetchAllTags()
+    const tags = await getAllTags()
     const tagsData = tags.map((item) => ({
       key: item.id,
       tagName: item.tagName,

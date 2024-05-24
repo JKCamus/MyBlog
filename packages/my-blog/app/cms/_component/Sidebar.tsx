@@ -4,7 +4,7 @@ const Sidebar = () => {
   const menuItems = [
     { name: 'User', href: '/cms/user' },
     { name: 'Tags', href: '/cms/tags' },
-    { name: 'Notes', href: '/cms/notes' },
+    { name: 'Notes', href: '/cms/blog' },
   ]
 
   return (

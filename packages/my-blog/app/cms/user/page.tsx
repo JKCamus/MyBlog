@@ -3,14 +3,14 @@ import { Table, type TableProps } from 'antd'
 
 interface UserDataType {
   key: string
-  username: string
+  userName: string
 }
 
 const columns: TableProps<UserDataType>['columns'] = [
   {
-    title: 'username',
-    dataIndex: 'username',
-    key: 'username',
+    title: 'userName',
+    dataIndex: 'userName',
+    key: 'userName',
   },
 ]
 
@@ -18,8 +18,8 @@ const UserPage: React.FC = async () => {
   const user = await getAllUsers()
 
   const userData: UserDataType[] = user.map((item) => ({
-    key: item.username,
-    username: item.username,
+    key: item.userName,
+    userName: item.userName,
   }))
 
   return <Table columns={columns} dataSource={userData} />

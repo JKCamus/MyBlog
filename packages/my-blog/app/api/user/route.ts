@@ -5,13 +5,13 @@ import { z } from 'zod'
 
 // 定义 Zod schema
 const userSchema = z.object({
-  username: z.string().min(1, { message: '用户名不能为空' }),
+  userName: z.string().min(1, { message: '用户名不能为空' }),
   password: z.string().min(1, { message: '密码不能为空' }),
 })
 
 const userUpdateSchema = z.object({
   userId: z.string().min(1, { message: '用户ID不能为空' }),
-  username: z.string().min(1, { message: '用户名不能为空' }),
+  userName: z.string().min(1, { message: '用户名不能为空' }),
   password: z.string().min(1, { message: '密码不能为空' }),
 })
 
@@ -28,7 +28,7 @@ export async function POST(request) {
     if (!success) {
       return NextResponse.json({ error }, { status: 400 })
     }
-    await addUser(data.username, data.password)
+    await addUser(data.userName, data.password)
     return NextResponse.json({ message: '新建用户成功' }, { status: 200 })
   } catch (error) {
     console.log('error', error)
@@ -47,7 +47,7 @@ export async function PUT(request) {
     }
 
     try {
-      await updateUser(data.userId, data.username, data.password)
+      await updateUser(data.userId, data.userName, data.password)
       return NextResponse.json({ message: '更新用户成功' }, { status: 200 })
     } catch (error) {
       if (error.code === 'P2025') {

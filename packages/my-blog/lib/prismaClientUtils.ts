@@ -1,4 +1,4 @@
-import { Note, NoteLayout, PrismaClient, Tags, User } from '@prisma/client'
+import { Blog, BlogLayout, PrismaClient, TagOnBlog, Tags, User } from '@prisma/client'
 
 const globalForPrisma = global
 
@@ -6,10 +6,9 @@ const prisma = globalForPrisma.prisma || new PrismaClient()
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 import { join } from 'path'
-
 import { unlink } from 'fs/promises'
 
-interface AddNoteInput {
+interface AddBlogInput {
   title: string
   summary?: string
   authorId: string
@@ -18,26 +17,22 @@ interface AddNoteInput {
   filepath: string
 }
 
-interface Tag {
-  id: string
-  tagName: string
-}
 // user
-// 添加user
-export async function addUser(username, password) {
+// 添加 user
+export async function addUser(userName, password) {
   const user = await prisma.user.create({
     data: {
-      username,
+      userName,
       password,
-      notes: {
+      blogs: {
         create: [],
       },
     },
   })
 
   return {
-    name: username,
-    username,
+    name: userName,
+    userName,
     userId: user.id,
   }
 }
@@ -47,13 +42,13 @@ export async function getUserById(userId: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: { notes: true },
+      include: { blogs: true },
     })
     if (!user) {
       return null
     }
     return {
-      username: user.username,
+      userName: user.userName,
       userId: user.id,
     }
   } catch (error) {
@@ -75,13 +70,13 @@ export async function getAllUsers(): Promise<User[]> {
 // 更新 user
 export async function updateUser(
   userId: string,
-  username: string,
+  userName: string,
   password: string
 ): Promise<User> {
   try {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { username, password },
+      data: { userName, password },
     })
     return updatedUser
   } catch (error) {
@@ -90,9 +85,9 @@ export async function updateUser(
   }
 }
 
-// 删除单条 User（同时删除对应用户的笔记）
+// 删除单条 User（同时删除对应用户的博客）
 export async function deleteUser(userId: string): Promise<User> {
-  await prisma.note.deleteMany({
+  await prisma.blog.deleteMany({
     where: { authorId: userId },
   })
   const deletedUser = await prisma.user.delete({
@@ -101,24 +96,24 @@ export async function deleteUser(userId: string): Promise<User> {
   return deletedUser
 }
 
-// note
-//  添加 note
-export async function addNote({
+// blog
+//  添加 blog
+export async function addBlog({
   title,
   summary,
   authorId,
   layout = 'PostLayout',
   tags = [],
   filepath,
-}: AddNoteInput): Promise<Note> {
+}: AddBlogInput): Promise<Blog> {
   try {
-    // 创建笔记
-    const newNote = await prisma.note.create({
+    // 创建博客
+    const newBlog = await prisma.blog.create({
       data: {
         title,
         summary,
         authorId,
-        layout: layout as NoteLayout,
+        layout: layout as BlogLayout,
         filepath,
         tags: {
           create: tags.map((tagId) => ({
@@ -133,60 +128,62 @@ export async function addNote({
       },
     })
 
-    return newNote
+    return newBlog
   } catch (error) {
-    console.error('Error adding note:', error)
+    console.error('Error adding blog:', error)
     throw error
   }
 }
 
-export async function getAllNotes(): Promise<Note[]> {
+export async function getAllBlogs(): Promise<(Blog & {
+  tags: TagOnBlog[]
+})[]> {
   try {
-    const notes = await prisma.note.findMany({
+    const blogs = await prisma.blog.findMany({
       include: {
         tags: true,
       },
     })
-    return notes
+    return blogs
   } catch (error) {
-    console.error('Error retrieving notes:', error)
+    console.error('Error retrieving blogs:', error)
     throw error
   }
 }
 
-export async function getNoteById(noteId: number): Promise<Note | null> {
+export async function getBlogById(blogId: number): Promise<Blog | null> {
   try {
-    const note = await prisma.note.findUnique({
-      where: { id: noteId },
+    const blog = await prisma.blog.findUnique({
+      where: { id: blogId },
       include: {
         tags: true,
       },
     })
-    return note
+    return blog
   } catch (error) {
-    console.error('Error retrieving note:', error)
+    console.error('Error retrieving blog:', error)
     throw error
   }
 }
 
-// 更新 Note（更新信息，包含关联的标签）
-export async function updateNote(
-  noteId: number,
-  noteData: Partial<Note> & { tags: string[] }
-): Promise<Note> {
-  const updatedNote = await prisma.$transaction(async (prisma) => {
-    // 删除现有的 TagOnNote 关系
-    await prisma.tagOnNote.deleteMany({
-      where: { noteId: noteId },
+// 更新 Blog（更新信息，包含关联的标签）
+export async function updateBlog(
+  blogId: number,
+  blogData: Partial<Blog> & { tags: string[] }
+): Promise<Blog> {
+  const updatedBlog = await prisma.$transaction(async (prisma) => {
+    // 删除现有的 TagOnBlog 关系
+    await prisma.tagOnBlog.deleteMany({
+      where: { blogId: blogId },
     })
 
-    // 更新 Note 和重新创建 TagOnNote 关系
-    const note = await prisma.note.update({
-      where: { id: noteId },
+    // 更新 Blog 和重新创建 TagOnBlog 关系
+    const blog = await prisma.blog.update({
+      where: { id: blogId },
       data: {
-        ...noteData,
+        ...blogData,
         tags: {
-          create: noteData.tags.map((tagId) => ({
+          create: blogData.tags.map((tagId) => ({
             tag: {
               connect: { id: tagId },
             },
@@ -196,46 +193,46 @@ export async function updateNote(
       include: { tags: true },
     })
 
-    return note
+    return blog
   })
 
-  return updatedNote
+  return updatedBlog
 }
 
-// 删除笔记，并关联 user 和 tags
-export async function deleteNote(noteId: number): Promise<void> {
+// 删除博客，并关联 user 和 tags
+export async function deleteBlog(blogId: number): Promise<void> {
   try {
     // 启动一个事务
     await prisma.$transaction(async (prisma) => {
-      // 获取要删除的 Note 及其文件路径
-      const noteToDelete = await prisma.note.findUnique({
-        where: { id: noteId },
+      // 获取要删除的 Blog 及其文件路径
+      const blogToDelete = await prisma.blog.findUnique({
+        where: { id: blogId },
         include: {
           tags: true,
           author: true,
         },
       })
 
-      if (!noteToDelete) {
-        throw new Error(`Note with ID ${noteId} not found`)
+      if (!blogToDelete) {
+        throw new Error(`Blog with ID ${blogId} not found`)
       }
 
-      // 删除 TagOnNote 中的关联记录
-      await prisma.tagOnNote.deleteMany({
-        where: { noteId: noteId },
+      // 删除 TagOnBlog 中的关联记录
+      await prisma.tagOnBlog.deleteMany({
+        where: { blogId: blogId },
       })
 
-      // 删除 Note
-      await prisma.note.delete({
-        where: { id: noteId },
+      // 删除 Blog
+      await prisma.blog.delete({
+        where: { id: blogId },
       })
 
       // 删除文件
-      const filePath = join(process.cwd(), 'data', noteToDelete.filepath)
+      const filePath = join(process.cwd(), 'data', blogToDelete.filepath)
       await unlink(filePath)
     })
   } catch (error) {
-    console.error('Error deleting note:', error)
+    console.error('Error deleting blog:', error)
     throw error
   }
 }
@@ -263,7 +260,7 @@ export async function getAllTags(): Promise<Tags[]> {
   }
 }
 
-export async function getTagsByIds(tagIds: string[]): Promise<Tag[]> {
+export async function getTagsByIds(tagIds: string[]): Promise<Tags[]> {
   const tags = await prisma.tags.findMany({
     where: { id: { in: tagIds } },
     select: { id: true, tagName: true },
@@ -284,9 +281,9 @@ export async function updateTag(tagId: string, tagName: string): Promise<Tags> {
   }
 }
 
-// 删除单条 Tag（需要更新对应笔记包含的标签信息）
+// 删除单条 Tag（需要更新对应博客包含的标签信息）
 export async function deleteTag(tagId: string): Promise<Tags> {
-  await prisma.tagOnNote.deleteMany({
+  await prisma.tagOnBlog.deleteMany({
     where: { tagId },
   })
   const deletedTag = await prisma.tags.delete({

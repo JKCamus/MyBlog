@@ -1,9 +1,22 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Table, TableProps, Button, Modal, Form, Input, Space, Tag, Select } from 'antd'
+import {
+  Table,
+  TableProps,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  Tag,
+  Select,
+  Upload,
+  message,
+} from 'antd'
 import { createBlog, modifyBlog, removeBlog, fetchAllBlogs, getAllTags } from '../actions'
 import { BlogLayout, Tags } from '@prisma/client'
+import { UploadOutlined } from '@ant-design/icons'
 
 const { TextArea } = Input
 
@@ -16,11 +29,7 @@ interface BlogDataType {
   tags: Tags[]
 }
 
-const LayoutOptions = [
-  { value: BlogLayout.PostLayout, label: 'PostLayout' },
-  { value: BlogLayout.PostBanner, label: 'PostBanner' },
-  { value: BlogLayout.PostSimple, label: 'PostSimple' },
-]
+const LayoutOptions = Object.values(BlogLayout).map((layout) => ({ value: layout, label: layout }))
 
 interface TagsOptions {
   value: string
@@ -35,22 +44,31 @@ const BlogsPage: React.FC = () => {
   const [form] = Form.useForm()
 
   useEffect(() => {
-    fetchBlogs()
-    fetchTags()
+    fetchInitData()
   }, [])
 
+  const fetchInitData = async () => {
+    await Promise.all([fetchBlogs(), fetchTags()])
+  }
+
   const fetchBlogs = async () => {
-    const blogs = await fetchAllBlogs()
-    setBlogsData(blogs)
+    try {
+      const blogs = await fetchAllBlogs()
+      setBlogsData(blogs)
+    } catch (error) {
+      console.error('Error fetching blogs:', error)
+      message.error('Failed to fetch blogs.')
+    }
   }
 
   const fetchTags = async () => {
-    const tags = await getAllTags()
-    const options = tags.map((tag) => ({
-      value: tag.id,
-      label: tag.tagName,
-    }))
-    setTagsOptions(options)
+    try {
+      const tags = await getAllTags()
+      setTagsOptions(tags?.map((tag) => ({ value: tag?.id, label: tag?.tagName })))
+    } catch (error) {
+      console.error('Error fetching tags:', error)
+      message.error('Failed to fetch tags.')
+    }
   }
 
   const handleAdd = () => {
@@ -60,7 +78,6 @@ const BlogsPage: React.FC = () => {
   }
 
   const handleEdit = (record: BlogDataType) => {
-    console.log('record', record)
     form.setFieldsValue({
       title: record.title,
       summary: record.summary,
@@ -73,42 +90,57 @@ const BlogsPage: React.FC = () => {
   }
 
   const handleDelete = async (blogId: number) => {
-    await removeBlog({ blogId: Number(blogId) })
-    fetchBlogs()
+    try {
+      await removeBlog({ blogId: blogId })
+      fetchBlogs()
+      message.success('Delete blog successfully')
+    } catch (error) {
+      message.error('Delete blog fail')
+    }
+  }
+
+  const fileChange = (info) => {
+    const { status } = info.file
+    if (status === 'error') {
+      message.error(`${info.file.name} file add failed.`)
+    }
   }
 
   const handleOk = async () => {
     try {
-      const values = await form.validateFields()
-      console.log('values', values)
-      console.log('currentBlog.key', currentBlog)
-
-      const data = {
-        title: values?.title,
-        summary: values?.summary,
-        userName: values?.userName,
-        layout: values?.layout,
-        tags: values?.tags,
-      }
-
+      const { file, tags, summary, title, layout } = await form.validateFields()
+      // todo jwt get user
+      const authorId = 'e0dd82e4-6a23-4b9f-a9a5-4f3b1509f3f4'
       if (currentBlog) {
-        await modifyBlog(currentBlog.key, data)
+        await modifyBlog(currentBlog.key, {
+          title,
+          summary,
+          layout,
+          tags,
+        })
       } else {
-        await createBlog(values)
+        const formData = new FormData()
+        formData.append('title', title)
+        summary && formData.append('summary', summary)
+        formData.append('authorId', authorId)
+        formData.append('layout', layout || BlogLayout.PostLayout)
+        tags && formData.append('tags', tags)
+        file[0]?.originFileObj && formData.append('file', file[0]?.originFileObj)
+        await createBlog(formData)
       }
       setIsModalVisible(false)
       form.resetFields()
       fetchBlogs()
+      message.success('File uploaded and blog added successfully')
     } catch (error) {
       console.log(error)
+      message.error('Add blog fail')
     }
   }
 
   const handleCancel = () => {
     setIsModalVisible(false)
   }
-
-  const onLayoutChange = (value) => {}
 
   const columns: TableProps<BlogDataType>['columns'] = [
     {
@@ -153,10 +185,16 @@ const BlogsPage: React.FC = () => {
       ),
     },
   ]
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e
+    }
+    return e?.fileList
+  }
 
   return (
     <div>
-      <Button type="primary" onClick={handleAdd}>
+      <Button className="mb-5" type="primary" onClick={handleAdd}>
         Add Blog
       </Button>
       <Table columns={columns} dataSource={blogsData} />
@@ -174,34 +212,33 @@ const BlogsPage: React.FC = () => {
           >
             <Input placeholder="Title" />
           </Form.Item>
-          <Form.Item
-            name="summary"
-            label="Summary"
-            rules={[{ required: false, message: 'Please input the summary!' }]}
-          >
+          <Form.Item name="summary" label="Summary">
             <TextArea placeholder="Summary" rows={4} />
           </Form.Item>
-          <Form.Item
-            name="layout"
-            label="Layout"
-            rules={[{ required: false, message: 'Please input the layout!' }]}
-            initialValue={BlogLayout.PostLayout}
-          >
-            <Select style={{ width: 120 }} onChange={onLayoutChange} options={LayoutOptions} />
+          <Form.Item name="layout" label="Layout" initialValue={BlogLayout.PostLayout}>
+            <Select style={{ width: 120 }} options={LayoutOptions} />
           </Form.Item>
-          <Form.Item
-            label="Tags"
-            name="tags"
-            rules={[{ required: false, message: 'Please input the tags!' }]}
-          >
+          <Form.Item label="Tags" name="tags">
             <Select
               mode="multiple"
               placeholder="Please select"
-              onChange={onLayoutChange}
               style={{ width: '100%' }}
               options={tagsOptions}
             />
           </Form.Item>
+          {!currentBlog && (
+            <Form.Item
+              label="Upload"
+              name="file"
+              valuePropName="fileList"
+              getValueFromEvent={normFile}
+              rules={[{ required: true, message: 'Please upload file!' }]}
+            >
+              <Upload onChange={fileChange} maxCount={1} accept=".md,.mdx">
+                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              </Upload>
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </div>

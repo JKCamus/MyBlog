@@ -52,7 +52,7 @@ const tagDeleteSchema = z.object({
     .min(1, { message: 'Tag ID cannot be empty' }),
 })
 
-const blogSchema = z.object({
+const blogAddSchema = z.object({
   title: z
     .string({
       required_error: 'Title 不能为空',
@@ -113,8 +113,13 @@ export async function createTag(data: { tagName: string }) {
   if (!success) {
     throw new Error(error)
   }
-  const newTag = await addTag(parsed.tagName)
-  return newTag
+  try {
+    const newTag = await addTag(parsed.tagName)
+    return newTag
+  } catch (error) {
+    console.error('Error creating tag:', error)
+    throw new Error('Failed to create tag')
+  }
 }
 
 export async function modifyTag(data: { tagId: string; tagName: string }) {
@@ -122,8 +127,13 @@ export async function modifyTag(data: { tagId: string; tagName: string }) {
   if (!success) {
     throw new Error(error)
   }
-  const updatedTag = await updateTag(parsed.tagId, parsed.tagName)
-  return updatedTag
+  try {
+    const updatedTag = await updateTag(parsed.tagId, parsed.tagName)
+    return updatedTag
+  } catch (error) {
+    console.error('Error updating tag:', error)
+    throw new Error('Failed to update tag')
+  }
 }
 
 export async function removeTag(data: { tagId: string }) {
@@ -131,19 +141,86 @@ export async function removeTag(data: { tagId: string }) {
   if (!success) {
     throw new Error(error)
   }
-  const deletedTag = await deleteTag(parsed.tagId)
-  return deletedTag
+  try {
+    const deletedTag = await deleteTag(parsed.tagId)
+    return deletedTag
+  } catch (error) {
+    console.error('Error deleting tag:', error)
+    throw new Error('Failed to delete tag')
+  }
 }
 
 export { getAllTags }
 
-export async function createBlog(data: any) {
-  const { success, data: parsed, error } = validate(blogSchema, data)
-  if (!success) {
+export async function createBlog(formData) {
+  try {
+    const file = formData.get('file')
+    const fields = {
+      title: formData.get('title'),
+      summary: formData.get('summary') || undefined,
+      authorId: formData.get('authorId'),
+      layout: formData.get('layout') || undefined,
+      tags: formData.get('tags') ? formData.get('tags').split(',') : [],
+      file,
+    }
+    const { success, data, error } = validate(blogAddSchema, fields)
+    if (!success) {
+      throw new Error(error)
+    }
+
+    if (!file || !(file instanceof File)) {
+      throw new Error('File is required.')
+    }
+    const allowedExtensions = ['md', 'mdx']
+    const fileExtension = file.name.split('.').pop()?.toLowerCase()
+    if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+      throw new Error('Invalid file type. Only .md and .mdx files are allowed.')
+    }
+    const relativeUploadDir = `/blog`
+    const uploadDir = join(process.cwd(), 'data', relativeUploadDir)
+
+    try {
+      await stat(uploadDir)
+    } catch (e) {
+      const error = e as NodeJS.ErrnoException
+      if (error?.code === 'ENOENT') {
+        await mkdir(uploadDir, { recursive: true })
+      } else {
+        throw new Error('mkdir error')
+      }
+    }
+
+    const uniqueSuffix = `${Math.random().toString(36).slice(-18)}`
+
+    const uniqueFilename = `${uniqueSuffix}.mdx`
+
+    const blog = await addBlog({
+      title: data.title,
+      summary: data.summary,
+      authorId: data.authorId,
+      layout: data.layout,
+      tags: data.tags,
+      filepath: `${relativeUploadDir}/${uniqueFilename}`,
+    })
+    const tagNames = await getTagsByIds(data.tags)
+
+    const yamlFrontMatter = `---
+title: '${blog.title}'
+date: '${dayjs(blog.date).format('YYYY-MM-DD')}'
+${tagNames.length > 0 ? `tags: [${tagNames.map((tag) => `'${tag.tagName}'`).join(', ')}]` : ''}
+draft: false
+${blog.summary ? `summary: '${blog.summary}'` : ''}
+layout: ${blog.layout}
+---\n`
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const fileContent = buffer.toString('utf-8')
+    const newContent = yamlFrontMatter + fileContent
+
+    await writeFile(`${uploadDir}/${uniqueFilename}`, newContent)
+  } catch (error) {
+    console.log('error', error)
     throw new Error(error)
   }
-  const newBlog = await addBlog(parsed)
-  return newBlog
 }
 
 export async function modifyBlog(
@@ -182,12 +259,16 @@ layout: ${updatedBlog.layout}
 }
 
 export async function removeBlog(data: { blogId: number }) {
-  const { success, data: parsed, error } = validate(blogDeleteSchema, data)
-  if (!success) {
-    throw new Error(error)
+  try {
+    const { success, data: parsed, error } = validate(blogDeleteSchema, data)
+    if (!success) {
+      throw new Error(error)
+    }
+    await deleteBlog(parsed.blogId)
+  } catch (error) {
+    console.error('Error deleting blog:', error)
+    throw new Error('Failed to delete blog')
   }
-  await deleteBlog(parsed.blogId)
-  return
 }
 
 export async function fetchAllBlogs() {
@@ -214,6 +295,6 @@ export async function fetchAllBlogs() {
     return blogsData
   } catch (error) {
     console.error('Error fetching all blogs:', error)
-    throw error
+    throw new Error('Failed to fetch blogs.')
   }
 }

@@ -61,11 +61,12 @@ module.exports = () => {
     reactStrictMode: true,
     compiler: {
       styledComponents: {
-        ssr:true,
-        displayName:true,
-        fileName:true
+        ssr: true,
+        displayName: true,
+        fileName: true,
       },
     },
+
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
     eslint: {
       dirs: ['app', 'components', 'layouts', 'scripts'],
@@ -78,6 +79,15 @@ module.exports = () => {
         {
           source: '/(.*)',
           headers: securityHeaders,
+        },
+      ]
+    },
+    async redirects() {
+      return [
+        {
+          source: '/cms',
+          destination: '/cms/blog',
+          permanent: true,
         },
       ]
     },

@@ -1,6 +1,6 @@
 import { addBlog, deleteBlog, getAllBlogs, getTagsByIds, updateBlog } from '@/lib/prismaClientUtils'
 import validate from '@/lib/validate'
-import { Tags } from '@prisma/client'
+import { BlogLayout, Tags } from '@prisma/client'
 import dayjs from 'dayjs'
 import { mkdir, stat, writeFile, readFile } from 'fs/promises'
 import { NextApiRequest } from 'next'
@@ -16,8 +16,8 @@ const blogAddSchema = z.object({
   title: z.string().min(1, { message: 'Title 不能为空' }),
   summary: z.string().optional(), // summary 不是必填项
   authorId: z.string().min(1, { message: 'AuthorId 不能为空' }),
-  layout: z.string().optional(), // layout 不是必填项
-  tags: z.array(z.string()).optional(), // tagId 数组 不是必填项
+  layout: z.nativeEnum(BlogLayout).optional(),
+  tags: z.array(z.string()), // tagId 数组 不是必填项
   file: z.any(), // 文件类型校验单独进行
 })
 
@@ -29,8 +29,8 @@ const blogUpdateSchema = z.object({
   blogId: z.number().min(1, { message: 'Blog ID 不能为空' }),
   title: z.string().optional(),
   summary: z.string().optional(),
-  layout: z.string().optional(),
-  tags: z.array(z.string().min(1, { message: 'Tag ID 不能为空' })).optional(),
+  layout: z.nativeEnum(BlogLayout).optional(),
+  tags: z.array(z.string().min(1, { message: 'Tag ID 不能为空' })),
   draft: z.boolean().optional(),
 })
 
@@ -44,7 +44,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request:NextApiRequestWithFormData) {
+export async function POST(request: NextApiRequestWithFormData) {
   try {
     const formData = await request.formData()
     const file = formData.get('file')

@@ -5,12 +5,14 @@ import { Table, TableProps, Button, Modal, Form, Input, Space, Tag, Select } fro
 import { createBlog, modifyBlog, removeBlog, fetchAllBlogs, getAllTags } from '../actions'
 import { BlogLayout, Tags } from '@prisma/client'
 
+const { TextArea } = Input
+
 interface BlogDataType {
   key: number
   title: string
   summary?: string
   userName: string
-  layout: string
+  layout: BlogLayout
   tags: Tags[]
 }
 
@@ -58,12 +60,13 @@ const BlogsPage: React.FC = () => {
   }
 
   const handleEdit = (record: BlogDataType) => {
+    console.log('record', record)
     form.setFieldsValue({
       title: record.title,
       summary: record.summary,
       userName: record.userName,
       layout: record.layout,
-      tags: record.tags.map(tag => tag.id),
+      tags: record.tags.map((tag) => tag.id),
     })
     setCurrentBlog(record)
     setIsModalVisible(true)
@@ -77,20 +80,27 @@ const BlogsPage: React.FC = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields()
+      console.log('values', values)
+      console.log('currentBlog.key', currentBlog)
+
       const data = {
-        ...values,
-        tags: values.tags.split(','),
+        title: values?.title,
+        summary: values?.summary,
+        userName: values?.userName,
+        layout: values?.layout,
+        tags: values?.tags,
       }
+
       if (currentBlog) {
-        await modifyBlog({ blogId: Number(currentBlog.key), ...data })
+        await modifyBlog(currentBlog.key, data)
       } else {
-        await createBlog(data)
+        await createBlog(values)
       }
       setIsModalVisible(false)
       form.resetFields()
       fetchBlogs()
     } catch (error) {
-      console.log('Validate Failed:', error)
+      console.log(error)
     }
   }
 
@@ -98,7 +108,7 @@ const BlogsPage: React.FC = () => {
     setIsModalVisible(false)
   }
 
-  const onLayoutChange = (value) => { }
+  const onLayoutChange = (value) => {}
 
   const columns: TableProps<BlogDataType>['columns'] = [
     {
@@ -169,7 +179,7 @@ const BlogsPage: React.FC = () => {
             label="Summary"
             rules={[{ required: false, message: 'Please input the summary!' }]}
           >
-            <Input placeholder="Summary" />
+            <TextArea placeholder="Summary" rows={4} />
           </Form.Item>
           <Form.Item
             name="layout"
@@ -177,11 +187,7 @@ const BlogsPage: React.FC = () => {
             rules={[{ required: false, message: 'Please input the layout!' }]}
             initialValue={BlogLayout.PostLayout}
           >
-            <Select
-              style={{ width: 120 }}
-              onChange={onLayoutChange}
-              options={LayoutOptions}
-            />
+            <Select style={{ width: 120 }} onChange={onLayoutChange} options={LayoutOptions} />
           </Form.Item>
           <Form.Item
             label="Tags"

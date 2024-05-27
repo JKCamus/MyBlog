@@ -1,11 +1,30 @@
-import { z } from "zod"
+import { ZodSchema, z, ZodError } from 'zod'
 
-const validate = (schema, body) => {
+interface ValidationSuccess<T> {
+  success: true
+  data: T
+  error: undefined
+}
+
+interface ValidationError {
+  success: false
+  error: string
+  data: undefined
+}
+
+type ValidationResult<T> = ValidationSuccess<T> | ValidationError
+
+function validate<T>(schema: ZodSchema<T>, body: unknown): ValidationResult<T> {
   try {
-    return { success: true, data: schema.parse(body) }
+    const data = schema.parse(body)
+    return { success: true, data, error: undefined }
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors.map((e) => e.message).join(', ') }
+    if (error instanceof ZodError) {
+      return {
+        success: false,
+        error: error.errors.map((e) => e.message).join(', '),
+        data: undefined,
+      }
     }
     throw error
   }

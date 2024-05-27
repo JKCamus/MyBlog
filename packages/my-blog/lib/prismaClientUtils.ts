@@ -173,6 +173,7 @@ export async function updateBlog(
 ): Promise<Blog> {
   const updatedBlog = await prisma.$transaction(async (prisma) => {
     // 删除现有的 TagOnBlog 关系
+    console.log('blogData',blogData )
     await prisma.tagOnBlog.deleteMany({
       where: { blogId: blogId },
     })

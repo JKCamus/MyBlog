@@ -82,15 +82,15 @@ module.exports = () => {
         },
       ]
     },
-    async redirects() {
-      return [
-        {
-          source: '/cms',
-          destination: '/cms/blog',
-          permanent: true,
-        },
-      ]
-    },
+    // async redirects() {
+    //   return [
+    //     {
+    //       source: '/cms',
+    //       destination: '/cms/blog',
+    //       permanent: true,
+    //     },
+    //   ]
+    // },
     webpack: (config, options) => {
       config.module.rules.push({
         test: /\.svg$/,

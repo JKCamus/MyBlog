@@ -17,7 +17,6 @@ const options: NextAuthOptions = {
   secret: process.env.AUTH_SECRET,
 };
 
-// 导出 NextAuth 配置
 export const { handlers, auth, signIn, signOut } = NextAuth(options);
 
 export { handlers as GET, handlers as POST };

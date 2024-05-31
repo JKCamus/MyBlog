@@ -1,18 +1,18 @@
 import React from 'react'
-import { signIn, signOut, auth } from "@/lib/auth"
+import { signIn, signOut, auth } from '@/lib/auth'
+import { Button } from 'antd'
 
-function SignIn({
-  provider,
-  ...props
-}) {
+function SignIn({ ...props }) {
   return (
     <form
       action={async () => {
-        "use server"
-        await signIn(provider)
+        'use server'
+        await signIn('github')
       }}
     >
-      <button {...props}>Sign In</button>
+      <Button type="primary" htmlType="submit" {...props}>
+        Sign In
+      </Button>
     </form>
   )
 }
@@ -21,29 +21,32 @@ function SignOut(props) {
   return (
     <form
       action={async () => {
-        "use server"
+        'use server'
         await signOut()
       }}
     >
-      <button {...props}>
+      <Button htmlType="submit" {...props}>
         Sign Out
-      </button>
+      </Button>
     </form>
   )
 }
 
-const CMS: React.FC = async() => {
+const CMS: React.FC = async () => {
   const session = await auth()
 
-  return <div>      {
-    session?.user
-      ? <span style={{ display: "flex", "alignItems": "center" }}>{session?.user.name}<SignOut /></span>
-      : <SignIn />
-  }</div>
+  return (
+    <div>
+      {session?.user ? (
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+          {session?.user.name}
+          <SignOut />
+        </span>
+      ) : (
+        <SignIn />
+      )}
+    </div>
+  )
 }
 
 export default CMS
-
-
-
-

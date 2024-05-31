@@ -17,6 +17,7 @@ const userUpdateSchema = z.object({
 
 const userDeleteSchema = z.object({
   userId: z.string().min(1, { message: '用户ID不能为空' }),
+  accountId:z.string().min(1, { message: 'account ID不能为空' })
 })
 
 // 处理 POST 请求（新增 User）

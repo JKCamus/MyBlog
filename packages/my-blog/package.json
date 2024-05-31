@@ -8,11 +8,14 @@
     "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
-    "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts"
+    "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
+    "orm:migrate": "npx prisma migrate dev",
+    "orm:studio": "npx prisma studio"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.4",
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@next-auth/prisma-adapter": "^1.0.7",
     "@next/bundle-analyzer": "13.5.6",
     "@notionhq/client": "^2.2.15",
     "@prisma/client": "5.13.0",
@@ -32,7 +35,7 @@
     "image-size": "1.0.0",
     "mime": "^4.0.3",
     "next": "^14.2.3",
-    "next-auth": "5.0.0-beta.4",
+    "next-auth": "5.0.0-beta.18",
     "next-contentlayer": "0.3.4",
     "next-themes": "^0.2.1",
     "pliny": "^0.2.1",

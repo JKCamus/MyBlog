@@ -2,7 +2,8 @@ import { Blog, BlogLayout, PrismaClient, TagOnBlog, Tags, User } from '@prisma/c
 
 const globalForPrisma = global
 
-const prisma = globalForPrisma.prisma || new PrismaClient()
+export const prisma = globalForPrisma.prisma || new PrismaClient()
+
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 import { join } from 'path'
@@ -90,8 +91,20 @@ export async function deleteUser(userId: string): Promise<User> {
   await prisma.blog.deleteMany({
     where: { authorId: userId },
   })
+  await prisma.session.deleteMany({
+    where: {
+      userId: userId,
+    },
+  });
+  await prisma.account.deleteMany({
+    where: {
+      userId: userId,
+    },
+  });
+
   const deletedUser = await prisma.user.delete({
-    where: { id: userId },
+    where: { id: userId
+     },
   })
   return deletedUser
 }

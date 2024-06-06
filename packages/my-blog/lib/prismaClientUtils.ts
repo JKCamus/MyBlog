@@ -1,9 +1,9 @@
 import { Blog, BlogLayout, PrismaClient, TagOnBlog, Tags, User } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 
 const globalForPrisma = global
 
 export const prisma = globalForPrisma.prisma || new PrismaClient()
-
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 import { join } from 'path'
@@ -20,21 +20,33 @@ interface AddBlogInput {
 
 // user
 // 添加 user
-export async function addUser(userName, password) {
-  const user = await prisma.user.create({
-    data: {
-      userName,
-      password,
-      blogs: {
-        create: [],
+export async function addUser( email: string, password: string) {
+  try {
+    const existUser = await prisma.user.findUnique({
+      where: {
+        email: email,
       },
-    },
-  })
+    })
+    if (existUser) {
+      return {
+        error: '当前邮箱已存在！',
+      }
+    }
+    // 给密码加盐，密码明文存数据库不安全
+    const hashedPassword = await bcrypt.hash(password, 10)
 
-  return {
-    name: userName,
-    userName,
-    userId: user.id,
+    const user = await prisma.user.create({
+      data: {
+        name:email,
+        email,
+        password: hashedPassword,
+      },
+    })
+
+    return
+  } catch (error) {
+    console.log('error', error)
+    throw new Error(error)
   }
 }
 
@@ -95,16 +107,15 @@ export async function deleteUser(userId: string): Promise<User> {
     where: {
       userId: userId,
     },
-  });
+  })
   await prisma.account.deleteMany({
     where: {
       userId: userId,
     },
-  });
+  })
 
   const deletedUser = await prisma.user.delete({
-    where: { id: userId
-     },
+    where: { id: userId },
   })
   return deletedUser
 }
@@ -148,9 +159,11 @@ export async function addBlog({
   }
 }
 
-export async function getAllBlogs(): Promise<(Blog & {
-  tags: TagOnBlog[]
-})[]> {
+export async function getAllBlogs(): Promise<
+  (Blog & {
+    tags: TagOnBlog[]
+  })[]
+> {
   try {
     const blogs = await prisma.blog.findMany({
       include: {
@@ -186,7 +199,7 @@ export async function updateBlog(
 ): Promise<Blog> {
   const updatedBlog = await prisma.$transaction(async (prisma) => {
     // 删除现有的 TagOnBlog 关系
-    console.log('blogData',blogData )
+    console.log('blogData', blogData)
     await prisma.tagOnBlog.deleteMany({
       where: { blogId: blogId },
     })

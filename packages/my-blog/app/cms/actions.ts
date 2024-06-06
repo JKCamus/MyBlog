@@ -12,12 +12,35 @@ import {
   getAllBlogs,
   getUserById,
   getTagsByIds,
+  addUser,
 } from '@/lib/prismaClientUtils'
 import validate from '@/lib/validate'
 import { BlogLayout, Tags } from '@prisma/client'
 import dayjs from 'dayjs'
 import { join } from 'path'
 import { mkdir, stat, writeFile, readFile } from 'fs/promises'
+import { signIn } from '@/lib/auth'
+
+
+const userSchema = z.object({
+  email: z
+    .string({
+      required_error: 'email 不能为空',
+      invalid_type_error: 'email must be a string',
+    })
+    .min(1, { message: 'email can not be empty' }),
+  password: z
+    .string({
+      required_error: 'password 不能为空',
+      invalid_type_error: 'password must be a string',
+    })
+    .min(1, { message: 'password can not be empty' }),
+})
+
+interface UserInput {
+  email: string
+  password: string
+}
 
 const tagSchema = z.object({
   tagName: z
@@ -107,6 +130,40 @@ const blogDeleteSchema = z.object({
     })
     .min(1, { message: 'Blog ID 不能为空' }),
 })
+
+
+
+
+export async function registerUser(data: UserInput) {
+  const { success, data: parsed, error } = validate(userSchema, data)
+  if (!success) {
+    throw new Error(error)
+  }
+  try {
+    const { email, password } = parsed
+    const result = await addUser(email, password)
+    return result
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
+export async function loginUser(data: UserInput) {
+  try {
+    const { success, data: parsed, error } = validate(userSchema, data)
+    if (!success) {
+      throw new Error(error)
+    }
+    const result = await signIn('credentials',{
+      ...parsed,
+      redirectTo:'/cms/blog'
+    } )
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
 
 export async function createTag(data: { tagName: string }) {
   const { success, data: parsed, error } = validate(tagSchema, data)

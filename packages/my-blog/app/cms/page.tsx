@@ -1,51 +1,48 @@
 import React from 'react'
-import { signIn, signOut, auth } from '@/lib/auth'
-import { Button } from 'antd'
+import { Tabs, Button } from 'antd'
+import { auth, signOut } from '@/lib/auth'
+import dynamic from 'next/dynamic';
 
-function SignIn({ ...props }) {
-  return (
-    <form
-      action={async () => {
-        'use server'
-        await signIn('github')
-      }}
-    >
-      <Button type="primary" htmlType="submit" {...props}>
-        Sign In
-      </Button>
-    </form>
-  )
-}
 
-function SignOut(props) {
-  return (
-    <form
-      action={async () => {
-        'use server'
-        await signOut()
-      }}
-    >
-      <Button htmlType="submit" {...props}>
-        Sign Out
-      </Button>
-    </form>
-  )
-}
+const Login = dynamic(() => import('./_component/Login'), { ssr: false });
+const Register = dynamic(() => import('./_component/Register'), { ssr: false });
+
 
 const CMS: React.FC = async () => {
   const session = await auth()
+  console.log('session', session)
 
   return (
-    <div>
+    <>
       {session?.user ? (
-        <span style={{ display: 'flex', alignItems: 'center' }}>
-          {session?.user.name}
-          <SignOut />
-        </span>
+          <form
+            action={async () => {
+              'use server'
+              await signOut()
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              signOut
+            </Button>
+          </form>
       ) : (
-        <SignIn />
+        <Tabs
+          defaultActiveKey="1"
+          items={[
+            {
+              label: '登录',
+              key: '1',
+              children: <Login />,
+            },
+            {
+              label: '注册',
+              key: '2',
+              children: <Register />,
+            },
+          ]}
+        ></Tabs>
       )}
-    </div>
+    </>
   )
 }
 

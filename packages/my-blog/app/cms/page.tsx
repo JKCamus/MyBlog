@@ -1,7 +1,8 @@
 import React from 'react'
-import { Tabs, Button } from 'antd'
+import { Tabs } from 'antd'
 import { auth, signOut } from '@/lib/auth'
 import dynamic from 'next/dynamic'
+import { Button } from '@nextui-org/button'
 
 const Login = dynamic(() => import('./_component/Login'), { ssr: false })
 const Register = dynamic(() => import('./_component/Register'), { ssr: false })
@@ -19,7 +20,7 @@ const CMS: React.FC = async () => {
             await signOut()
           }}
         >
-          <Button type="primary" color="secondary" htmlType='submit'>
+          <Button type="submit" color="secondary">
             signOut
           </Button>
         </form>

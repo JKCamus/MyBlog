@@ -1,7 +1,9 @@
 import React from 'react'
-import { Tabs, Button } from 'antd'
+import { Tabs } from 'antd'
 import { auth, signOut } from '@/lib/auth'
 import dynamic from 'next/dynamic';
+import { Button } from '@nextui-org/react';
+import Test from './_component/Table';
 
 
 const Login = dynamic(() => import('./_component/Login'), { ssr: false });
@@ -14,6 +16,8 @@ const CMS: React.FC = async () => {
 
   return (
     <>
+            <Test></Test>
+
       {session?.user ? (
           <form
             action={async () => {
@@ -21,9 +25,11 @@ const CMS: React.FC = async () => {
               await signOut()
             }}
           >
-            <Button type="primary" htmlType="submit">
+            {/* <Button type="primary" htmlType="submit">
               signOut
-            </Button>
+            </Button> */}
+            <Button color='primary'>click me</Button>
+            <Button color='secondary'>click me</Button>
           </form>
       ) : (
         <Tabs
@@ -40,6 +46,7 @@ const CMS: React.FC = async () => {
               children: <Register />,
             },
           ]}
+
         ></Tabs>
       )}
     </>

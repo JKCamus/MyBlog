@@ -1,6 +1,5 @@
 // @ts-check
 const { fontFamily } = require('tailwindcss/defaultTheme')
-import { nextui } from '@nextui-org/react'
 const colors = require('tailwindcss/colors')
 
 /** @type {import("tailwindcss/types").Config } */
@@ -69,7 +68,5 @@ module.exports = {
       }),
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), nextui({
-
-  })],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 }

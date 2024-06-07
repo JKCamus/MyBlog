@@ -1,14 +1,10 @@
 import React from 'react'
-import { Tabs } from 'antd'
+import { Tabs, Button } from 'antd'
 import { auth, signOut } from '@/lib/auth'
-import dynamic from 'next/dynamic';
-import { Button } from '@nextui-org/react';
-import Test from './_component/Table';
+import dynamic from 'next/dynamic'
 
-
-const Login = dynamic(() => import('./_component/Login'), { ssr: false });
-const Register = dynamic(() => import('./_component/Register'), { ssr: false });
-
+const Login = dynamic(() => import('./_component/Login'), { ssr: false })
+const Register = dynamic(() => import('./_component/Register'), { ssr: false })
 
 const CMS: React.FC = async () => {
   const session = await auth()
@@ -16,21 +12,17 @@ const CMS: React.FC = async () => {
 
   return (
     <>
-            <Test></Test>
-
       {session?.user ? (
-          <form
-            action={async () => {
-              'use server'
-              await signOut()
-            }}
-          >
-            {/* <Button type="primary" htmlType="submit">
-              signOut
-            </Button> */}
-            <Button color='primary'>click me</Button>
-            <Button color='secondary'>click me</Button>
-          </form>
+        <form
+          action={async () => {
+            'use server'
+            await signOut()
+          }}
+        >
+          <Button type="primary" color="secondary" htmlType='submit'>
+            signOut
+          </Button>
+        </form>
       ) : (
         <Tabs
           defaultActiveKey="1"
@@ -46,7 +38,6 @@ const CMS: React.FC = async () => {
               children: <Register />,
             },
           ]}
-
         ></Tabs>
       )}
     </>

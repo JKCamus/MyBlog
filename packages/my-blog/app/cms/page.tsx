@@ -1,11 +1,8 @@
-import React from 'react'
-import { Tabs } from 'antd'
+import React, { Key } from 'react'
 import { auth, signOut } from '@/lib/auth'
-import dynamic from 'next/dynamic'
-import { Button } from '@nextui-org/button'
+import { Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader } from '@nextui-org/react'
+import Login from './_component/Login'
 
-const Login = dynamic(() => import('./_component/Login'), { ssr: false })
-const Register = dynamic(() => import('./_component/Register'), { ssr: false })
 
 const CMS: React.FC = async () => {
   const session = await auth()
@@ -25,21 +22,7 @@ const CMS: React.FC = async () => {
           </Button>
         </form>
       ) : (
-        <Tabs
-          defaultActiveKey="1"
-          items={[
-            {
-              label: '登录',
-              key: '1',
-              children: <Login />,
-            },
-            {
-              label: '注册',
-              key: '2',
-              children: <Register />,
-            },
-          ]}
-        ></Tabs>
+        <Login></Login>
       )}
     </>
   )

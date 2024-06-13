@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import NextAuth, { NextAuthConfig } from 'next-auth'
 import GitHubProvider from 'next-auth/providers/github'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { prisma } from '@/lib/prismaClientUtils'
@@ -26,8 +26,7 @@ const options = {
             throw new Error('Invalid email or password')
           }
         } catch (error) {
-          console.log('error', error)
-          return null
+          throw error
         }
       },
     }),
@@ -53,6 +52,6 @@ const options = {
   },
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth(options as NextAuthOptions)
+export const { handlers, auth, signOut, signIn } = NextAuth(options as NextAuthConfig)
 
 export { handlers as GET, handlers as POST }

@@ -1,18 +1,65 @@
-"use client"
-import React,{Key} from "react";
-import {Tabs, Tab, Input, Link, Button, Card, CardBody} from "@nextui-org/react";
+'use client'
+import React, { Key , useState } from 'react'
+import { Tabs, Tab, Input, Link, Button, Card, CardBody } from '@nextui-org/react'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { userSchema, UserFormSchemaType } from '../validateSchema'
+import { loginUser, registerUser } from '../actions'
+import { message } from 'antd'
 
-enum TabsKey{
-  login,
-  signUp
+enum TabsKey {
+  login = 'login',
+  signUp = 'signUp',
 }
 
-export default function App() {
-  const [selected, setSelected] = React.useState<Exclude<Key,bigint>>(TabsKey.login);
+export default function Login() {
+  const [selected, setSelected] = useState<Exclude<Key, bigint>>(TabsKey.login)
+  const {
+    register: registerLogin,
+    handleSubmit: handleSubmitLogin,
+    formState: { errors: loginErrors },
+  } = useForm<UserFormSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(userSchema),
+  })
+
+  const {
+    register: registerSignUp,
+    handleSubmit: handleSubmitSignUp,
+    formState: { errors: signUpErrors },
+  } = useForm<UserFormSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(userSchema),
+  })
+
+  const onLoginSubmit: SubmitHandler<UserFormSchemaType> = async (values) => {
+    try {
+      const { email, password } = values
+      const result = await loginUser({ email, password })
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  const onSignUpSubmit: SubmitHandler<UserFormSchemaType> = async (values) => {
+    try {
+      const { email, password } = values
+      const result = await registerUser({ email, password })
+      if (result?.error) {
+        message.error(result?.error)
+      } else {
+        message.success('注册成功')
+        setSelected(TabsKey.login)
+      }
+    } catch (error) {
+      message.error('注册失败，请重试')
+      console.log('error', error)
+    }
+  }
 
   return (
-    <div className="flex flex-col w-full">
-      <Card className="max-w-full w-[340px] h-[400px]">
+    <div className="flex min-h-screen w-full flex-col items-center">
+      <Card className="h-[22rem] w-[20rem] max-w-full">
         <CardBody className="overflow-hidden">
           <Tabs
             fullWidth
@@ -21,46 +68,67 @@ export default function App() {
             selectedKey={selected}
             onSelectionChange={setSelected}
           >
-            <Tab key={TabsKey.login} title="Login">
-              <form className="flex flex-col gap-4">
-                <Input isRequired label="Email" placeholder="Enter your email" type="email" />
+            <Tab key={TabsKey.login} title="Login" className="w-full sm:w-unset md:my-auto">
+              <form className="flex flex-col gap-4" onSubmit={handleSubmitLogin(onLoginSubmit)}>
                 <Input
-                  isRequired
+                  label="Email"
+                  placeholder="Enter your email"
+                  type="email"
+                  autoComplete="email"
+                  isInvalid={!!loginErrors?.email}
+                  errorMessage={loginErrors.email?.message}
+                  {...registerLogin('email', { required: true })}
+                />
+                <Input
                   label="Password"
                   placeholder="Enter your password"
                   type="password"
+                  isInvalid={!!loginErrors?.password}
+                  {...registerLogin('password', { required: true })}
+                  errorMessage={loginErrors.password?.message}
+                  autoComplete="current-password"
                 />
                 <p className="text-center text-small">
-                  Need to create an account?{" "}
+                  Need to create an account?{' '}
                   <Link size="sm" onPress={() => setSelected(TabsKey.signUp)}>
                     Sign up
                   </Link>
                 </p>
-                <div className="flex gap-2 justify-end">
-                  <Button fullWidth color="secondary">
+                <div className="flex justify-end gap-2">
+                  <Button fullWidth color="secondary" type="submit">
                     Login
                   </Button>
                 </div>
               </form>
             </Tab>
-            <Tab key={TabsKey.signUp} title="Sign up">
-              <form className="flex flex-col gap-4 h-[300px]">
-                <Input isRequired label="Name" placeholder="Enter your name" type="password" />
-                <Input isRequired label="Email" placeholder="Enter your email" type="email" />
+            <Tab key={TabsKey.signUp} title="Sign up" className="w-full sm:w-unset md:my-auto">
+              <form className="flex flex-col gap-4" onSubmit={handleSubmitSignUp(onSignUpSubmit)}>
                 <Input
-                  isRequired
+                  label="Email"
+                  placeholder="Enter your email"
+                  type="email"
+                  autoComplete="email"
+                  isInvalid={!!signUpErrors?.email}
+                  errorMessage={signUpErrors.email?.message}
+                  {...registerSignUp('email')}
+                />
+                <Input
                   label="Password"
                   placeholder="Enter your password"
                   type="password"
+                  isInvalid={!!signUpErrors?.password}
+                  errorMessage={signUpErrors.password?.message}
+                  autoComplete="new-password"
+                  {...registerSignUp('password')}
                 />
                 <p className="text-center text-small">
-                  Already have an account?{" "}
+                  Already have an account?{' '}
                   <Link size="sm" onPress={() => setSelected(TabsKey.login)}>
                     Login
                   </Link>
                 </p>
-                <div className="flex gap-2 justify-end">
-                  <Button fullWidth color="secondary">
+                <div className="flex justify-end gap-2">
+                  <Button fullWidth color="secondary" type="submit">
                     Sign up
                   </Button>
                 </div>
@@ -70,5 +138,5 @@ export default function App() {
         </CardBody>
       </Card>
     </div>
-  );
+  )
 }

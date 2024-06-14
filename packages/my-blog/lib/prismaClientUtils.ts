@@ -55,13 +55,13 @@ export async function getUserById(userId: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: { blogs: true },
     })
+    console.log('user', user)
     if (!user) {
       return null
     }
     return {
-      userName: user.userName,
+      userName: user.name,
       userId: user.id,
     }
   } catch (error) {

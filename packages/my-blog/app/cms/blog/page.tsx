@@ -109,8 +109,6 @@ const BlogsPage: React.FC = () => {
   const handleOk = async () => {
     try {
       const { file, tags, summary, title, layout } = await form.validateFields()
-      // todo jwt get user
-      const authorId = 'e0dd82e4-6a23-4b9f-a9a5-4f3b1509f3f4'
       if (currentBlog) {
         await modifyBlog(currentBlog.key, {
           title,
@@ -122,7 +120,6 @@ const BlogsPage: React.FC = () => {
         const formData = new FormData()
         formData.append('title', title)
         summary && formData.append('summary', summary)
-        formData.append('authorId', authorId)
         formData.append('layout', layout || BlogLayout.PostLayout)
         tags && formData.append('tags', tags)
         file[0]?.originFileObj && formData.append('file', file[0]?.originFileObj)

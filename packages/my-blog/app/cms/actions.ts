@@ -19,7 +19,7 @@ import { BlogLayout, Tags } from '@prisma/client'
 import dayjs from 'dayjs'
 import { join } from 'path'
 import { mkdir, stat, writeFile, readFile } from 'fs/promises'
-import { signIn } from '@/lib/auth'
+import { auth, signIn } from '@/lib/auth'
 import { userSchema } from './validateSchema'
 
 interface UserInput {
@@ -194,14 +194,17 @@ export { getAllTags }
 export async function createBlog(formData) {
   try {
     const file = formData.get('file')
+    const session = await auth()
+
     const fields = {
       title: formData.get('title'),
       summary: formData.get('summary') || undefined,
-      authorId: formData.get('authorId'),
+      authorId: session?.user?.id,
       layout: formData.get('layout') || undefined,
       tags: formData.get('tags') ? formData.get('tags').split(',') : [],
       file,
     }
+
     const { success, data, error } = validate(blogAddSchema, fields)
     if (!success) {
       throw new Error(error)

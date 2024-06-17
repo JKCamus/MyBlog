@@ -1,11 +1,12 @@
 'use client'
-import React, { Key , useState } from 'react'
+import React, { Key, useState } from 'react'
 import { Tabs, Tab, Input, Link, Button, Card, CardBody } from '@nextui-org/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { userSchema, UserFormSchemaType } from '../validateSchema'
-import { loginUser, registerUser } from '../actions'
+import { loginUser, registerUser, loginWidthGithub } from '../actions'
 import { message } from 'antd'
+import { GithubOutlined } from '@ant-design/icons'
 
 enum TabsKey {
   login = 'login',
@@ -68,7 +69,7 @@ export default function Login() {
             selectedKey={selected}
             onSelectionChange={setSelected}
           >
-            <Tab key={TabsKey.login} title="Login" className="w-full sm:w-unset md:my-auto">
+            <Tab key={TabsKey.login} title="Login" className="sm:w-unset w-full md:my-auto">
               <form className="flex flex-col gap-4" onSubmit={handleSubmitLogin(onLoginSubmit)}>
                 <Input
                   label="Email"
@@ -94,14 +95,19 @@ export default function Login() {
                     Sign up
                   </Link>
                 </p>
-                <div className="flex justify-end gap-2">
-                  <Button fullWidth color="secondary" type="submit">
-                    Login
-                  </Button>
-                </div>
+                <Button fullWidth color="secondary" type="submit">
+                  Login
+                </Button>
+                <Button
+                  className="bg-gray-800 text-white"
+                  startContent={<GithubOutlined />}
+                  onClick={() => loginWidthGithub()}
+                >
+                  GitHub Login
+                </Button>
               </form>
             </Tab>
-            <Tab key={TabsKey.signUp} title="Sign up" className="w-full sm:w-unset md:my-auto">
+            <Tab key={TabsKey.signUp} title="Sign up" className="sm:w-unset w-full md:my-auto">
               <form className="flex flex-col gap-4" onSubmit={handleSubmitSignUp(onSignUpSubmit)}>
                 <Input
                   label="Email"

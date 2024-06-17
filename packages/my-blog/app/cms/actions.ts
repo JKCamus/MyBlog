@@ -157,6 +157,12 @@ export async function loginUser(data: UserInput) {
   }
 }
 
+export const loginWidthGithub = async () => {
+  await signIn('github', {
+    redirectTo: '/cms/blog',
+  })
+}
+
 export async function fetchAllUser() {
   try {
     const user = await getAllUsers()

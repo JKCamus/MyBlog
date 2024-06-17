@@ -1,11 +1,10 @@
-import React, { Key } from 'react'
+import React from 'react'
 import { auth, signOut } from '@/lib/auth'
 import { Button } from '@nextui-org/react'
 import Login from './_component/Login'
 
 const CMS: React.FC = async () => {
   const session = await auth()
-  console.log('session', session)
 
   return (
     <>

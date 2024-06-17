@@ -87,7 +87,7 @@ model TagOnBlog {
   blogId     Int
   tagId      String
   assignedAt DateTime @default(now())
-  blog       Blog     @relation(fields: [blogId], references: [id])
+  blog       Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
   tag        Tags     @relation(fields: [tagId], references: [id])
 
   @@id([blogId, tagId])

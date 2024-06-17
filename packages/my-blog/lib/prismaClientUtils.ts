@@ -20,7 +20,7 @@ interface AddBlogInput {
 
 // user
 // 添加 user
-export async function addUser( email: string, password: string) {
+export async function addUser(email: string, password: string) {
   try {
     const existUser = await prisma.user.findUnique({
       where: {
@@ -37,7 +37,7 @@ export async function addUser( email: string, password: string) {
 
     const user = await prisma.user.create({
       data: {
-        name:email,
+        name: email,
         email,
         password: hashedPassword,
       },
@@ -56,7 +56,6 @@ export async function getUserById(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
     })
-    console.log('user', user)
     if (!user) {
       return null
     }
@@ -81,15 +80,11 @@ export async function getAllUsers(): Promise<User[]> {
 }
 
 // 更新 user
-export async function updateUser(
-  userId: string,
-  userName: string,
-  password: string
-): Promise<User> {
+export async function updateUser(id: string, name: string): Promise<User> {
   try {
     const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: { userName, password },
+      where: { id },
+      data: { name },
     })
     return updatedUser
   } catch (error) {
@@ -99,25 +94,18 @@ export async function updateUser(
 }
 
 // 删除单条 User（同时删除对应用户的博客）
-export async function deleteUser(userId: string): Promise<User> {
-  await prisma.blog.deleteMany({
-    where: { authorId: userId },
-  })
-  await prisma.session.deleteMany({
-    where: {
-      userId: userId,
-    },
-  })
-  await prisma.account.deleteMany({
-    where: {
-      userId: userId,
-    },
-  })
-
-  const deletedUser = await prisma.user.delete({
-    where: { id: userId },
-  })
-  return deletedUser
+export async function deleteUser(userId: string) {
+  try {
+    await prisma.$transaction(async (prisma) => {
+      // 删除用户及其关联的记录（级联删除）
+      await prisma.user.delete({
+        where: { id: userId },
+      })
+    })
+    return
+  } catch (error) {
+    throw error
+  }
 }
 
 // blog

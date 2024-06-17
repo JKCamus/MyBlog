@@ -16,4 +16,25 @@ export const userSchema = z.object({
     .min(1, { message: '请输入密码' }),
 })
 
-export type UserFormSchemaType = z.infer<typeof userSchema>;
+export const userModifySchema = z.object({
+  userId: z
+    .string({
+      required_error: 'userId is required',
+    })
+    .min(1, { message: 'userId is required' }),
+  userName: z
+    .string({
+      required_error: '请输入用户名',
+      invalid_type_error: 'userName must be a string',
+    })
+    .min(1, { message: '请输入用户名' }),
+})
+
+export const userDelSchema = z.object({
+  userId: z.string({
+    required_error: 'userId is required',
+  }),
+})
+
+export type UserFormSchemaType = z.infer<typeof userSchema>
+export type UserModifyType = z.infer<typeof userModifySchema>

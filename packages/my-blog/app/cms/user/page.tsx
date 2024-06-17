@@ -1,42 +1,117 @@
-import { getAllUsers } from '@/lib/prismaClientUtils'
-import { Table, type TableProps } from 'antd'
-import dayjs from 'dayjs';
+'use client'
+import { Button, Form, Input, Modal, Space, Table, message, type TableProps } from 'antd'
+import dayjs from 'dayjs'
+import { useEffect, useState } from 'react'
+import { UserData, delUser, fetchAllUser, modifyUserInfo } from '../actions'
 
-interface UserDataType {
-  key: string
-  userName: string
-  email: string | null
-  createdAt: string
-}
+const UserPage: React.FC = () => {
+  const [userData, setUserData] = useState<UserData[]>([])
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [currentUser, setCurrentUser] = useState<UserData | null>(null)
 
-const columns: TableProps<UserDataType>['columns'] = [
-  {
-    title: 'userName',
-    dataIndex: 'userName',
-    key: 'userName',
-  },
-  {
-    title: 'email',
-    dataIndex: 'email',
-    key: 'email',
-  },
-  {
-    title: 'createdAt',
-    dataIndex: 'createdAt',
-    key: 'createdAt',
-  },
-]
+  const [form] = Form.useForm()
 
-const UserPage: React.FC = async () => {
-  const user = await getAllUsers()
-  const userData: UserDataType[] = user.map((item) => ({
-    key: item.id,
-    userName: item.name || '',
-    email: item.email,
-    createdAt: dayjs(item.createdAt).format('YYYY-MM-DD'),
-  }))
+  useEffect(() => {
+    getUserData()
+  }, [])
 
-  return <Table columns={columns} dataSource={userData} />
+
+  const columns: TableProps<UserData>['columns'] = [
+    {
+      title: 'userName',
+      dataIndex: 'userName',
+      key: 'userName',
+    },
+    {
+      title: 'email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'createdAt',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_: any, record: UserData) => (
+        <Space size="middle">
+          <Button onClick={() => handleEdit(record)}>Edit</Button>
+          <Button onClick={() => handleDelete(record.userId)}>Delete</Button>
+        </Space>
+      ),
+    },
+  ]
+
+  const getUserData = async () => {
+    try {
+      const users = await fetchAllUser()
+      setUserData(users)
+    } catch (error) {
+      message.error('fetch user error')
+      console.log('error', error)
+    }
+  }
+
+  const handleEdit = (record: UserData) => {
+    form.setFieldsValue(record)
+    setCurrentUser(record)
+    setIsModalVisible(true)
+  }
+
+  const handleDelete = async (userId: string) => {
+    try {
+      await delUser(userId)
+      message.success('删除成功')
+      getUserData()
+    } catch (error) {
+      message.error(error.message)
+      console.log('error', error)
+    }
+  }
+
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields()
+      await modifyUserInfo({
+        userName: values?.userName,
+        userId: currentUser?.userId || '',
+      })
+      message.success('修改成功')
+      setIsModalVisible(false)
+      form.resetFields()
+      getUserData()
+    } catch (error) {
+      message.error(error.message)
+      console.log(error.message)
+    }
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false)
+  }
+
+  return (
+    <>
+      <Table columns={columns} dataSource={userData} />
+      <Modal
+        title={currentUser ? 'Edit User Info' : 'Add User Info'}
+        open={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Form form={form}>
+          <Form.Item
+            name="userName"
+            rules={[{ required: true, message: 'Please input the user name!' }]}
+          >
+            <Input placeholder="User Name" />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
+  )
 }
 
 export default UserPage

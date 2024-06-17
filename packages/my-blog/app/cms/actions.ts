@@ -13,18 +13,28 @@ import {
   getUserById,
   getTagsByIds,
   addUser,
+  getAllUsers,
+  updateUser,
+  deleteUser,
 } from '@/lib/prismaClientUtils'
-import validate from '@/lib/validate'
+import validate, { actionValidate } from '@/lib/validate'
 import { BlogLayout, Tags } from '@prisma/client'
 import dayjs from 'dayjs'
 import { join } from 'path'
 import { mkdir, stat, writeFile, readFile } from 'fs/promises'
 import { auth, signIn } from '@/lib/auth'
-import { userSchema } from './validateSchema'
+import { UserModifyType, userDelSchema, userModifySchema, userSchema } from './validateSchema'
 
 interface UserInput {
   email: string
   password: string
+}
+
+export interface UserData {
+  userId: string
+  userName: string
+  email: string | null
+  createdAt: string
 }
 
 const tagSchema = z.object({
@@ -143,6 +153,49 @@ export async function loginUser(data: UserInput) {
     return result
   } catch (error) {
     console.log('error', error)
+    throw error
+  }
+}
+
+export async function fetchAllUser() {
+  try {
+    const user = await getAllUsers()
+    const users = user.map((item) => ({
+      key: item.id,
+      userId: item.id,
+      userName: item.name || '',
+      email: item.email,
+      createdAt: dayjs(item.createdAt).format('YYYY-MM-DD'),
+    }))
+    return users
+  } catch (error) {
+    console.log('error', error)
+    throw error
+  }
+}
+
+export async function modifyUserInfo(data: UserModifyType) {
+  try {
+    const { userId, userName } = actionValidate(userModifySchema, data)
+    await updateUser(userId, userName)
+    return
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function delUser(id: string) {
+  try {
+    const { userId } = actionValidate(userDelSchema, { userId: id })
+
+    const session = await auth()
+    const isCurrentUser = session?.user?.id === userId
+
+    if (isCurrentUser) {
+      throw new Error('不能删除当前用户')
+    }
+    await deleteUser(userId)
+  } catch (error) {
     throw error
   }
 }

@@ -46,3 +46,17 @@ services:
       - pgadmin-data:/var/lib/pgadmin
     depends_on:
       - postgresql
+  nextjs:
+    container_name: nextjs-app
+    image: node:18
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+    command: sh -c "yarn && yarn dev"
+    depends_on:
+      - postgresql

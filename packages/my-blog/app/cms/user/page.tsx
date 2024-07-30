@@ -1,8 +1,9 @@
 'use client'
 import { Button, Form, Input, Modal, Space, Table, message, type TableProps } from 'antd'
-import dayjs from 'dayjs'
+
 import { useEffect, useState } from 'react'
-import { UserData, delUser, fetchAllUser, modifyUserInfo } from '../actions'
+import { UserData } from '../actions'
+import { delUser, fetchAllUser, updateUserInfo } from '@/lib/actions/userAction'
 
 const UserPage: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([])
@@ -14,7 +15,6 @@ const UserPage: React.FC = () => {
   useEffect(() => {
     getUserData()
   }, [])
-
 
   const columns: TableProps<UserData>['columns'] = [
     {
@@ -44,12 +44,13 @@ const UserPage: React.FC = () => {
     },
   ]
 
+
   const getUserData = async () => {
     try {
-      const users = await fetchAllUser()
-      setUserData(users)
+      const result = await fetchAllUser()
+      setUserData(result)
     } catch (error) {
-      message.error('fetch user error')
+      message.error(error)
       console.log('error', error)
     }
   }
@@ -74,7 +75,7 @@ const UserPage: React.FC = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields()
-      await modifyUserInfo({
+      await updateUserInfo({
         userName: values?.userName,
         userId: currentUser?.userId || '',
       })

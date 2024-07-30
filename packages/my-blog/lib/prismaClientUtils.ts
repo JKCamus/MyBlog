@@ -1,4 +1,4 @@
-import { Blog, BlogLayout, PrismaClient, TagOnBlog, Tags, User } from '@prisma/client'
+import { Blog, BlogLayout, Prisma, PrismaClient, TagOnBlog, Tags, User } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
 const globalForPrisma = global
@@ -45,8 +45,8 @@ export async function addUser(email: string, password: string) {
 
     return
   } catch (error) {
-    console.log('error', error)
-    throw new Error(error)
+    console.error('Error addUser in prisma:', error)
+    throw error
   }
 }
 
@@ -64,7 +64,7 @@ export async function getUserById(userId: string) {
       userId: user.id,
     }
   } catch (error) {
-    console.log('error', error)
+    console.error('Error getUserById in prisma:', error)
     throw error
   }
 }
@@ -74,7 +74,7 @@ export async function getAllUsers(): Promise<User[]> {
     const users = await prisma.user.findMany()
     return users
   } catch (error) {
-    console.error('Error retrieving users:', error)
+    console.error('Error getAllUsers in prisma:', error)
     throw error
   }
 }
@@ -88,7 +88,7 @@ export async function updateUser(id: string, name: string): Promise<User> {
     })
     return updatedUser
   } catch (error) {
-    console.error('Error updating user:', error)
+    console.error('Error updateUser in prisma:', error)
     throw error
   }
 }
@@ -104,6 +104,7 @@ export async function deleteUser(userId: string) {
     })
     return
   } catch (error) {
+    console.error('Error deleteUser in prisma:', error)
     throw error
   }
 }
@@ -142,7 +143,7 @@ export async function addBlog({
 
     return newBlog
   } catch (error) {
-    console.error('Error adding blog:', error)
+    console.error('Error addBlog in prisma:', error)
     throw error
   }
 }
@@ -160,7 +161,7 @@ export async function getAllBlogs(): Promise<
     })
     return blogs
   } catch (error) {
-    console.error('Error retrieving blogs:', error)
+    console.error('Error getAllBlogs in prisma :', error)
     throw error
   }
 }
@@ -175,43 +176,43 @@ export async function getBlogById(blogId: number): Promise<Blog | null> {
     })
     return blog
   } catch (error) {
-    console.error('Error retrieving blog:', error)
+    console.error('Error getBlogById in prisma:', error)
     throw error
   }
 }
 
 // 更新 Blog（更新信息，包含关联的标签）
-export async function updateBlog(
-  blogId: number,
-  blogData: Partial<Blog> & { tags: string[] }
-): Promise<Blog> {
-  const updatedBlog = await prisma.$transaction(async (prisma) => {
-    // 删除现有的 TagOnBlog 关系
-    console.log('blogData', blogData)
-    await prisma.tagOnBlog.deleteMany({
-      where: { blogId: blogId },
-    })
+export async function updateBlog(blogId: number, blogData: Partial<Blog> & { tags: string[] }) {
+  try {
+    const updatedBlog = await prisma.$transaction(async (prisma) => {
+      // 删除现有的 TagOnBlog 关系
+      await prisma.tagOnBlog.deleteMany({
+        where: { blogId: blogId },
+      })
 
-    // 更新 Blog 和重新创建 TagOnBlog 关系
-    const blog = await prisma.blog.update({
-      where: { id: blogId },
-      data: {
-        ...blogData,
-        tags: {
-          create: blogData.tags.map((tagId) => ({
-            tag: {
-              connect: { id: tagId },
-            },
-          })),
+      // 更新 Blog 和重新创建 TagOnBlog 关系
+      const blog = await prisma.blog.update({
+        where: { id: blogId },
+        data: {
+          ...blogData,
+          tags: {
+            create: blogData.tags.map((tagId) => ({
+              tag: {
+                connect: { id: tagId },
+              },
+            })),
+          },
         },
-      },
-      include: { tags: true },
+        include: { tags: true },
+      })
+
+      return blog
     })
-
-    return blog
-  })
-
-  return updatedBlog
+    return updatedBlog
+  } catch (error) {
+    console.error('Error updateBlog in prisma:', error)
+    throw error
+  }
 }
 
 // 删除博客，并关联 user 和 tags
@@ -247,7 +248,7 @@ export async function deleteBlog(blogId: number): Promise<void> {
       await unlink(filePath)
     })
   } catch (error) {
-    console.error('Error deleting blog:', error)
+    console.error('Error deleteBlog blog in prisma:', error)
     throw error
   }
 }
@@ -260,7 +261,7 @@ export async function addTag(tagName: string): Promise<Tags> {
     })
     return newTag
   } catch (error) {
-    console.error('Error adding tag:', error)
+    console.error('Error addTag in prisma:', error)
     throw error
   }
 }
@@ -270,17 +271,22 @@ export async function getAllTags(): Promise<Tags[]> {
     const tags = await prisma.tags.findMany()
     return tags
   } catch (error) {
-    console.error('Error retrieving tags:', error)
+    console.error('Error getAllTags in prisma:', error)
     throw error
   }
 }
 
 export async function getTagsByIds(tagIds: string[]): Promise<Tags[]> {
-  const tags = await prisma.tags.findMany({
-    where: { id: { in: tagIds } },
-    select: { id: true, tagName: true },
-  })
-  return tags
+  try {
+    const tags = await prisma.tags.findMany({
+      where: { id: { in: tagIds } },
+      select: { id: true, tagName: true },
+    })
+    return tags
+  } catch (error) {
+    console.error('Error getTagsByIds in prisma:', error)
+    throw error
+  }
 }
 
 export async function updateTag(tagId: string, tagName: string): Promise<Tags> {
@@ -291,18 +297,23 @@ export async function updateTag(tagId: string, tagName: string): Promise<Tags> {
     })
     return updatedTag
   } catch (error) {
-    console.error('Error updating tag:', error)
+    console.error('Error updateTag in prisma:', error)
     throw error
   }
 }
 
 // 删除单条 Tag（需要更新对应博客包含的标签信息）
-export async function deleteTag(tagId: string): Promise<Tags> {
-  await prisma.tagOnBlog.deleteMany({
-    where: { tagId },
-  })
-  const deletedTag = await prisma.tags.delete({
-    where: { id: tagId },
-  })
-  return deletedTag
+export async function deleteTag(tagId: string) {
+  try {
+    await prisma.tagOnBlog.deleteMany({
+      where: { tagId },
+    })
+    const deletedTag = await prisma.tags.delete({
+      where: { id: tagId },
+    })
+    return deletedTag
+  } catch (error) {
+    console.error('Error updateTag in prisma:', error)
+    throw error
+  }
 }

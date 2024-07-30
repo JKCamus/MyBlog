@@ -1,25 +1,14 @@
 version: "3.9"
-# 定义卷的变量名，具名卷，作为卷持久性
 volumes:
   postgresql-data:
   pgadmin-data:
 
 services:
   postgresql:
-  #  定义容易名，方便进行 debug
     container_name: blog-postgresql
     image: postgres:14
-    # healthcheck 配置对于确保 PostgreSQL 数据库容器正常运行
     healthcheck:
-      test:
-        [
-          "CMD",
-          "pg_isready",
-          "-q",
-          "-d",
-          "postgres",
-          "-U",
-        ]
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "camus"]
       timeout: 45s
       interval: 10s
       retries: 10
@@ -32,31 +21,17 @@ services:
       - "5432:5432"
     volumes:
       - postgresql-data:/data
+
   pgadmin-compose:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
     restart: always
     environment:
-    # 用户登录 pgadmin
       PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
       PGADMIN_DEFAULT_PASSWORD: "root"
     ports:
       - "16543:80"
     volumes:
       - pgadmin-data:/var/lib/pgadmin
-    depends_on:
-      - postgresql
-  nextjs:
-    container_name: nextjs-app
-    image: node:18
-    working_dir: /app
-    volumes:
-      - .:/app
-      - /app/node_modules
-    ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: development
-    command: sh -c "yarn && yarn dev"
     depends_on:
       - postgresql

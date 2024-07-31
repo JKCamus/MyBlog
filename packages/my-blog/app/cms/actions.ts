@@ -146,6 +146,7 @@ export async function loginUser(data: UserInput) {
     if (!success) {
       throw new Error(error)
     }
+    console.log('parsed', parsed)
     const result = await signIn('credentials', {
       ...parsed,
       redirectTo: '/cms/blog',

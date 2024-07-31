@@ -3,7 +3,7 @@ import { Button, Form, Input, Modal, Space, Table, message, type TableProps } fr
 
 import { useEffect, useState } from 'react'
 import { UserData } from '../actions'
-import { delUser, fetchAllUser, updateUserInfo } from '@/lib/actions/userAction'
+import { delUserAction, getAllUsersAction, updateUserAction } from '@/lib/actions/userAction'
 
 const UserPage: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([])
@@ -44,10 +44,9 @@ const UserPage: React.FC = () => {
     },
   ]
 
-
   const getUserData = async () => {
     try {
-      const result = await fetchAllUser()
+      const result = await getAllUsersAction()
       setUserData(result)
     } catch (error) {
       message.error(error)
@@ -63,7 +62,7 @@ const UserPage: React.FC = () => {
 
   const handleDelete = async (userId: string) => {
     try {
-      await delUser(userId)
+      await delUserAction(userId)
       message.success('删除成功')
       getUserData()
     } catch (error) {
@@ -75,7 +74,7 @@ const UserPage: React.FC = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields()
-      await updateUserInfo({
+      await updateUserAction({
         userName: values?.userName,
         userId: currentUser?.userId || '',
       })

@@ -5,7 +5,8 @@ import { auth, signIn } from '../auth'
 import { addUser, deleteUser, getAllUsers, updateUser } from '../prismaClientUtils'
 import { userAddSchema, userDelSchema, userModifySchema } from '../schema/userSchema'
 
-export async function registerUser(data) {
+
+export async function registerUserAction(data) {
   const result = userAddSchema.safeParse(data)
 
   if (!result.success) {
@@ -24,33 +25,33 @@ export async function registerUser(data) {
   }
 }
 
-export async function loginUser(data) {
-  const result = userModifySchema.safeParse(data)
-
+export async function loginUserAction(data) {
+  const result = userAddSchema.safeParse(data)
   if (!result.success) {
     console.error('Validation error:', result.error)
     throw new Error(result.error.issues[0].message)
   }
-
+  const { email, password } = result.data
   try {
-    const loginInfo = await signIn('credentials', {
-      ...result,
+    const usrInfo = await signIn('credentials', {
+      email,
+      password,
       redirectTo: '/cms/blog',
     })
-    return loginInfo
+    return usrInfo
   } catch (error) {
-    console.error('Error loginUser in action:', error)
-    throw new Error('Login Failed. Please try again later.')
+    console.log('error', error)
+    throw error
   }
 }
 
-export const loginWidthGithub = async () => {
+export const loginWidthGithubAction = async () => {
   await signIn('github', {
     redirectTo: '/cms/blog',
   })
 }
 
-export async function fetchAllUser() {
+export async function getAllUsersAction() {
   try {
     const user = await getAllUsers()
     const users = user.map((item) => ({
@@ -67,7 +68,7 @@ export async function fetchAllUser() {
   }
 }
 
-export async function updateUserInfo(data) {
+export async function updateUserAction(data) {
   const result = userModifySchema.safeParse(data)
   if (!result.success) {
     console.error('Validation error:', result.error)
@@ -83,7 +84,7 @@ export async function updateUserInfo(data) {
   }
 }
 
-export async function delUser(id) {
+export async function delUserAction(id) {
   const result = userDelSchema.safeParse(id)
   if (!result.success) {
     console.error('Validation error:', result.error)

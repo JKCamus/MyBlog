@@ -1,7 +1,7 @@
 
 import { z } from 'zod'
 
-export const tagSAddSchema = z.object({
+export const tagAddSchema = z.object({
   tagName: z
     .string({
       required_error: 'Tag name 不能为空',

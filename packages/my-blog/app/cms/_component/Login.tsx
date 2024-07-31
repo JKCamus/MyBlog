@@ -4,9 +4,14 @@ import { Tabs, Tab, Input, Link, Button, Card, CardBody } from '@nextui-org/reac
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { userSchema, UserFormSchemaType } from '../validateSchema'
-import { loginUser, registerUser, loginWidthGithub } from '../actions'
 import { message } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
+import {
+  loginUserAction,
+  loginWidthGithubAction,
+  registerUserAction,
+} from '@/lib/actions/userAction'
+import { useRouter } from 'next/navigation'
 
 enum TabsKey {
   login = 'login',
@@ -15,6 +20,7 @@ enum TabsKey {
 
 export default function Login() {
   const [selected, setSelected] = useState<Exclude<Key, bigint>>(TabsKey.login)
+   const router=useRouter()
   const {
     register: registerLogin,
     handleSubmit: handleSubmitLogin,
@@ -36,7 +42,7 @@ export default function Login() {
   const onLoginSubmit: SubmitHandler<UserFormSchemaType> = async (values) => {
     try {
       const { email, password } = values
-      const result = await loginUser({ email, password })
+      await loginUserAction({ email, password })
     } catch (error) {
       console.log('error', error)
     }
@@ -45,7 +51,7 @@ export default function Login() {
   const onSignUpSubmit: SubmitHandler<UserFormSchemaType> = async (values) => {
     try {
       const { email, password } = values
-      const result = await registerUser({ email, password })
+      const result = await registerUserAction({ email, password })
       if (result?.error) {
         message.error(result?.error)
       } else {
@@ -101,7 +107,7 @@ export default function Login() {
                 <Button
                   className="bg-gray-800 text-white"
                   startContent={<GithubOutlined />}
-                  onClick={() => loginWidthGithub()}
+                  onClick={() => loginWidthGithubAction()}
                 >
                   GitHub Login
                 </Button>

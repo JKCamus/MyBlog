@@ -1,7 +1,12 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { Table, TableProps, Button, Modal, Form, Input, Space, Tag } from 'antd'
-import { createTag, getAllTags, modifyTag, removeTag } from '../actions'
+import { Table, TableProps, Button, Modal, Form, Input, Space, Tag, message } from 'antd'
+import {
+  createTagAction,
+  delTagAction,
+  getAllTagsAction,
+  updateTagAction,
+} from '@/lib/actions/tagAction'
 
 interface TagsDataType {
   key: string
@@ -20,13 +25,17 @@ const TagsPage: React.FC = () => {
   }, [])
 
   const fetchTags = async () => {
-    const tags = await getAllTags()
-    const tagsData = tags.map((item) => ({
-      key: item.id,
-      tagName: item.tagName,
-      tagId: item.id,
-    }))
-    setTagsData(tagsData)
+    try {
+      const tags = await getAllTagsAction()
+      const tagsData = tags.map((item) => ({
+        key: item.id,
+        tagName: item.tagName,
+        tagId: item.id,
+      }))
+      setTagsData(tagsData)
+    } catch (error) {
+      message.error(error.message)
+    }
   }
 
   const handleAdd = () => {
@@ -42,22 +51,30 @@ const TagsPage: React.FC = () => {
   }
 
   const handleDelete = async (tagId: string) => {
-    await removeTag({ tagId })
-    fetchTags()
+    try {
+      await delTagAction({ tagId })
+      message.success('删除成功')
+      fetchTags()
+    } catch (error) {
+      message.error(error.message)
+    }
   }
 
   const handleOk = async () => {
     try {
       const values = await form.validateFields()
       if (currentTag) {
-        await modifyTag({ tagId: currentTag.key, tagName: values.tagName })
+        await updateTagAction({ tagId: currentTag.key, tagName: values.tagName })
+        message.success('新增成功')
       } else {
-        await createTag({ tagName: values.tagName })
+        await createTagAction({ tagName: values.tagName })
+        message.success('修改成功')
       }
       setIsModalVisible(false)
       form.resetFields()
       fetchTags()
     } catch (error) {
+      message.error(error.message)
       console.log('Validate Failed:', error)
     }
   }

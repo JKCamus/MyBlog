@@ -5,7 +5,6 @@ import Login from './_component/Login'
 
 const CMS: React.FC = async () => {
   const session = await auth()
-
   return (
     <>
       {session?.user ? (

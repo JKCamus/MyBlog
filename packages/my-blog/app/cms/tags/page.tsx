@@ -52,7 +52,7 @@ const TagsPage: React.FC = () => {
 
   const handleDelete = async (tagId: string) => {
     try {
-      await delTagAction({ tagId })
+      await delTagAction(tagId)
       message.success('删除成功')
       fetchTags()
     } catch (error) {
@@ -65,10 +65,10 @@ const TagsPage: React.FC = () => {
       const values = await form.validateFields()
       if (currentTag) {
         await updateTagAction({ tagId: currentTag.key, tagName: values.tagName })
-        message.success('新增成功')
-      } else {
-        await createTagAction({ tagName: values.tagName })
         message.success('修改成功')
+      } else {
+        await createTagAction(values.tagName)
+        message.success('新增成功')
       }
       setIsModalVisible(false)
       form.resetFields()

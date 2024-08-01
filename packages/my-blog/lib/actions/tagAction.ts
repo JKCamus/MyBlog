@@ -3,8 +3,8 @@
 import { addTag, deleteTag, getAllTags, updateTag } from '../prismaClientUtils'
 import { tagAddSchema, tagDelSchema, tagUpdateSchema } from '../schema/tagSchema'
 
-export async function createTagAction(data: { tagName: string }) {
-  const result = tagAddSchema.safeParse(data)
+export async function createTagAction(tagName:string) {
+  const result = tagAddSchema.safeParse(tagName)
 
   if (!result.success) {
     console.error('Validation error:', result.error)
@@ -12,7 +12,7 @@ export async function createTagAction(data: { tagName: string }) {
   }
 
   try {
-    const newTag = await addTag(result.data.tagName)
+    const newTag = await addTag(result.data)
     return newTag
   } catch (error) {
     console.error('Error creating tag in action:', error)
@@ -37,14 +37,15 @@ export async function updateTagAction(data: { tagId: string; tagName: string }) 
   }
 }
 
-export async function delTagAction(data: { tagId: string }) {
-  const result = tagDelSchema.safeParse(data)
+export async function delTagAction(id:string) {
+  const result = tagDelSchema.safeParse(id)
   if (!result.success) {
     console.error('Validation error:', result.error)
     throw new Error(result.error.issues[0].message)
   }
+  const tagId = result.data
   try {
-    const deletedTag = await deleteTag(result?.data?.tagId)
+    const deletedTag = await deleteTag(tagId)
     return deletedTag
   } catch (error) {
     console.error('Error delate tag in action:', error)

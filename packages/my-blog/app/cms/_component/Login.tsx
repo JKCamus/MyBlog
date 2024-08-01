@@ -3,7 +3,7 @@ import React, { Key, useState } from 'react'
 import { Tabs, Tab, Input, Link, Button, Card, CardBody } from '@nextui-org/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { userSchema, UserFormSchemaType } from '../validateSchema'
+import { userAddSchema, UserFormSchemaType } from '@/lib/schema/userSchema'
 import { message } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import {
@@ -27,7 +27,7 @@ export default function Login() {
     formState: { errors: loginErrors },
   } = useForm<UserFormSchemaType>({
     mode: 'all',
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(userAddSchema),
   })
 
   const {
@@ -36,7 +36,7 @@ export default function Login() {
     formState: { errors: signUpErrors },
   } = useForm<UserFormSchemaType>({
     mode: 'all',
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(userAddSchema),
   })
 
   const onLoginSubmit: SubmitHandler<UserFormSchemaType> = async (values) => {

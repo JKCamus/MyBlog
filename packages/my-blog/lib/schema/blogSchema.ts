@@ -1,4 +1,3 @@
-
 import { z } from 'zod'
 import { BlogLayout } from '@prisma/client'
 
@@ -49,12 +48,12 @@ export const blogUpdateSchema = z.object({
   draft: z.boolean().optional(),
 })
 
+export const blogDelSchema = z
+  .number({
+    required_error: 'Blog ID 不能为空',
+    invalid_type_error: 'Blog ID must be a number',
+  })
+  .min(1, { message: 'Blog ID 不能为空' })
 
-export const blogDelSchema = z.object({
-  blogId: z
-    .number({
-      required_error: 'Blog ID 不能为空',
-      invalid_type_error: 'Blog ID must be a number',
-    })
-    .min(1, { message: 'Blog ID 不能为空' }),
-})
+
+  export type BlogUpdateType=z.infer<typeof blogUpdateSchema>

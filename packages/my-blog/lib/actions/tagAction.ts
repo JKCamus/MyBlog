@@ -12,7 +12,7 @@ export async function createTagAction(data: { tagName: string }) {
   }
 
   try {
-    const newTag = await addTag(12)
+    const newTag = await addTag(result.data.tagName)
     return newTag
   } catch (error) {
     console.error('Error creating tag in action:', error)

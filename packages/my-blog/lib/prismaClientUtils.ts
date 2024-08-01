@@ -182,7 +182,7 @@ export async function getBlogById(blogId: number): Promise<Blog | null> {
 }
 
 // 更新 Blog（更新信息，包含关联的标签）
-export async function updateBlog(blogId: number, blogData: Partial<Blog> & { tags: string[] }) {
+export async function updateBlog(blogId: number, blogData: Partial<Blog> & { tags: string[] }):Promise<Blog>{
   try {
     const updatedBlog = await prisma.$transaction(async (prisma) => {
       // 删除现有的 TagOnBlog 关系

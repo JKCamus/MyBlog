@@ -14,9 +14,11 @@ import {
   Upload,
   message,
 } from 'antd'
-import { createBlog, modifyBlog, removeBlog, fetchAllBlogs, getAllTags } from '../actions'
+
 import { BlogLayout, Tags } from '@prisma/client'
 import { UploadOutlined } from '@ant-design/icons'
+import { createBlogAction, deleteBlogAction, getAllBlogsAction, updateBlogAction } from '@/lib/actions/blogAction'
+import { getAllTagsAction } from '@/lib/actions/tagAction'
 
 const { TextArea } = Input
 
@@ -53,21 +55,21 @@ const BlogsPage: React.FC = () => {
 
   const fetchBlogs = async () => {
     try {
-      const blogs = await fetchAllBlogs()
+      const blogs = await getAllBlogsAction()
       setBlogsData(blogs)
     } catch (error) {
       console.error('Error fetching blogs:', error)
-      message.error('Failed to fetch blogs.')
+      message.error(error.message)
     }
   }
 
   const fetchTags = async () => {
     try {
-      const tags = await getAllTags()
+      const tags = await getAllTagsAction()
       setTagsOptions(tags?.map((tag) => ({ value: tag?.id, label: tag?.tagName })))
     } catch (error) {
       console.error('Error fetching tags:', error)
-      message.error('Failed to fetch tags.')
+      message.error(error.message)
     }
   }
 
@@ -91,11 +93,12 @@ const BlogsPage: React.FC = () => {
 
   const handleDelete = async (blogId: number) => {
     try {
-      await removeBlog({ blogId: blogId })
+      await deleteBlogAction(blogId)
       fetchBlogs()
       message.success('Delete blog successfully')
     } catch (error) {
-      message.error('Delete blog fail')
+      console.log('error', error)
+      message.error(error.message)
     }
   }
 
@@ -110,7 +113,8 @@ const BlogsPage: React.FC = () => {
     try {
       const { file, tags, summary, title, layout } = await form.validateFields()
       if (currentBlog) {
-        await modifyBlog(currentBlog.key, {
+        await updateBlogAction( {
+          blogId: currentBlog.key,
           title,
           summary,
           layout,
@@ -123,7 +127,7 @@ const BlogsPage: React.FC = () => {
         formData.append('layout', layout || BlogLayout.PostLayout)
         tags && formData.append('tags', tags)
         file[0]?.originFileObj && formData.append('file', file[0]?.originFileObj)
-        await createBlog(formData)
+        await createBlogAction(formData)
       }
       setIsModalVisible(false)
       form.resetFields()
@@ -131,7 +135,7 @@ const BlogsPage: React.FC = () => {
       message.success('File uploaded and blog added successfully')
     } catch (error) {
       console.log(error)
-      message.error('Add blog fail')
+      message.error(error.message)
     }
   }
 

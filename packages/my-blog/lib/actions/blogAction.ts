@@ -1,8 +1,14 @@
 'use server'
 
 import { auth } from '../auth'
-import { BlogUpdateType, blogAddSchema, blogDelSchema, blogUpdateSchema } from '../schema/blogSchema'
+import {
+  BlogUpdateType,
+  blogAddSchema,
+  blogDelSchema,
+  blogUpdateSchema,
+} from '../schema/blogSchema'
 import { join } from 'path'
+
 import { mkdir, stat, writeFile, readFile } from 'fs/promises'
 import {
   addBlog,
@@ -85,13 +91,16 @@ layout: ${blog.layout}
     const newContent = yamlFrontMatter + fileContent
 
     await writeFile(`${uploadDir}/${uniqueFilename}`, newContent)
+    revalidatePath('/', 'page')
+
+
   } catch (error) {
     console.log('error', error)
     throw error
   }
 }
 
-export async function updateBlogAction(data:BlogUpdateType) {
+export async function updateBlogAction(data: BlogUpdateType) {
   try {
     const result = blogUpdateSchema.safeParse(data)
     if (!result.success) {
@@ -115,7 +124,7 @@ ${
   currentTags.length > 0 ? `tags: [${currentTags.map((tag) => `'${tag.tagName}'`).join(', ')}]` : ''
 }
 draft: ${updatedBlog?.draft}
-${updatedBlog.summary&&`summary: '${updatedBlog.summary}'`}
+${updatedBlog.summary && `summary: '${updatedBlog.summary}'`}
 layout: ${updatedBlog.layout}
 ---`
 
@@ -125,7 +134,7 @@ layout: ${updatedBlog.layout}
 
     await writeFile(filePath, newContent)
     // 清除缓存，避免修改了 blog 数据，blog 显示不正确
-    revalidatePath('/','page')
+    revalidatePath('/', 'page')
 
     return updatedBlog
   } catch (error) {
@@ -143,6 +152,7 @@ export async function deleteBlogAction(id) {
     }
     const blogId = result.data
     await deleteBlog(blogId)
+    revalidatePath('/', 'page')
   } catch (error) {
     console.error('Error deleting blog in action:', error)
     throw new Error('Failed to delete blog in action. Please try again later.')
